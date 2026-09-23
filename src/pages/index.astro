@@ -377,13 +377,19 @@ const values = [
       grid-template-columns: 1fr;
     }
 
+    .product:not(.product--soon) {
+      grid-template-columns: 1fr minmax(0, 26rem);
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 80rem) {
     .products {
       grid-template-columns: 2fr 1fr;
     }
 
     .product:not(.product--soon) {
       grid-template-columns: 1fr 1fr;
-      align-items: center;
     }
   }
 </style>
