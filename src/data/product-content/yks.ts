@@ -109,20 +109,24 @@ export const social = {
   privacy: 'Neyin kime görüneceğini Gizlilik Ayarları’ndan sen seçersin; istemediğin kişiyi engelleyebilirsin.',
 };
 
-export const extras = [
+export const extras: { t: string; d: string; visual: 'achievements' | 'guide' | 'widget'; note: string }[] = [
   {
     t: '55 başarım',
-    d: 'Çalıştıkça açılan başarımlar. Küçük adımları da görünür kılar.',
+    d: 'Bronzdan efsaneviye dört seviye. Deneme, düello, hedef, çalışma ve lig başarımları çalıştıkça açılır.',
+    visual: 'achievements',
+    note: 'Örnek görünüm. Başarımlar uygulamadaki listeden.',
+  },
+  {
+    t: '173 adımlık rehber',
+    d: '“Nasıl Kullanılır?” her bölümü önce kısaca, istersen adım adım anlatır. Kurulumdan sonra ilk durağın burası.',
+    visual: 'guide',
+    note: 'Örnek görünüm.',
   },
   {
     t: 'Ana ekran widget’ı',
     d: 'TYT, AYT ve YDT’ye kalan günü uygulamayı açmadan gör. Şu an yalnızca Android’de.',
-    note: 'Örnek görünüm. Gün sayısı, uygulamanın kullandığı tahmini sınav tarihlerine göre hesaplanır.',
-    widget: true,
-  },
-  {
-    t: '173 adımlık rehber',
-    d: 'Uygulama içindeki “Nasıl Kullanılır” eğitimi her özelliği adım adım anlatır.',
+    visual: 'widget',
+    note: 'Gün sayısı bugünün tarihine göre hesaplanır; sınav tarihleri tahminidir.',
   },
 ];
 

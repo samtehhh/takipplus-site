@@ -1,0 +1,130 @@
+---
+/**
+ * "Nasıl Kullanılır?" rehberi: uygulamadaki bölüm listesiyle aynı yapı
+ * (lib/screens/tutorial/nasil_kullanilir_screen.dart).
+ */
+const sections = [
+  { t: 'Günün Odağı', d: 'Bugün odaklanman gereken tek şey', c: 'var(--amber-500)', icon: 'M12 4v2M12 18v2M4 12H2M22 12h-2M6 6 4.6 4.6M19.4 19.4 18 18M6 18l-1.4 1.4M19.4 4.6 18 6M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z' },
+  { t: 'Konular', d: 'TYT/AYT konu takibin ve tekrar planların', c: 'var(--violet-500)', icon: 'M4 6.5C6 5 9 5 12 6.5V19c-3-1.5-6-1.5-8 0V6.5ZM12 6.5C15 5 18 5 20 6.5V19c-2-1.5-5-1.5-8 0' },
+  { t: 'Çalışma', d: 'Sayaç ve optik araçların', c: 'var(--emerald-500)', icon: 'M12 8v5l3 2M9 2h6M12 22a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z' },
+  { t: 'Denemeler', d: 'Deneme netlerin ve yanlışların', c: 'var(--teal-400)', icon: 'M3 17l5-5 4 4 8-9' },
+];
+---
+
+<div class="mock guide" role="img" aria-label="Nasıl Kullanılır rehberi örneği: Günün Odağı, Konular, Çalışma ve Denemeler bölümleri">
+  <div class="guide__head" aria-hidden="true">
+    <p class="guide__title">Nasıl Kullanılır?</p>
+    <p class="guide__sub">Bir kutuya dokun, kısa bilgiyi gör; bir kez daha dokunursan adım adım anlatalım.</p>
+  </div>
+  <ul class="guide__list" aria-hidden="true">
+    {
+      sections.map((s) => (
+        <li class="guide__row" style={`--c:${s.c}`}>
+          <span class="guide__icon">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path d={s.icon} fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="guide__text">
+            <span class="guide__t">{s.t}</span>
+            <span class="guide__d">{s.d}</span>
+          </span>
+          <span class="guide__tap">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10l4.2.8a2 2 0 0 1 1.6 2.3l-.8 4.4A3 3 0 0 1 14 20h-2.4a3 3 0 0 1-2.4-1.2L6 14.5a1.4 1.4 0 0 1 2-2l1 1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="guide__more" aria-hidden="true">+ Hedef & Net, Planlar, Sosyal</p>
+</div>
+
+<style is:global>
+  .guide {
+    display: grid;
+    gap: 0.875rem;
+    padding: 1rem;
+    border-radius: 22px;
+    background:
+      radial-gradient(120% 60% at 30% 0%, rgb(139 92 246 / 0.22), transparent 70%),
+      linear-gradient(160deg, rgb(35 43 68 / 0.9), rgb(20 28 46 / 0.95));
+  }
+
+  .guide__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .guide__sub {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--text-2);
+  }
+
+  .guide__list {
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .guide__row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 16px;
+    background: rgb(10 10 26 / 0.4);
+    border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+  }
+
+  .guide__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+    background: color-mix(in srgb, var(--c) 18%, transparent);
+    color: var(--c);
+  }
+
+  .guide__text {
+    display: grid;
+    min-width: 0;
+  }
+
+  .guide__t {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .guide__d {
+    overflow: hidden;
+    font-size: 0.8125rem;
+    color: var(--text-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .guide__tap {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--c) 20%, transparent);
+    color: var(--c);
+  }
+
+  .guide__more {
+    font-size: 0.8125rem;
+    color: var(--text-3);
+  }
+</style>

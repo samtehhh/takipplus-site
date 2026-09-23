@@ -1,65 +1,106 @@
 ---
-// Android ana ekran widget'ı: TYT, AYT ve YDT sayacı.
-// Tarihler uygulamadaki (ana_panel.dart) değerlerle aynı. Gün sayısı
-// derlemede hesaplanır, sayfa açıldığında tarayıcıda güncellenir.
+/**
+ * Android ana ekran widget'ı: uygulamadaki AYT / TYT / YDT kartlarıyla aynı
+ * düzen (üstte sınav, ortada büyük gün sayısı, altında "gün kaldı" ve
+ * ilerleme çizgisi). Tarihler uygulamadaki (ana_panel.dart) değerler;
+ * gün sayısı İstanbul saatine göre takvim günü farkıdır, derlemede
+ * hesaplanır ve sayfa açılınca tarayıcıda güncellenir.
+ */
 const exams = [
-  { k: 'TYT', date: '2027-06-19T10:15:00+03:00', c: 'var(--violet-500)' },
-  { k: 'AYT', date: '2027-06-20T10:15:00+03:00', c: 'var(--teal-400)' },
-  { k: 'YDT', date: '2027-06-20T15:45:00+03:00', c: 'var(--amber-500)' },
+  { k: 'AYT', date: '2027-06-20', bg: 'linear-gradient(115deg, #3a2a1c, #3a1f33 60%, #5a2238)' },
+  { k: 'TYT', date: '2027-06-19', bg: 'linear-gradient(115deg, #172554, #1e2a5e 55%, #3b2d7a)' },
+  { k: 'YDT', date: '2027-06-20', bg: 'linear-gradient(115deg, #2e1f5e, #26275e 55%, #2f3a8a)' },
 ];
-const days = (iso: string) => Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000));
+
+const istanbulToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date());
+const days = (iso: string) => Math.max(0, Math.round((Date.parse(iso) - Date.parse(istanbulToday())) / 86400000));
 ---
 
-<div class="widget" role="img" aria-label="Android widget örneği: TYT, AYT ve YDT'ye kalan gün sayısı">
-  {
-    exams.map((e) => (
-      <div class="widget__cell" style={`--c:${e.c}`}>
-        <span class="widget__k">{e.k}</span>
-        <span class="widget__d num" data-countdown={e.date}>
-          {days(e.date)}
-        </span>
-        <span class="widget__u">gün</span>
-      </div>
-    ))
-  }
+<div class="homescreen" role="img" aria-label="Android widget örneği: AYT, TYT ve YDT'ye kalan gün sayısı">
+  <div class="homescreen__stack" aria-hidden="true">
+    {
+      exams.map((e) => (
+        <div class="wcard" style={`--bg:${e.bg}`}>
+          <span class="wcard__k">{e.k}</span>
+          <span class="wcard__d" data-countdown={e.date}>
+            {days(e.date)}
+          </span>
+          <span class="wcard__u">gün kaldı</span>
+          <span class="wcard__bar">
+            <span />
+          </span>
+        </div>
+      ))
+    }
+  </div>
 </div>
 
-
 <style is:global>
-  .widget {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    padding: 0.75rem;
+  .homescreen {
+    padding: 1rem;
     border-radius: 24px;
-    background: rgb(15 23 42 / 0.88);
-    border: 1px solid var(--line);
+    background:
+      radial-gradient(80% 60% at 0% 20%, rgb(34 197 94 / 0.35), transparent 70%),
+      radial-gradient(70% 60% at 100% 10%, rgb(56 189 248 / 0.35), transparent 70%),
+      radial-gradient(90% 70% at 40% 100%, rgb(245 158 11 / 0.25), transparent 70%),
+      #1f4d57;
     box-shadow: var(--shadow-3);
   }
 
-  .widget__cell {
+  .homescreen__stack {
+    display: grid;
+    gap: 0.625rem;
+  }
+
+  .wcard {
     display: grid;
     justify-items: center;
-    padding: 0.75rem 0.25rem;
-    border-radius: 16px;
-    background: color-mix(in srgb, var(--c) 14%, transparent);
+    padding: 0.625rem 1rem 0.75rem;
+    border-radius: 18px;
+    background: var(--bg);
+    border: 1.5px solid rgb(148 163 184 / 0.35);
+    color: #fff;
   }
 
-  .widget__k {
-    font-family: var(--font-display);
+  .wcard__k {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
     font-weight: 700;
-    font-size: 0.8125rem;
-    color: color-mix(in srgb, var(--c) 70%, white);
+    letter-spacing: 0.14em;
+    opacity: 0.9;
   }
 
-  .widget__d {
-    font-size: 1.625rem;
+  .wcard__d {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 18px rgb(167 139 250 / 0.6);
+  }
+
+  .wcard__u {
+    margin-top: 0.125rem;
+    font-size: 0.625rem;
     font-weight: 600;
-    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
   }
 
-  .widget__u {
-    font-size: 0.75rem;
-    color: var(--text-2);
+  .wcard__bar {
+    width: 90%;
+    height: 3px;
+    margin-top: 0.5rem;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 0.18);
+  }
+
+  .wcard__bar span {
+    display: block;
+    width: 26%;
+    height: 100%;
+    border-radius: inherit;
+    background: #fff;
   }
 </style>

@@ -250,7 +250,7 @@ button {
 
 .sample-note {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
   font-size: var(--text-xs);
   color: var(--text-3);
@@ -258,8 +258,10 @@ button {
 
 .sample-note::before {
   content: '';
+  flex: none;
   width: 6px;
   height: 6px;
+  margin-top: 0.5em;
   border-radius: 50%;
   background: var(--text-3);
 }

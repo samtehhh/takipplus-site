@@ -41,10 +41,14 @@ document.addEventListener('click', (e) => {
 });
 
 // ---------- Sınav geri sayımı (widget örneği) ----------
-document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((el) => {
-  const d = Math.ceil((new Date(el.dataset.countdown!).getTime() - Date.now()) / 86400000);
-  el.textContent = String(Math.max(0, d));
-});
+// Uygulamadaki gibi İstanbul saatine göre takvim günü farkı
+{
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date());
+  document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((el) => {
+    const d = Math.round((Date.parse(el.dataset.countdown!) - Date.parse(today)) / 86400000);
+    el.textContent = String(Math.max(0, d));
+  });
+}
 
 // ---------- Form sonucu sayfası (JS'siz gönderim) ----------
 if (new URLSearchParams(location.search).get('durum') === 'hata') root.classList.add('is-error');

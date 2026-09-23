@@ -19,6 +19,8 @@ import WizardMock from '../components/mockups/WizardMock.astro';
 import TimerMock from '../components/mockups/TimerMock.astro';
 import SocialMock from '../components/mockups/SocialMock.astro';
 import WidgetMock from '../components/mockups/WidgetMock.astro';
+import AchievementsMock from '../components/mockups/AchievementsMock.astro';
+import GuideMock from '../components/mockups/GuideMock.astro';
 import { products, type Product } from '../data/products';
 import { screens, type ScreenName } from '../data/screens';
 import { mobileAppLd, faqLd } from '../lib/jsonld';
@@ -35,6 +37,7 @@ export async function getStaticPaths() {
 
 const { product, content: c } = Astro.props as { product: Product; content: typeof import('../data/product-content/yks') };
 
+const extraVisuals = { achievements: AchievementsMock, guide: GuideMock, widget: WidgetMock };
 const mocks = { optik: OptikMock, netchart: NetChart, repeat: RepeatMock, wizard: WizardMock, timer: TimerMock };
 
 // Gerçek ekran görüntüleri: yalnızca var olanlar galeride gösterilir.
@@ -179,18 +182,21 @@ const gallery = available.filter((s) => s !== 'bugun');
       </div>
       <ul class="extras" role="list">
         {
-          c.extras.map((e) => (
-            <li class:list={['extra', { 'extra--widget': e.widget }]}>
-              <h3 class="h3">{e.t}</h3>
-              <p class="muted">{e.d}</p>
-              {e.widget && (
-                <div class="extra__widget">
-                  <WidgetMock />
+          c.extras.map((e) => {
+            const Visual = extraVisuals[e.visual];
+            return (
+              <li class="extra">
+                <div class="extra__copy">
+                  <h3 class="h3">{e.t}</h3>
+                  <p class="muted">{e.d}</p>
+                </div>
+                <div class="extra__visual">
+                  <Visual />
                   <p class="sample-note">{e.note}</p>
                 </div>
-              )}
-            </li>
-          ))
+              </li>
+            );
+          })
         }
       </ul>
     </div>
@@ -468,20 +474,26 @@ const gallery = available.filter((s) => s !== 'bugun');
   }
 
   .extra {
-    display: grid;
-    align-content: start;
-    gap: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
     padding: var(--space-5);
     border-radius: var(--radius-lg);
     background: var(--grad-card);
     border: 1px solid var(--line);
   }
 
-  .extra__widget {
+  .extra__copy {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .extra__visual {
     display: grid;
     gap: var(--space-3);
-    margin-top: var(--space-4);
-    max-width: 22rem;
+    width: 100%;
+    max-width: 28rem;
+    margin-top: auto;
   }
 
   .shot {
@@ -516,8 +528,8 @@ const gallery = available.filter((s) => s !== 'bugun');
       grid-template-columns: repeat(2, 1fr);
     }
 
-    .extra--widget {
-      grid-row: span 2;
+    .extra:last-child {
+      grid-column: 1 / -1;
     }
   }
 
@@ -537,6 +549,14 @@ const gallery = available.filter((s) => s !== 'bugun');
 
     .today-points--wide {
       grid-template-columns: repeat(4, 1fr);
+    }
+
+    .extras {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .extra:last-child {
+      grid-column: auto;
     }
 
     .split {
