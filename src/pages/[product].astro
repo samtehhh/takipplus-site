@@ -524,8 +524,13 @@ const gallery = available.filter((s) => s !== 'bugun');
       padding: var(--space-8);
     }
 
-    /* Tablet ve dar dizüstü: her kart yatay, metin solda, örnek sağda */
-    .extra {
+    /* Tablet ve dar dizüstü: iki kart yan yana, widget altta yatay */
+    .extras {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .extra:last-child {
+      grid-column: 1 / -1;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
       align-items: center;
@@ -533,7 +538,7 @@ const gallery = available.filter((s) => s !== 'bugun');
       padding: var(--space-6);
     }
 
-    .extra__visual {
+    .extra:last-child .extra__visual {
       margin-top: 0;
     }
   }
@@ -564,14 +569,15 @@ const gallery = available.filter((s) => s !== 'bugun');
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .extra {
+    .extra:last-child {
+      grid-column: auto;
       display: flex;
       flex-direction: column;
       gap: var(--space-5);
       padding: var(--space-5);
     }
 
-    .extra__visual {
+    .extra:last-child .extra__visual {
       margin-top: auto;
     }
 
