@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 const noIndex = ['/404', '/erken-erisim/onaylandi', '/erken-erisim/tesekkurler'];
 
 export default defineConfig({
-  site: 'https://takipplus.com.tr',
+  site: 'https://www.takipplus.com.tr',
   trailingSlash: 'never',
   output: 'static',
   build: {

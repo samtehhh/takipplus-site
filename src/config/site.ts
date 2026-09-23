@@ -8,7 +8,7 @@
 
 export const site = {
   name: 'Takip+',
-  url: 'https://takipplus.com.tr',
+  url: 'https://www.takipplus.com.tr',
   locale: 'tr_TR',
   lang: 'tr',
   founder: 'Samet Öndeş',

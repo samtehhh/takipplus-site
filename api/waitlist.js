@@ -59,7 +59,7 @@ export default async function handler(req, res) {
         email,
         includeListIds: [listId],
         templateId,
-        redirectionUrl: process.env.BREVO_DOI_REDIRECT_URL || 'https://takipplus.com.tr/erken-erisim/onaylandi',
+        redirectionUrl: process.env.BREVO_DOI_REDIRECT_URL || 'https://www.takipplus.com.tr/erken-erisim/onaylandi',
         attributes,
       }
     : { email, listIds: [listId], updateEnabled: true, attributes };
