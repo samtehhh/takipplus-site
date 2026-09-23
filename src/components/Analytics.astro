@@ -1,0 +1,16 @@
+---
+// Çerez kullanmayan analiz. Sağlayıcı src/config/site.ts içinden seçilir.
+// Olaylar src/scripts/site.ts içindeki track() ile gönderilir.
+import { site } from '../config/site';
+
+const a = site.analytics;
+const isProd = import.meta.env.PROD;
+---
+
+{isProd && a.provider === 'vercel' && <script defer src="/_vercel/insights/script.js" is:inline />}
+{isProd && a.provider === 'umami' && a.umamiWebsiteId && (
+  <script defer src={a.umamiSrc} data-website-id={a.umamiWebsiteId} is:inline />
+)}
+{isProd && a.provider === 'plausible' && (
+  <script defer data-domain={a.plausibleDomain} src="https://plausible.io/js/script.js" is:inline />
+)}

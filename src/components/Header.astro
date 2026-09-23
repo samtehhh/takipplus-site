@@ -1,0 +1,321 @@
+---
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import { liveProducts } from '../data/products';
+import { legalLinks } from '../data/nav';
+
+interface Props {
+  ctaHref: string;
+  currentPath: string;
+}
+
+const { ctaHref, currentPath } = Astro.props;
+
+const nav = [
+  ...liveProducts.map((p) => ({ href: `/${p.slug}`, label: p.name })),
+  { href: '/hakkimizda', label: 'Hakkımızda' },
+  { href: '/marka', label: 'Marka' },
+  { href: '/iletisim', label: 'İletişim' },
+];
+const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__row">
+    <a class="site-header__brand tap" href="/" aria-label="Takip+ ana sayfa">
+      <Logo size={32} id="hdr" />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Ana menü">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <Button href={ctaHref} class="site-header__cta" track="cta_header">Erken erişime katıl</Button>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-open
+      >
+        <span class="sr-only">Menüyü aç</span>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M4 8h16M4 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog id="site-menu" class="menu" aria-label="Menü" data-menu>
+  <div class="menu__inner">
+    <div class="menu__top">
+      <a class="tap" href="/" aria-label="Takip+ ana sayfa"><Logo size={32} id="menu" /></a>
+      <button class="menu__close" type="button" data-menu-close>
+        <span class="sr-only">Menüyü kapat</span>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+    <nav aria-label="Mobil menü">
+      <ul class="menu__links">
+        <li><a href="/" aria-current={currentPath === '/' ? 'page' : undefined}>Ana sayfa</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="menu__bottom">
+      <Button href={ctaHref} size="lg" track="cta_menu">Erken erişime katıl</Button>
+      <ul class="menu__legal">
+        {legalLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    padding-top: env(safe-area-inset-top);
+    background: rgb(15 23 42 / 0.82);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header {
+      background: rgb(15 23 42 / 0.86);
+      backdrop-filter: saturate(1.4) blur(14px);
+      -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    }
+  }
+
+  :global(.is-scrolled) .site-header {
+    border-bottom-color: var(--line);
+  }
+
+  .site-header__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    height: 64px;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 10px;
+  }
+
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .site-header__actions :global(.site-header__cta) {
+    display: none;
+  }
+
+  .menu-toggle,
+  .menu__close {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-right: -12px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .menu-toggle:active,
+  .menu__close:active {
+    background: rgb(148 163 184 / 0.14);
+  }
+
+  @media (min-width: 30rem) {
+    .site-header__actions :global(.site-header__cta) {
+      display: inline-flex;
+      --btn-h: 44px;
+      padding-inline: 1rem;
+      font-size: 0.9375rem;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .site-header__row {
+      height: 72px;
+    }
+
+    .site-header__nav {
+      display: block;
+    }
+
+    .site-header__nav ul {
+      display: flex;
+      gap: var(--space-1);
+      list-style: none;
+    }
+
+    .site-header__nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 0.875rem;
+      border-radius: 12px;
+      color: var(--text-2);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color var(--dur-2) var(--ease-out);
+    }
+
+    .site-header__nav a[aria-current='page'] {
+      color: var(--text);
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+  }
+
+  @media (min-width: 60rem) and (hover: hover) {
+    .site-header__nav a:hover {
+      color: var(--text);
+    }
+  }
+
+  /* ---------- Mobil menü ---------- */
+  .menu {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--bg);
+    color: var(--text);
+    overscroll-behavior: contain;
+  }
+
+  .menu::backdrop {
+    background: var(--bg);
+  }
+
+  .menu__inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: env(safe-area-inset-top) var(--gutter) calc(var(--space-5) + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(60rem 30rem at 10% -10%, rgb(139 92 246 / 0.18), transparent 60%),
+      var(--bg);
+  }
+
+  .menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .menu__top a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .menu__links {
+    display: grid;
+    gap: var(--space-1);
+    margin-top: var(--space-6);
+    list-style: none;
+  }
+
+  .menu__links a {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .menu__links a[aria-current='page'] {
+    color: var(--violet-400);
+  }
+
+  .menu__links a:active {
+    color: var(--violet-300);
+  }
+
+  .menu__bottom {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: auto;
+    padding-top: var(--space-7);
+  }
+
+  .menu__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
+    list-style: none;
+  }
+
+  .menu__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .menu[open] .menu__inner {
+      animation: menu-in var(--dur-3) var(--ease-out);
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+</style>

@@ -1,0 +1,246 @@
+---
+/**
+ * Ücretsiz ve Premium karşılaştırması. Fiyatlar yalnızca
+ * pricing.pricingVisible = true olduğunda ve yenileme/iptal bilgisiyle
+ * birlikte gösterilir.
+ */
+import { pricing } from '../config/site';
+
+interface Props {
+  rows: { label: string; detail: string; free: boolean }[];
+}
+const { rows } = Astro.props;
+
+const tl = (n: number) => n.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY', minimumFractionDigits: 2 });
+const monthsLeft = (() => {
+  const now = new Date();
+  const exam = new Date(pricing.examDate);
+  return exam.getFullYear() * 12 + exam.getMonth() - (now.getFullYear() * 12 + now.getMonth());
+})();
+const untilExamTotal = monthsLeft > 0 ? pricing.monthly * pricing.untilExamMultiplier * monthsLeft : null;
+const saving = Math.round((1 - pricing.untilExamMultiplier) * 100);
+
+const yes = 'M5 12.5l4.5 4.5L19 7.5';
+---
+
+<div class="plans">
+  <table class="plans__table">
+    <caption class="sr-only">Ücretsiz ve Premium planda neler var</caption>
+    <thead>
+      <tr>
+        <th scope="col">Özellik</th>
+        <th scope="col">Ücretsiz</th>
+        <th scope="col" class="plans__premium-h">Premium</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((r) => (
+          <tr>
+            <th scope="row">
+              <span class="plans__label">{r.label}</span>
+              <span class="plans__detail">{r.detail}</span>
+            </th>
+            <td>
+              {r.free ? (
+                <svg viewBox="0 0 24 24" width="22" height="22" class="plans__yes" role="img" aria-label="Var"><path d={yes} /></svg>
+              ) : (
+                <span class="plans__no" role="img" aria-label="Yok" />
+              )}
+            </td>
+            <td class="plans__premium">
+              <svg viewBox="0 0 24 24" width="22" height="22" class="plans__yes" role="img" aria-label="Var"><path d={yes} /></svg>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  {
+    pricing.pricingVisible && (
+      <div class="plans__prices">
+        <div class="price">
+          <p class="price__name">Haftalık</p>
+          <p class="price__v num">{tl(pricing.weekly)}<span>/hafta</span></p>
+        </div>
+        <div class="price">
+          <p class="price__name">Aylık</p>
+          <p class="price__v num">{tl(pricing.monthly)}<span>/ay</span></p>
+          <p class="price__note">İlk {pricing.monthlyTrialDays} gün ücretsiz, sonra {tl(pricing.monthly)}/ay</p>
+        </div>
+        {untilExamTotal && (
+          <div class="price price--best">
+            <p class="price__name">Sınava Kadar</p>
+            <p class="price__v num">{tl(untilExamTotal)}<span>/toplam · {monthsLeft} ay</span></p>
+            <p class="price__note">Aylık plana göre %{saving} tasarruf. Fiyat, satın alma anında sınava kalan aya göre hesaplanır.</p>
+          </div>
+        )}
+        <p class="price__renew fine">{pricing.renewalNote}</p>
+      </div>
+    )
+  }
+</div>
+
+<style is:global>
+  .plans__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--radius-xl);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .plans__table th,
+  .plans__table td {
+    padding: 0.875rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .plans__table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .plans__table thead th {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  .plans__table thead th:first-child,
+  .plans__table tbody th {
+    text-align: left;
+    padding-left: 1.125rem;
+  }
+
+  .plans__table thead .plans__premium-h {
+    color: var(--violet-300);
+  }
+
+  .plans__premium {
+    background: rgb(139 92 246 / 0.07);
+  }
+
+  .plans__table thead .plans__premium-h {
+    background: rgb(139 92 246 / 0.12);
+  }
+
+  .plans__label {
+    display: block;
+    font-weight: 600;
+  }
+
+  .plans__detail {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+
+  .plans__yes {
+    display: inline-block;
+    fill: none;
+    stroke: var(--emerald-500);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .plans__premium .plans__yes {
+    stroke: var(--violet-400);
+  }
+
+  .plans__no {
+    display: inline-block;
+    width: 12px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ink-500);
+    vertical-align: middle;
+  }
+
+  .plans__prices {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .price {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+  }
+
+  .price--best {
+    border-color: rgb(139 92 246 / 0.5);
+  }
+
+  .price__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .price__v {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  .price__v span {
+    font-size: var(--text-sm);
+    color: var(--text-2);
+    font-weight: 400;
+  }
+
+  .price__note {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  @media (max-width: 23rem) {
+    .plans__table th,
+    .plans__table td {
+      padding: 0.75rem 0.375rem;
+    }
+
+    .plans__table thead th:first-child,
+    .plans__table tbody th {
+      padding-left: 0.875rem;
+    }
+
+    .plans__table thead th {
+      font-size: var(--text-xs);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .plans__prices {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .price__renew {
+      grid-column: 1 / -1;
+    }
+
+    .plans__table th,
+    .plans__table td {
+      padding: 1rem 1.25rem;
+    }
+
+    .plans__label,
+    .plans__detail {
+      display: inline;
+    }
+
+    .plans__detail::before {
+      content: ' · ';
+    }
+  }
+</style>

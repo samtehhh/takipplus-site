@@ -1,0 +1,84 @@
+---
+/**
+ * Rehber bölümü şablonu: /rehber (liste) ve /rehber/<yazı>.
+ * Yayınlanmış yazı yoksa hiçbir sayfa üretilmez.
+ */
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('rehber', (p) => !p.data.draft)).sort(
+    (a, b) => b.data.published.getTime() - a.data.published.getTime(),
+  );
+  if (!posts.length) return [];
+  return [
+    { params: { slug: undefined }, props: { posts } },
+    ...posts.map((post) => ({ params: { slug: post.id }, props: { post } })),
+  ];
+}
+
+const { posts, post } = Astro.props as { posts?: any[]; post?: any };
+const fmt = (d: Date) => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+const Content = post ? (await render(post)).Content : null;
+---
+
+{
+  posts && (
+    <Base title="Rehber" description="YKS hazırlığı, net hesaplama ve çalışma planı üzerine Takip+ rehberleri." path="/rehber" breadcrumbs={[{ name: 'Rehber', path: '/rehber' }]}>
+      <section class="section">
+        <div class="container container-narrow">
+          <h1 class="h2">Rehber</h1>
+          <ul class="posts" role="list">
+            {posts.map((p) => (
+              <li>
+                <a href={`/rehber/${p.id}`}>
+                  <h2 class="h3">{p.data.title}</h2>
+                  <p class="muted">{p.data.description}</p>
+                  <time class="fine" datetime={p.data.published.toISOString()}>{fmt(p.data.published)}</time>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </Base>
+  )
+}
+{
+  post && Content && (
+    <Base
+      title={post.data.title}
+      description={post.data.description}
+      path={`/rehber/${post.id}`}
+      breadcrumbs={[
+        { name: 'Rehber', path: '/rehber' },
+        { name: post.data.title, path: `/rehber/${post.id}` },
+      ]}
+    >
+      <article class="section">
+        <div class="container container-narrow prose">
+          <h1 class="h2">{post.data.title}</h1>
+          <p class="fine">
+            <time datetime={post.data.published.toISOString()}>{fmt(post.data.published)}</time>
+          </p>
+          <Content />
+        </div>
+      </article>
+    </Base>
+  )
+}
+
+<style>
+  .posts {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+    list-style: none;
+  }
+
+  .posts a {
+    display: grid;
+    gap: var(--space-2);
+    text-decoration: none;
+  }
+</style>

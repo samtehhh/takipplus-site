@@ -1,0 +1,268 @@
+---
+/**
+ * "Günün Odağı" — uygulamanın Bugün ekranındaki yapıyla aynı:
+ * saat/soru/video/konu hedef kartları + günün listesi. Değerler örnektir.
+ */
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
+const metrics = [
+  { key: 'saat', label: 'Saat', value: '3.5', goal: '6', pct: 58, icon: 'M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z' },
+  { key: 'soru', label: 'Soru', value: '64', goal: '100', pct: 64, icon: 'M5 7h9M5 12h6M5 17h4M15 16l2 2 4-5' },
+  { key: 'video', label: 'Video', value: '4', goal: '10', pct: 40, icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM10 9l5 3-5 3V9Z' },
+  { key: 'konu', label: 'Konu', value: '2', goal: '5', pct: 40, icon: 'M4 6.5C6 5 9 5 12 6.5V19c-3-1.5-6-1.5-8 0V6.5ZM12 6.5C15 5 18 5 20 6.5V19c-2-1.5-5-1.5-8 0' },
+];
+
+const tasks = [
+  { kind: 'Rutin', text: 'Paragraf: 40 soru', done: true },
+  { kind: 'Tekrar', text: 'Yapamadıklarım: 3 soru', done: false },
+  { kind: 'Konu', text: 'AYT Matematik: Türev', done: false },
+  { kind: 'Plan', text: 'Fizik deneme analizi', done: false },
+];
+---
+
+<div class:list={['mock', 'today', { 'today--compact': compact }]} data-animate>
+  <div class="today__head">
+    <div>
+      <p class="today__title">Günün Odağı</p>
+      <p class="today__date">Salı</p>
+    </div>
+    <span class="today__chip">Bugün</span>
+  </div>
+
+  <ul class="today__metrics" role="list">
+    {
+      metrics.map((m, i) => (
+        <li class={`metric metric--${m.key}`} style={`--pct:${m.pct}%;--i:${i}`}>
+          <svg class="metric__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d={m.icon} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="metric__value num">
+            {m.value}<span class="metric__goal">/{m.goal}</span>
+          </span>
+          <span class="metric__label">{m.label}</span>
+          <span class="metric__bar" aria-hidden="true"><span /></span>
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    !compact && (
+      <ul class="today__tasks" role="list">
+        {tasks.map((t) => (
+          <li class:list={['task', { 'task--done': t.done }]}>
+            <span class="task__check" aria-hidden="true" />
+            <span class="task__text">{t.text}</span>
+            <span class="task__kind">{t.kind}</span>
+            {t.done && <span class="sr-only">(tamamlandı)</span>}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<style is:global>
+  .mock {
+    position: relative;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(160deg, rgb(35 43 68 / 0.9), rgb(20 28 46 / 0.95));
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-3);
+    color: var(--text);
+    font-family: var(--font-body);
+  }
+
+  .today {
+    container-type: inline-size;
+    display: grid;
+    gap: 1.125rem;
+    padding: 1.25rem;
+  }
+
+  .today__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .today__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .today__date {
+    margin-top: 0.25rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--violet-400);
+  }
+
+  .today__chip {
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--violet-500), var(--teal-400));
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .today__metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .metric {
+    --c: var(--metric-saat);
+    display: grid;
+    gap: 0.25rem;
+    align-content: start;
+    min-width: 0;
+    padding: 0.75rem 0.625rem 0.75rem;
+    border-radius: 16px;
+    border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent);
+    background: color-mix(in srgb, var(--c) 13%, transparent);
+  }
+
+  .metric--soru {
+    --c: var(--metric-soru);
+  }
+
+  .metric--video {
+    --c: var(--metric-video);
+  }
+
+  .metric--konu {
+    --c: var(--metric-konu);
+  }
+
+  .metric__icon {
+    width: 28px;
+    height: 28px;
+    padding: 5px;
+    margin-bottom: 0.375rem;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+    color: var(--c);
+  }
+
+  .metric__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.875rem, 4.6cqi, 1.3rem);
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  .metric__goal {
+    color: var(--slate-300);
+    font-weight: 600;
+  }
+
+  .metric__label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--c) 70%, white);
+  }
+
+  .metric__bar {
+    height: 5px;
+    margin-top: 0.5rem;
+    border-radius: 99px;
+    background: rgb(148 163 184 / 0.2);
+    overflow: hidden;
+  }
+
+  .metric__bar span {
+    display: block;
+    width: var(--pct);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--c);
+    transform-origin: left;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .today:not(.is-in) .metric__bar span {
+      transform: scaleX(0);
+    }
+
+    .motion .today .metric__bar span {
+      transition: transform var(--dur-4) var(--ease-out);
+      transition-delay: calc(var(--i) * 90ms + 150ms);
+    }
+  }
+
+  .today__tasks {
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .task {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 14px;
+    background: rgb(10 10 26 / 0.35);
+    border: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .task__check {
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+    border: 1.5px solid var(--line-strong);
+  }
+
+  .task--done .task__check {
+    border-color: var(--emerald-500);
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 13px no-repeat,
+      var(--emerald-500);
+  }
+
+  .task--done .task__text {
+    color: var(--text-2);
+    text-decoration: line-through;
+    text-decoration-color: rgb(148 163 184 / 0.5);
+  }
+
+  .task__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .task__kind {
+    font-size: 0.75rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 22rem) {
+    .today {
+      padding: 1rem;
+    }
+
+    .today__metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

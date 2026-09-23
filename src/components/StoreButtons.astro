@@ -1,0 +1,80 @@
+---
+/**
+ * Yayın öncesi: "Erken erişime katıl" butonu.
+ * Yayın sonrası (product.released = true): resmi Google Play ve App Store
+ * rozetleri. Rozet dosyaları resmi kaynaklardan indirilip değiştirilmeden
+ * public/badges/ altına konmalı (bkz. README):
+ *   public/badges/google-play-tr.png  (Google Play "Google Play'den alın")
+ *   public/badges/app-store-tr.svg    (Apple "App Store'dan İndirin")
+ * Kullanıcının cihazına göre ilgili mağaza öne alınır (src/scripts/site.ts).
+ */
+import Button from './Button.astro';
+import type { Product } from '../data/products';
+
+interface Props {
+  product: Product;
+  ctaHref?: string;
+  size?: 'md' | 'lg';
+  secondary?: { href: string; label: string };
+}
+
+const { product, ctaHref = '#erken-erisim', size = 'lg', secondary } = Astro.props;
+const { released, stores } = product;
+---
+
+{
+  released ? (
+    <div class="stores" data-stores>
+      {stores.googlePlayUrl && (
+        <a class="stores__badge" href={stores.googlePlayUrl} data-store="android" data-track="store_google_play" rel="noopener">
+          <img src="/badges/google-play-tr.png" alt="Google Play'den alın" width="180" height="53" />
+        </a>
+      )}
+      {stores.appStoreUrl && (
+        <a class="stores__badge" href={stores.appStoreUrl} data-store="ios" data-track="store_app_store" rel="noopener">
+          <img src="/badges/app-store-tr.svg" alt="App Store'dan İndirin" width="160" height="53" />
+        </a>
+      )}
+    </div>
+  ) : (
+    <div class="stores">
+      <Button href={ctaHref} size={size} track="cta_early_access">
+        Erken erişime katıl
+      </Button>
+      {secondary && (
+        <Button href={secondary.href} size={size} variant="secondary">
+          {secondary.label}
+        </Button>
+      )}
+    </div>
+  )
+}
+
+<style is:global>
+  .stores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .stores > .btn {
+    flex: 1 1 14rem;
+  }
+
+  @media (min-width: 30rem) {
+    .stores > .btn {
+      flex: 0 0 auto;
+    }
+  }
+
+  .stores__badge {
+    display: inline-flex;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  .stores__badge img {
+    height: 53px;
+    width: auto;
+  }
+</style>

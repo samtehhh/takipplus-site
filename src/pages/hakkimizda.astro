@@ -1,0 +1,168 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { site, contactEmail } from '../config/site';
+
+const principles = [
+  { t: 'Önce gerçek ihtiyaç', d: 'Bir özelliği, bir öğrencinin gününü gerçekten kolaylaştırıyorsa ekleriz.' },
+  { t: 'Abartısız dil', d: 'Uygulamanın yapmadığı bir şeyi vaat etmeyiz. Tahminlere tahmin, örneklere örnek deriz.' },
+  { t: 'Veri senin', d: 'Verini reklam için kullanmayız. Neyin kime görüneceğini sen seçersin.' },
+  { t: 'Birlikte büyümek', d: 'Geri bildirimleri okur, yol haritasını kullananlarla birlikte çizeriz.' },
+];
+---
+
+<Base
+  title="Hakkımızda"
+  description="Takip+ nasıl başladı, kim geliştiriyor ve neden var? Öğrencinin kendi koçu olabileceğine inanan bağımsız bir girişim."
+  path="/hakkimizda"
+  ogImage="hakkimizda"
+  breadcrumbs={[{ name: 'Hakkımızda', path: '/hakkimizda' }]}
+>
+  <section class="about-hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container container-narrow about-hero__inner">
+      <p class="label">Hakkımızda</p>
+      <h1 class="display about-hero__title">Öğrencinin kendi koçu olabileceğine inanıyoruz.</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow story">
+      <!-- Kuruluş hikâyesi: site sahibinin kendi anlatımıyla kişiselleştirilmeli (bkz. README → Site sahibinden gelecekler). -->
+      <p class="lead story__lead">
+        Takip+, {site.founder}’in bağımsız olarak geliştirdiği bir girişim. Şimdilik tek kişilik bir ekip:
+        uygulamayı tasarlayan, kodlayan ve gelen mesajları yanıtlayan aynı kişi.
+      </p>
+      <p>
+        Sınava hazırlanan bir öğrencinin elinde çoğu zaman her şey var: konu listeleri, deneme sonuçları, çalışma
+        saatleri, hedef bölüm. Eksik olan, bunların hepsini aynı yerde görmek ve her gün “bugün neyi, ne kadar
+        yaptım?” sorusunu dürüstçe cevaplayabilmek. Takip+ bu soruyu cevaplamak için var.
+      </p>
+      <p>
+        İlk ürünümüz Takip+ YKS. Konu takibi, deneme analizi, Optik Çözüm, hedef ve net hesabı, çalışma planı ve
+        arkadaşlarınla çalışmayı kolaylaştıran sosyal özellikleri tek uygulamada topluyor. Bu yapıyı zamanla başka
+        sınavlara da taşımak istiyoruz.
+      </p>
+      <p>
+        Koçluğu bir uygulamaya devretmiyoruz. Planı yapan, kararı veren ve emeği ortaya koyan sensin. Biz sadece
+        ilerlemeni görünür kılıyoruz.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <h2 class="h2 principles__title">Nasıl çalışıyoruz</h2>
+      <ul class="principles" role="list">
+        {principles.map((p) => <li><h3 class="h3">{p.t}</h3><p class="muted">{p.d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow founder">
+      <div class="founder__card">
+        <div class="founder__avatar" aria-hidden="true">SÖ</div>
+        <div>
+          <p class="founder__name">{site.founder}</p>
+          <p class="muted">Kurucu ve geliştirici</p>
+        </div>
+      </div>
+      <p class="muted">Bir fikrin, önerin ya da eleştirin varsa doğrudan bana yazabilirsin.</p>
+      <div class="founder__actions">
+        <Button href={`mailto:${contactEmail}`} variant="secondary">E-posta gönder</Button>
+        <Button href="/yks">Takip+ YKS’yi incele</Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .about-hero__inner {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .about-hero__title {
+    font-size: var(--text-3xl);
+  }
+
+  .story {
+    display: grid;
+    gap: var(--space-5);
+    max-width: calc(40rem + 2 * var(--gutter));
+    color: var(--slate-300);
+    font-size: var(--text-md);
+  }
+
+  .story__lead {
+    color: var(--text);
+    font-size: var(--text-lg);
+    line-height: 1.5;
+  }
+
+  .principles__title {
+    margin-bottom: var(--space-6);
+  }
+
+  .principles {
+    display: grid;
+    gap: var(--space-5) var(--space-7);
+    list-style: none;
+  }
+
+  .principles li {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .founder {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .founder__card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .founder__avatar {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--grad-primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .founder__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+  }
+
+  .founder__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 48rem) {
+    .principles {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

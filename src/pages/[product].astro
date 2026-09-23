@@ -1,0 +1,559 @@
+---
+/**
+ * Ürün sayfası şablonu. Her ürün için src/data/products.ts kaydı +
+ * src/data/product-content/<slug>.ts içerik dosyası yeterli.
+ */
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import StoreButtons from '../components/StoreButtons.astro';
+import DeviceFrame from '../components/DeviceFrame.astro';
+import Carousel from '../components/Carousel.astro';
+import Faq from '../components/Faq.astro';
+import PlanTable from '../components/PlanTable.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import TodayMock from '../components/mockups/TodayMock.astro';
+import OptikMock from '../components/mockups/OptikMock.astro';
+import NetChart from '../components/mockups/NetChart.astro';
+import RepeatMock from '../components/mockups/RepeatMock.astro';
+import WizardMock from '../components/mockups/WizardMock.astro';
+import TimerMock from '../components/mockups/TimerMock.astro';
+import SocialMock from '../components/mockups/SocialMock.astro';
+import WidgetMock from '../components/mockups/WidgetMock.astro';
+import { products, type Product } from '../data/products';
+import { screens, type ScreenName } from '../data/screens';
+import { mobileAppLd, faqLd } from '../lib/jsonld';
+
+export async function getStaticPaths() {
+  const contents = import.meta.glob('../data/product-content/*.ts', { eager: true });
+  return products
+    .filter((p) => p.status !== 'planned')
+    .map((product) => ({
+      params: { product: product.slug },
+      props: { product, content: contents[`../data/product-content/${product.slug}.ts`] },
+    }));
+}
+
+const { product, content: c } = Astro.props as { product: Product; content: typeof import('../data/product-content/yks') };
+
+const mocks = { optik: OptikMock, netchart: NetChart, repeat: RepeatMock, wizard: WizardMock, timer: TimerMock };
+
+// Gerçek ekran görüntüleri: yalnızca var olanlar galeride gösterilir.
+const shots = import.meta.glob<ImageMetadata>('/assets/screens/*.png', { eager: true, import: 'default' });
+const available = (Object.keys(screens) as ScreenName[]).filter((s) => shots[`/assets/screens/${s}.png`]);
+const hasToday = available.includes('bugun');
+const gallery = available.filter((s) => s !== 'bugun');
+---
+
+<Base
+  title={c.seo.title}
+  description={c.seo.description}
+  path={`/${product.slug}`}
+  ogImage={product.slug}
+  ogAlt={`${product.name}: ${product.tagline}`}
+  accent={{ base: product.accent, deep: product.accentDeep }}
+  jsonLd={[mobileAppLd(product, c.seo.description), faqLd(c.faq)]}
+  breadcrumbs={[{ name: product.name, path: `/${product.slug}` }]}
+  ctaHref="#erken-erisim"
+  stickyCta
+>
+  <!-- 1. Hero -->
+  <section class="p-hero" data-hero>
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container p-hero__grid">
+      <div class="p-hero__copy">
+        <p class="label">{c.hero.label}</p>
+        <h1 class="display p-hero__title">{c.hero.title}</h1>
+        <p class="lead">{c.hero.lead}</p>
+        <StoreButtons product={product} secondary={{ href: '#bugun', label: 'Nasıl çalıştığını gör' }} />
+        <p class="fine">{c.hero.note}</p>
+      </div>
+      <div class="p-hero__visual">
+        <TodayMock />
+        <p class="sample-note">Örnek veri</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Bugün -->
+  <section class="section" id="bugun" aria-labelledby="bugun-title">
+    <div class:list={['container', { split: hasToday }]}>
+      <div class="today-sec">
+        <div class="split__copy" data-reveal>
+          <p class="label">{c.today.label}</p>
+          <h2 class="h2" id="bugun-title">{c.today.title}</h2>
+          <p class="lead">{c.today.text}</p>
+        </div>
+        <ul class:list={['today-points', { 'today-points--wide': !hasToday }]} role="list">
+          {c.today.points.map((p) => <li><h3>{p.t}</h3><p>{p.d}</p></li>)}
+        </ul>
+        <p class="muted today-foot">{c.today.footnote}</p>
+      </div>
+      {
+        hasToday && (
+          <div class="split__visual">
+            <DeviceFrame screen="bugun" width={300} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 3. Altı sekme -->
+  <section class="section" id="sekmeler" aria-labelledby="sekmeler-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="label">Uygulamanın içinde</p>
+        <h2 class="h2" id="sekmeler-title">Altı sekme, sınava hazırlığın doğal sırası.</h2>
+        <p class="lead">Alt menüdeki sıra bir günün akışını izler: bugünden başlar, konuya, çalışmaya, denemeye ve hedefe uzanır, plana döner.</p>
+      </div>
+      <Carousel count={c.tabs.length} label="Uygulamanın altı sekmesi" columns={3}>
+        {
+          c.tabs.map((t, i) => (
+            <li class="tab-card" style={`--c:${t.color}`}>
+              <span class="tab-card__n num" aria-hidden="true">{i + 1}</span>
+              <h3 class="tab-card__name">{t.name}</h3>
+              <p class="tab-card__text">{t.text}</p>
+            </li>
+          ))
+        }
+      </Carousel>
+    </div>
+  </section>
+
+  <!-- 4. Derinlemesine -->
+  <div class="dives">
+    {
+      c.deepDives.map((d, i) => {
+        const Mock = mocks[d.mock];
+        return (
+          <section class="section dive" id={d.id} aria-labelledby={`${d.id}-t`}>
+            <div class:list={['container', 'split', { 'split--flip': i % 2 === 1 }]}>
+              <div class="split__copy" data-reveal>
+                <p class="label">{d.tab}</p>
+                <h2 class="h2" id={`${d.id}-t`}>{d.title}</h2>
+                <p class="lead">{d.text}</p>
+                <ul class="plus-list plus-list--compact" role="list">
+                  {d.points.map((p) => <li><span>{p}</span></li>)}
+                </ul>
+                {d.note && <p class="fine dive__note">{d.note}</p>}
+              </div>
+              <div class="split__visual">
+                <Mock />
+                {!d.note && <p class="sample-note">Örnek veri</p>}
+              </div>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+
+  <!-- 5. Sosyal -->
+  <section class="section" id="sosyal" aria-labelledby="sosyal-title">
+    <div class="container">
+      <div class="social-band">
+        <div class="split">
+          <div class="split__copy" data-reveal>
+            <p class="label">{c.social.label}</p>
+            <h2 class="h2" id="sosyal-title">{c.social.title}</h2>
+            <p class="lead">{c.social.text}</p>
+          </div>
+          <div class="split__visual">
+            <SocialMock />
+            <p class="sample-note">Örnek veri</p>
+          </div>
+        </div>
+        <ul class="feature-grid" role="list">
+          {c.social.items.map((it) => <li><h3>{it.t}</h3><p>{it.d}</p></li>)}
+        </ul>
+        <p class="social-band__privacy">{c.social.privacy}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Başarımlar ve widget -->
+  <section class="section" id="dahasi" aria-labelledby="dahasi-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 class="h2" id="dahasi-title">Küçük ama her gün işine yarayan şeyler.</h2>
+      </div>
+      <ul class="extras" role="list">
+        {
+          c.extras.map((e) => (
+            <li class:list={['extra', { 'extra--widget': e.widget }]}>
+              <h3 class="h3">{e.t}</h3>
+              <p class="muted">{e.d}</p>
+              {e.widget && (
+                <div class="extra__widget">
+                  <WidgetMock />
+                  <p class="sample-note">{e.note}</p>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    gallery.length >= 3 && (
+      <section class="section" id="ekranlar" aria-labelledby="ekranlar-title">
+        <div class="container">
+          <div class="section-head">
+            <h2 class="h2" id="ekranlar-title">Uygulamadan ekranlar</h2>
+          </div>
+          <Carousel count={gallery.length} label="Uygulama ekran görüntüleri" columns={4}>
+            {gallery.map((s) => (
+              <li class="shot">
+                <DeviceFrame screen={s} width={240} />
+                <p class="shot__cap">{screens[s].label}</p>
+              </li>
+            ))}
+          </Carousel>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 7. Ücretsiz ve Premium -->
+  <section class="section" id="premium" aria-labelledby="premium-title">
+    <div class="container container-narrow">
+      <div class="section-head">
+        <p class="label">Planlar</p>
+        <h2 class="h2" id="premium-title">Ücretsiz başla, hazır olduğunda Premium’a geç.</h2>
+        <p class="lead">Sosyal ve Hedef Belirleme ücretsiz. Takibin geri kalanı Premium ile açılır. Aylık planı 3 gün ücretsiz deneyebilirsin.</p>
+      </div>
+      <PlanTable rows={c.plans} />
+      <p class="fine plans-foot">Fiyatlar uygulama mağazalarda yayına çıktığında netleşecek. Abonelikler Google Play ve App Store üzerinden yönetilir.</p>
+    </div>
+  </section>
+
+  <!-- 8. SSS -->
+  <section class="section" id="sss" aria-labelledby="sss-title">
+    <div class="container container-narrow">
+      <div class="section-head">
+        <h2 class="h2" id="sss-title">Sık sorulanlar</h2>
+      </div>
+      <Faq items={c.faq} />
+    </div>
+  </section>
+
+  <!-- 9. Bekleme listesi -->
+  <section class="section">
+    <div class="container">
+      <WaitlistForm product={product.slug} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .p-hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-7) var(--section-y);
+  }
+
+  .p-hero__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .p-hero__copy {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .p-hero__title {
+    max-width: 14ch;
+  }
+
+  .p-hero__visual {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: end;
+    width: 100%;
+    max-width: 30rem;
+  }
+
+  .p-hero__visual :global(.today) {
+    width: 100%;
+    rotate: -1.5deg;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .split__copy {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .split__visual {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    width: 100%;
+    max-width: 28rem;
+    margin-inline: auto;
+  }
+
+  .split__visual > :global(.mock) {
+    width: 100%;
+  }
+
+  .today-sec {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .today-points {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .today-points li {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+  }
+
+  .today-points h3 {
+    font-size: var(--text-md);
+  }
+
+  .today-points p {
+    color: var(--text-2);
+  }
+
+  .today-foot {
+    max-width: var(--measure);
+  }
+
+  .plus-list {
+    display: grid;
+    gap: var(--space-4);
+    margin-block: var(--space-2);
+    list-style: none;
+  }
+
+  .plus-list li {
+    position: relative;
+    display: grid;
+    gap: 0.125rem;
+    padding-left: 1.75rem;
+  }
+
+  .plus-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 12px;
+    height: 12px;
+    background:
+      linear-gradient(var(--accent-text), var(--accent-text)) center / 100% 2px no-repeat,
+      linear-gradient(var(--accent-text), var(--accent-text)) center / 2px 100% no-repeat;
+  }
+
+  .plus-list span {
+    color: var(--text-2);
+  }
+
+  .plus-list--compact {
+    gap: var(--space-2);
+  }
+
+  .plus-list--compact span {
+    color: var(--text);
+  }
+
+  .dive__note {
+    max-width: 34rem;
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--emerald-500);
+    background: rgb(16 185 129 / 0.06);
+    border-radius: 0 10px 10px 0;
+    color: var(--text-2);
+  }
+
+  /* Sekme kartları */
+  .tab-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--c);
+  }
+
+  .tab-card__n {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: var(--space-2);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--c) 18%, transparent);
+    color: color-mix(in srgb, var(--c) 65%, white);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .tab-card__name {
+    font-size: var(--text-lg);
+  }
+
+  .tab-card__text {
+    color: var(--text-2);
+  }
+
+  /* Sosyal */
+  .social-band {
+    display: grid;
+    gap: var(--space-7);
+    padding: var(--space-7) var(--space-5);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(50rem 24rem at 100% 0%, rgb(45 212 191 / 0.12), transparent 70%),
+      radial-gradient(40rem 20rem at 0% 100%, rgb(139 92 246 / 0.14), transparent 70%),
+      var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .feature-grid {
+    display: grid;
+    gap: var(--space-5) var(--space-6);
+    list-style: none;
+  }
+
+  .feature-grid li {
+    display: grid;
+    gap: var(--space-1);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .feature-grid h3 {
+    font-size: var(--text-md);
+  }
+
+  .feature-grid p {
+    color: var(--text-2);
+  }
+
+  .social-band__privacy {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  /* Ekstralar */
+  .extras {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .extra {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+  }
+
+  .extra__widget {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    max-width: 22rem;
+  }
+
+  .shot {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+  }
+
+  .shot__cap {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .plans-foot {
+    margin-top: var(--space-4);
+  }
+
+  @media (min-width: 48rem) {
+    .today-points {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .social-band {
+      padding: var(--space-8);
+    }
+
+    .extras {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .extra--widget {
+      grid-row: span 2;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .p-hero {
+      padding-top: var(--space-9);
+    }
+
+    .p-hero__grid {
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    .p-hero__title {
+      max-width: 16ch;
+      font-size: var(--text-3xl);
+    }
+
+    .today-points--wide {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+
+    .split--flip .split__copy {
+      order: 2;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dive + .dive {
+      padding-top: 0;
+    }
+  }
+</style>

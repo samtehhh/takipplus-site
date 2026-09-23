@@ -1,0 +1,105 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  track?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'primary', size = 'md', type = 'button', track, class: cls, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, cls]}
+  href={href}
+  type={href ? undefined : type}
+  data-track={track}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style is:global>
+  .btn {
+    --btn-h: 48px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: var(--btn-h);
+    padding: 0 1.375rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      transform var(--dur-1) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .btn--lg {
+    --btn-h: 56px;
+    padding: 0 1.75rem;
+    font-size: 1.0625rem;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn--primary {
+    color: #fff;
+    background: var(--grad-primary);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.18) inset,
+      var(--glow-accent);
+  }
+
+  .btn--secondary {
+    color: var(--text);
+    background: rgb(148 163 184 / 0.08);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+  }
+
+  .btn--ghost {
+    color: var(--text);
+    background: transparent;
+    padding-inline: 0.75rem;
+  }
+
+  @media (hover: hover) {
+    .btn--primary:hover {
+      box-shadow:
+        0 1px 0 rgb(255 255 255 / 0.22) inset,
+        0 16px 44px -12px color-mix(in srgb, var(--accent) 75%, transparent);
+    }
+
+    .btn--secondary:hover {
+      background: rgb(148 163 184 / 0.14);
+    }
+
+    .btn--ghost:hover {
+      background: rgb(148 163 184 / 0.08);
+    }
+  }
+
+  .btn[disabled],
+  .btn[aria-disabled='true'] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+</style>

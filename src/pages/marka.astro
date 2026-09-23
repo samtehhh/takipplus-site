@@ -1,0 +1,431 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import { contactEmail } from '../config/site';
+import { products } from '../data/products';
+
+const logos = [
+  { name: 'Sembol', file: 'takipplus-symbol', bg: 'dark', svg: true, png: 'takipplus-symbol-1024.png', note: 'Uygulama ikonu biçimi. Her zeminde kullanılabilir.' },
+  { name: 'Yatay logo, koyu zemin', file: 'takipplus-horizontal-on-dark', bg: 'dark', svg: true, png: 'takipplus-horizontal-on-dark.png' },
+  { name: 'Yatay logo, açık zemin', file: 'takipplus-horizontal-on-light', bg: 'light', svg: true, png: 'takipplus-horizontal-on-light.png' },
+  { name: 'İşaret, koyu zemin', file: 'takipplus-mark-on-dark', bg: 'dark', svg: true },
+  { name: 'İşaret, açık zemin', file: 'takipplus-mark-on-light', bg: 'light', svg: true },
+  { name: 'Yazı logo, koyu zemin', file: 'takipplus-wordmark-on-dark', bg: 'dark', svg: true },
+  { name: 'Yazı logo, açık zemin', file: 'takipplus-wordmark-on-light', bg: 'light', svg: true },
+];
+
+const colors = [
+  { group: 'Marka', items: [
+    { n: 'Electric Violet', hex: '#8B5CF6', role: 'Birincil renk, Takip+ YKS vurgusu' },
+    { n: 'Violet Deep', hex: '#6D28D9', role: 'Birincil gradyan sonu' },
+    { n: 'Turkuaz', hex: '#2DD4BF', role: 'İkincil renk' },
+  ]},
+  { group: 'Anlamsal', items: [
+    { n: 'Başarı', hex: '#10B981', role: 'Tamamlandı, artış' },
+    { n: 'Uyarı', hex: '#F59E0B', role: 'Dikkat, tekrar zamanı' },
+    { n: 'Hata', hex: '#EF4444', role: 'Hata, yanlış' },
+  ]},
+  { group: 'Nötr', items: [
+    { n: 'Arka plan', hex: '#0F172A', role: 'Sayfa zemini' },
+    { n: 'Yüzey', hex: '#141C2E', role: 'Bölümler, paneller' },
+    { n: 'Kart', hex: '#232B44', role: 'Kart gradyanı başı (→ #1A2036)' },
+    { n: 'Metin', hex: '#F8FAFC', role: 'Birincil metin' },
+    { n: 'İkincil metin', hex: '#94A3B8', role: 'Açıklamalar' },
+    { n: 'İkon zemini', hex: '#0A0A1A', role: 'Uygulama ikonu arka planı' },
+  ]},
+];
+
+const boilerplate =
+  'Takip+, sınava hazırlanan öğrenciler için çalışma ve takip uygulamaları geliştiren bağımsız bir Türk girişimidir. İlk ürünü Takip+ YKS; konu takibi, deneme ve net analizi, Optik Çözüm, hedef belirleme, çalışma planı ve sosyal özellikleri tek uygulamada toplar. Takip+ 2026’da Samet Öndeş tarafından kuruldu.';
+---
+
+<Base
+  title="Marka kiti"
+  description="Takip+ logoları, renkleri, yazı tipleri ve kısa marka metni. SVG ve PNG dosyalarını indir, markayı doğru kullan."
+  path="/marka"
+  ogImage="marka"
+  breadcrumbs={[{ name: 'Marka kiti', path: '/marka' }]}
+>
+  <section class="kit-hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container kit-hero__inner">
+      <p class="label">Basın ve marka kiti</p>
+      <h1 class="display kit-hero__title">Takip+ marka kiti</h1>
+      <p class="lead">Logolar, renkler, yazı tipleri ve kısa marka metni. Takip+ hakkında yazarken ya da bizi tanıtırken bu sayfadaki dosyaları kullanabilirsin.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="oz-title">
+    <div class="container kit-split">
+      <div>
+        <h2 class="h2" id="oz-title">Marka özü</h2>
+      </div>
+      <div class="kit-copy">
+        <p class="kit-promise">Kendi ilerlemeni sen yönet.</p>
+        <p class="muted">Değerlerimiz: <strong>netlik</strong>, <strong>disiplin</strong>, <strong>topluluk</strong> ve <strong>sahiplik</strong>. Ses tonumuz samimi, motive edici ve abartısız: öğrenciyle “sen” diye konuşur, yapmadığımız bir şeyi vaat etmeyiz.</p>
+        <h3 class="h3">Kısa marka metni</h3>
+        <blockquote class="kit-quote"><p>{boilerplate}</p></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="logo-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2" id="logo-title">Logolar</h2>
+        <p class="lead">Tüm logolar vektörel (SVG). Sosyal medya ve sunumlar için PNG sürümleri de var.</p>
+      </div>
+      <ul class="logos" role="list">
+        {
+          logos.map((l) => (
+            <li class="logo-card">
+              <div class:list={['logo-card__stage', `logo-card__stage--${l.bg}`]}>
+                <img src={`/brand/${l.file}.svg`} alt={`Takip+ ${l.name.toLowerCase()}`} loading="lazy" width="240" height="80" />
+              </div>
+              <div class="logo-card__meta">
+                <p class="logo-card__name">{l.name}</p>
+                {l.note && <p class="fine">{l.note}</p>}
+                <div class="logo-card__dl">
+                  <a href={`/brand/${l.file}.svg`} download>SVG indir</a>
+                  {l.png && <a href={`/brand/${l.png}`} download>PNG indir</a>}
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="rules">
+        <div class="rule rule--do">
+          <h3 class="h3">Böyle kullan</h3>
+          <ul>
+            <li>Logonun çevresinde en az “+” işaretinin yüksekliği kadar boşluk bırak.</li>
+            <li>Koyu zeminde koyu zemin, açık zeminde açık zemin sürümünü kullan.</li>
+            <li>Yatay logoyu en az 96 px, sembolü en az 24 px genişlikte kullan.</li>
+            <li>Ürün adını “Takip+ YKS” biçiminde, artı işaretiyle ve bitişik yaz.</li>
+          </ul>
+        </div>
+        <div class="rule rule--dont">
+          <h3 class="h3">Böyle kullanma</h3>
+          <ul>
+            <li>Logonun renklerini, oranlarını ya da harf aralığını değiştirme.</li>
+            <li>Logoya gölge, parlama ya da kontur ekleme.</li>
+            <li>Kalabalık fotoğrafların ya da düşük kontrastlı zeminlerin üstüne koyma.</li>
+            <li>“Takip Plus”, “TakipPlus” ya da “Takip +” yazma.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="renk-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2" id="renk-title">Renkler</h2>
+        <p class="lead">Renkler uygulamanın tema dosyasıyla birebir aynı. Her Takip+ ürününün kendi vurgu rengi olur; Takip+ YKS’nin rengi Electric Violet.</p>
+      </div>
+      {
+        colors.map((g) => (
+          <div class="swatch-group">
+            <h3 class="swatch-group__t">{g.group}</h3>
+            <ul class="swatches" role="list">
+              {g.items.map((c) => (
+                <li class="swatch">
+                  <span class="swatch__chip" style={`background:${c.hex}`} />
+                  <span class="swatch__n">{c.n}</span>
+                  <span class="swatch__hex num">{c.hex}</span>
+                  <span class="swatch__role">{c.role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <div class="swatch-group">
+        <h3 class="swatch-group__t">Ürün vurguları</h3>
+        <ul class="swatches" role="list">
+          {products.map((p) => (
+            <li class="swatch">
+              <span class="swatch__chip" style={`background:linear-gradient(135deg, ${p.accent}, ${p.accentDeep})`} />
+              <span class="swatch__n">{p.name}</span>
+              <span class="swatch__hex num">{p.accent}</span>
+              <span class="swatch__role">Ürün vurgusu</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="font-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2" id="font-title">Yazı tipleri</h2>
+        <p class="lead">Üçü de ücretsiz (SIL Open Font License) ve Türkçe karakterlerin tamamını destekler.</p>
+      </div>
+      <ul class="fonts" role="list">
+        <li class="font-card">
+          <p class="font-card__sample" style="font-family:var(--font-display);font-weight:800">Ağ Şİ çö</p>
+          <p class="font-card__name">Outfit</p>
+          <p class="fine">Başlıklar ve logo. Logo: 800 ağırlık, hafif negatif harf aralığı.</p>
+        </li>
+        <li class="font-card">
+          <p class="font-card__sample" style="font-family:var(--font-body);font-weight:500">Ağ Şİ çö</p>
+          <p class="font-card__name">Inter</p>
+          <p class="fine">Gövde metni ve arayüz.</p>
+        </li>
+        <li class="font-card">
+          <p class="font-card__sample num" style="font-weight:500">86,25</p>
+          <p class="font-card__name">JetBrains Mono</p>
+          <p class="fine">Rakamlar, süreler ve kod.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container kit-contact">
+      <Logo size={40} id="kit" />
+      <p class="muted">Basın ve iş birliği talepleri için: <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kit-hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .kit-hero__inner {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .kit-hero__title {
+    font-size: var(--text-3xl);
+  }
+
+  .kit-split {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .kit-copy {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 40rem;
+  }
+
+  .kit-copy strong {
+    color: var(--text);
+  }
+
+  .kit-promise {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .kit-quote {
+    margin: 0;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--slate-300);
+  }
+
+  .logos {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .logo-card {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .logo-card__stage {
+    display: grid;
+    place-items: center;
+    height: 160px;
+    padding: var(--space-5);
+  }
+
+  .logo-card__stage img {
+    max-height: 72px;
+    width: auto;
+  }
+
+  .logo-card__stage--dark {
+    background: var(--bg);
+  }
+
+  .logo-card__stage--light {
+    background: #f8fafc;
+  }
+
+  .logo-card__meta {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-4) var(--space-3);
+  }
+
+  .logo-card__name {
+    font-weight: 600;
+  }
+
+  .logo-card__dl {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .logo-card__dl a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--violet-300);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .rules {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .rule {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+  }
+
+  .rule ul {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-left: 1.25rem;
+    color: var(--text-2);
+  }
+
+  .rule--do {
+    border-color: rgb(16 185 129 / 0.35);
+  }
+
+  .rule--dont {
+    border-color: rgb(239 68 68 / 0.35);
+  }
+
+  .swatch-group + .swatch-group {
+    margin-top: var(--space-6);
+  }
+
+  .swatch-group__t {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-md);
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .swatch {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .swatch__chip {
+    height: 72px;
+    margin-bottom: var(--space-2);
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+  }
+
+  .swatch__n {
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .swatch__hex {
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .swatch__role {
+    font-size: var(--text-xs);
+    color: var(--text-3);
+  }
+
+  .fonts {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .font-card {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+  }
+
+  .font-card__sample {
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: var(--space-3);
+  }
+
+  .font-card__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .kit-contact {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .kit-contact a {
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 48rem) {
+    .logos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rules {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .fonts {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .kit-split {
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-9);
+    }
+
+    .logos {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+// Çalışma sayacı (Pomodoro). Örnek değer.
+const r = 88;
+const c = 2 * Math.PI * r;
+const pct = 0.62;
+---
+
+<div class="mock timer" data-animate>
+  <div class="timer__modes" aria-hidden="true">
+    <span class="on">Pomodoro</span><span>Kronometre</span><span>Geri sayım</span>
+  </div>
+  <div class="timer__ring">
+    <svg viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r={r} class="timer__track"></circle>
+      <circle cx="100" cy="100" r={r} class="timer__prog" style={`stroke-dasharray:${c};stroke-dashoffset:${c * (1 - pct)}`}></circle>
+    </svg>
+    <div class="timer__center">
+      <span class="timer__time num">15:36</span>
+      <span class="timer__sub">AYT Matematik</span>
+    </div>
+  </div>
+  <p class="timer__session"><span class="num">3/4</span> seans tamamlandı</p>
+</div>
+
+<style is:global>
+  .timer {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .timer__modes {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 14px;
+    background: rgb(10 10 26 / 0.4);
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .timer__modes span {
+    padding: 0.375rem 0.625rem;
+    border-radius: 10px;
+  }
+
+  .timer__modes .on {
+    background: rgb(245 158 11 / 0.16);
+    color: var(--amber-500);
+    font-weight: 600;
+  }
+
+  .timer__ring {
+    position: relative;
+    width: min(13rem, 100%);
+    aspect-ratio: 1;
+  }
+
+  .timer__ring svg {
+    width: 100%;
+    height: 100%;
+    rotate: -90deg;
+  }
+
+  .timer__track {
+    fill: none;
+    stroke: rgb(148 163 184 / 0.14);
+    stroke-width: 10;
+  }
+
+  .timer__prog {
+    fill: none;
+    stroke: var(--amber-500);
+    stroke-width: 10;
+    stroke-linecap: round;
+  }
+
+  .timer__center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+  }
+
+  .timer__time {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+
+  .timer__sub {
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .timer__session {
+    font-size: 0.875rem;
+    color: var(--text-2);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .timer:not(.is-in) .timer__ring svg {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+
+    .motion .timer .timer__ring svg {
+      transition:
+        opacity 700ms var(--ease-out),
+        transform 900ms var(--ease-out);
+    }
+  }
+</style>

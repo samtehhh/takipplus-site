@@ -1,0 +1,45 @@
+---
+import { markSvg } from '../lib/mark';
+
+interface Props {
+  size?: number;
+  id?: string;
+  wordmark?: boolean;
+  class?: string;
+}
+
+const { size = 32, id = 'logo', wordmark = true, class: cls } = Astro.props;
+const svg = markSvg({ id }).replace('role="img" aria-label="Takip+"', 'aria-hidden="true" focusable="false"');
+---
+
+<span class:list={['logo', cls]} style={`--logo-size:${size}px`}>
+  <span class="logo__mark" set:html={svg} />
+  {wordmark && <span class="logo__word">Takip+</span>}
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .logo__mark {
+    width: var(--logo-size);
+    height: var(--logo-size);
+    flex: none;
+  }
+
+  .logo__mark :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .logo__word {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: calc(var(--logo-size) * 0.66);
+    letter-spacing: var(--tracking-wordmark);
+    line-height: 1;
+  }
+</style>

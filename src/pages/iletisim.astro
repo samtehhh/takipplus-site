@@ -1,0 +1,202 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, contactEmail } from '../config/site';
+
+const socials = [
+  ['instagram', 'Instagram'],
+  ['x', 'X'],
+  ['tiktok', 'TikTok'],
+  ['youtube', 'YouTube'],
+  ['linkedin', 'LinkedIn'],
+]
+  .map(([k, label]) => ({ label, href: site.social[k as keyof typeof site.social] }))
+  .filter((s) => s.href);
+
+const topics = [
+  { t: 'Uygulama desteği', d: 'Bir özellik beklediğin gibi çalışmıyorsa ya da bir hata bulduysan.', subject: 'Destek' },
+  { t: 'Öneri ve geri bildirim', d: 'Takip+’ta görmek istediğin bir şey ya da yeni bir sınav için fikir.', subject: 'Öneri' },
+  { t: 'Gizlilik ve KVKK', d: 'Verilerinle ilgili bilgi, düzeltme ya da silme talepleri.', subject: 'KVKK Başvurusu' },
+  { t: 'Basın ve iş birliği', d: 'Takip+ hakkında yazmak ya da birlikte bir şey yapmak için.', subject: 'Basın' },
+];
+const mail = (s: string) => `mailto:${contactEmail}?subject=${encodeURIComponent(s)}`;
+---
+
+<Base
+  title="İletişim"
+  description="Takip+ ekibine ulaş: uygulama desteği, öneriler, KVKK talepleri, basın ve iş birliği için e-posta ve sosyal medya kanalları."
+  path="/iletisim"
+  ogImage="iletisim"
+  breadcrumbs={[{ name: 'İletişim', path: '/iletisim' }]}
+>
+  <section class="contact-hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container container-narrow contact-hero__inner">
+      <p class="label">İletişim</p>
+      <h1 class="display contact-hero__title">Sorun, fikrin ya da önerin mi var?</h1>
+      <p class="lead">Bütün mesajları okuyoruz ve genellikle birkaç iş günü içinde yanıtlıyoruz.</p>
+      <a class="contact-mail" href={`mailto:${contactEmail}`}>{contactEmail}</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <ul class="topics" role="list">
+        {
+          topics.map((t) => (
+            <li>
+              <a class="topic" href={mail(t.subject)}>
+                <span class="topic__t">{t.t}</span>
+                <span class="topic__d">{t.d}</span>
+                <span class="topic__cta">E-posta gönder</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="contact-notes">
+        <div>
+          <h2 class="h3">Uygulamanın içinden</h2>
+          <p class="muted">Takip+ YKS’deki “Bize Bildir” formu mesajını doğrudan bize iletir.</p>
+        </div>
+        <div>
+          <h2 class="h3">Hesap silme</h2>
+          <p class="muted">Adımlar ve silinen veriler <a href="/hesap-silme">Hesap silme</a> sayfasında.</p>
+        </div>
+        <div>
+          <h2 class="h3">Sosyal medya</h2>
+          {
+            socials.length ? (
+              <ul class="socials" role="list">
+                {socials.map((s) => (
+                  <li>
+                    <a href={s.href} rel="noopener" target="_blank">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="muted">Hesaplarımız yakında burada olacak.</p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .contact-hero__inner {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .contact-hero__title {
+    font-size: var(--text-3xl);
+  }
+
+  .contact-mail {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--violet-300);
+    overflow-wrap: anywhere;
+  }
+
+  .topics {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .topic {
+    display: grid;
+    gap: var(--space-1);
+    height: 100%;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--grad-card);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      transform var(--dur-1) var(--ease-out);
+  }
+
+  .topic:active {
+    transform: scale(0.99);
+  }
+
+  .topic__t {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-md);
+  }
+
+  .topic__d {
+    color: var(--text-2);
+  }
+
+  .topic__cta {
+    margin-top: var(--space-2);
+    color: var(--violet-300);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .contact-notes {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+  }
+
+  .contact-notes > div {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+  }
+
+  .contact-notes a {
+    color: var(--text);
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .socials a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  @media (hover: hover) {
+    .topic:hover {
+      border-color: rgb(139 92 246 / 0.45);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .topics {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .contact-notes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

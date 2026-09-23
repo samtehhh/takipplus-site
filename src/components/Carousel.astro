@@ -1,0 +1,107 @@
+---
+/**
+ * Telefonda yatay kaydırılan, scroll-snap'li liste; bir sonraki kartın bir
+ * kısmı görünür ve altında sayfa göstergesi olur. Geniş ekranda ızgaraya
+ * dönüşür. Çocuklar <li> olmalı.
+ */
+interface Props {
+  count: number;
+  label: string;
+  /** Geniş ekrandaki sütun sayısı */
+  columns?: number;
+}
+const { count, label, columns = 3 } = Astro.props;
+---
+
+<div class="carousel" data-carousel style={`--cols:${columns}`}>
+  <ul class="carousel__track" role="list" aria-label={label} tabindex="0">
+    <slot />
+  </ul>
+  <div class="carousel__dots" aria-hidden="true">
+    {Array.from({ length: count }, (_, i) => <span class:list={['carousel__dot', { 'is-active': i === 0 }]} />)}
+  </div>
+</div>
+
+<style is:global>
+  .carousel {
+    margin-inline: calc(var(--gutter) * -1);
+  }
+
+  .carousel__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(82%, 20rem);
+    gap: var(--space-3);
+    padding: 0.25rem var(--gutter) var(--space-2);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    list-style: none;
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel__track:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .carousel__track > li {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+
+  .carousel__dots {
+    display: none;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--space-4);
+  }
+
+  .js .carousel__dots {
+    display: flex;
+  }
+
+  .carousel__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--line-strong);
+    opacity: 0.6;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      opacity var(--dur-2) var(--ease-out);
+  }
+
+  .carousel__dot.is-active {
+    background: var(--violet-400);
+    opacity: 1;
+    transform: scale(1.5);
+  }
+
+  @media (min-width: 48rem) {
+    .carousel {
+      margin-inline: 0;
+    }
+
+    .carousel__track {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 0;
+      overflow: visible;
+    }
+
+    .js .carousel__dots {
+      display: none;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .carousel__track {
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    }
+  }
+</style>

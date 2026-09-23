@@ -1,0 +1,135 @@
+/*
+ * Takip+ tasarım token'ları.
+ * Kaynak: uygulamanın lib/theme.dart dosyası. Değişiklik önerileri BRAND.md'de.
+ * Bu dosya sitedeki tüm renk, tipografi, boşluk, köşe, gölge ve hareket
+ * değerlerinin tek kaynağıdır.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- Renk: marka ---- */
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa; /* koyu zeminde violet metin (6.5:1) */
+  --violet-500: #8b5cf6; /* Electric Violet — birincil */
+  --violet-600: #7c3aed; /* web butonları: beyaz metinle AA */
+  --violet-700: #6d28d9; /* birincil gradyan sonu */
+  --teal-400: #2dd4bf; /* ikincil */
+  --emerald-500: #10b981; /* başarı */
+  --amber-500: #f59e0b; /* uyarı */
+  --red-500: #ef4444; /* hata */
+  --red-400: #f87171; /* koyu zeminde hata metni */
+
+  /* ---- Renk: nötr ---- */
+  --ink-950: #0a0a1a; /* uygulama ikonu zemini */
+  --ink-900: #0f172a; /* arka plan */
+  --ink-850: #141c2e; /* yüzey */
+  --ink-800: #1a2036; /* kart gradyanı sonu */
+  --ink-750: #232b44; /* kart gradyanı başı */
+  --ink-600: #334155;
+  --ink-500: #475569;
+  --slate-400: #94a3b8; /* ikincil metin */
+  --slate-300: #cbd5e1;
+  --white: #f8fafc; /* metin */
+
+  /* ---- Renk: anlamsal ---- */
+  --bg: var(--ink-900);
+  --surface: var(--ink-850);
+  --card-from: var(--ink-750);
+  --card-to: var(--ink-800);
+  --text: var(--white);
+  --text-2: var(--slate-400);
+  --text-3: #7c8aa0; /* yardımcı küçük metin, 4.6:1 */
+  --line: rgb(148 163 184 / 0.14);
+  --line-strong: rgb(148 163 184 / 0.26);
+  --success: var(--emerald-500);
+  --warning: var(--amber-500);
+  --danger: var(--red-500);
+  --focus: var(--teal-400);
+
+  /* Ürün vurgusu: ürün sayfaları bunu kendi rengiyle ezer. */
+  --accent: var(--violet-500);
+  --accent-deep: var(--violet-700);
+  --accent-text: var(--violet-400);
+
+  --grad-primary: linear-gradient(135deg, var(--violet-600), var(--violet-700));
+  --grad-card: linear-gradient(160deg, var(--card-from), var(--card-to));
+
+  /* Günün Odağı dörtlüsü — uygulamadaki hedef kartlarının renkleri */
+  --metric-saat: var(--violet-500);
+  --metric-soru: var(--teal-400);
+  --metric-video: var(--amber-500);
+  --metric-konu: var(--red-500);
+
+  /* ---- Tipografi ---- */
+  --font-display: 'Outfit Variable', 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Akışkan ölçek: 320px → 1440px */
+  --text-xs: 0.8125rem; /* 13 */
+  --text-sm: 0.9375rem; /* 15 */
+  --text-base: 1rem; /* 16 — gövde metni asla bunun altına inmez */
+  --text-md: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-lg: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
+  --text-2xl: clamp(1.875rem, 1.5rem + 1.9vw, 3rem);
+  --text-3xl: clamp(2.375rem, 1.75rem + 3.2vw, 4.5rem);
+  --text-4xl: clamp(2.625rem, 1.8rem + 4.4vw, 5.75rem);
+
+  --leading-tight: 1.04;
+  --leading-snug: 1.2;
+  --leading-body: 1.6;
+  --tracking-display: -0.025em;
+  --tracking-wordmark: -0.0125em; /* Flutter'daki -0.2 @16px */
+  --measure: 38rem; /* ~70 karakter */
+
+  /* ---- Boşluk (4/8 tabanlı) ---- */
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.5rem; /* 24 */
+  --space-6: 2rem; /* 32 */
+  --space-7: 3rem; /* 48 */
+  --space-8: 4rem; /* 64 */
+  --space-9: 6rem; /* 96 */
+  --space-10: 8rem; /* 128 */
+  --section-y: clamp(4rem, 3rem + 5vw, 8rem);
+  --gutter: max(1.25rem, env(safe-area-inset-left), env(safe-area-inset-right));
+  --container: 72rem;
+
+  /* ---- Köşe ---- */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px; /* butonlar ve inputlar — uygulamayla aynı */
+  --radius-lg: 20px; /* küçük kartlar */
+  --radius-xl: 28px; /* büyük kartlar — uygulamayla aynı */
+  --radius-device: 46px;
+  --radius-pill: 999px;
+
+  /* ---- Çizgi ---- */
+  --stroke-hair: 1px;
+  --stroke-base: 1.5px;
+  --stroke-bold: 2px;
+
+  /* ---- Derinlik ---- */
+  --shadow-1: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 1px 2px rgb(2 6 23 / 0.4);
+  --shadow-2: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 12px 32px -12px rgb(2 6 23 / 0.7);
+  --shadow-3: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 32px 64px -24px rgb(2 6 23 / 0.85);
+  --glow-accent: 0 12px 40px -12px color-mix(in srgb, var(--accent) 55%, transparent);
+
+  /* ---- Hareket ---- */
+  --dur-1: 120ms; /* dokunma geri bildirimi */
+  --dur-2: 200ms; /* hover, küçük durum değişimi */
+  --dur-3: 360ms; /* açılma/kapanma */
+  --dur-4: 900ms; /* imza animasyonları */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* ---- Katman ---- */
+  --z-header: 40;
+  --z-sticky: 45;
+  --z-menu: 60;
+}

@@ -1,0 +1,146 @@
+---
+/**
+ * "Son 30 Gün" aktivite haritası — uygulamanın ana ekranındaki kartla aynı
+ * yapı (Yok / Az / Orta / Çok). Desen örnektir.
+ */
+const levels = [0, 1, 2, 1, 0, 2, 1, 2, 3, 2, 1, 0, 2, 3, 3, 2, 2, 1, 3, 3, 2, 3, 3, 1, 2, 3, 3, 2, 3, 3];
+const legend = ['Yok', 'Az', 'Orta', 'Çok'];
+---
+
+<div class="mock amap" data-animate>
+  <div class="amap__head">
+    <div>
+      <p class="amap__kicker">Aktivite haritası</p>
+      <p class="amap__title">Son 30 gün</p>
+    </div>
+    <div class="amap__goal">
+      <span>Günlük hedef</span>
+      <strong>6 saat</strong>
+    </div>
+  </div>
+  <ol class="amap__grid" role="list" aria-label="Son 30 günün çalışma yoğunluğu, örnek veri">
+    {
+      levels.map((l, i) => (
+        <li class={`amap__cell amap__cell--${l}`} style={`--i:${i}`}>
+          <span class="sr-only">{`${i + 1}. gün: ${legend[l]}`}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <ul class="amap__legend" role="list" aria-hidden="true">
+    {legend.map((l, i) => <li><span class={`amap__cell amap__cell--${i}`} />{l}</li>)}
+  </ul>
+</div>
+
+<style is:global>
+  .amap {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .amap__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .amap__kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--violet-400);
+  }
+
+  .amap__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .amap__goal {
+    display: grid;
+    gap: 0.125rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 14px;
+    background: rgb(139 92 246 / 0.16);
+    text-align: center;
+  }
+
+  .amap__goal span {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--violet-400);
+  }
+
+  .amap__goal strong {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+  }
+
+  .amap__grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 6px;
+    list-style: none;
+  }
+
+  .amap__cell {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 7px;
+    background: rgb(148 163 184 / 0.1);
+  }
+
+  .amap__cell--1 {
+    background: rgb(16 185 129 / 0.32);
+  }
+
+  .amap__cell--2 {
+    background: rgb(16 185 129 / 0.6);
+  }
+
+  .amap__cell--3 {
+    background: #34d399;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .amap:not(.is-in) .amap__grid .amap__cell:not(.amap__cell--0) {
+      opacity: 0.15;
+      transform: scale(0.6);
+    }
+
+    .motion .amap .amap__grid .amap__cell {
+      transition:
+        opacity 420ms var(--ease-out),
+        transform 420ms var(--ease-spring);
+      transition-delay: calc(var(--i) * 28ms);
+    }
+  }
+
+  .amap__legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .amap__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .amap__legend .amap__cell {
+    width: 12px;
+    border-radius: 4px;
+  }
+</style>

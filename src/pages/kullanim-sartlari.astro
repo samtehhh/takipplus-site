@@ -1,0 +1,134 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site, contactEmail, pricing } from '../config/site';
+
+const saving = Math.round((1 - pricing.untilExamMultiplier) * 100);
+const toc = [
+  { id: 'kapsam', label: 'Kapsam' },
+  { id: 'hesap', label: 'Hesap ve sorumluluklar' },
+  { id: 'kullanim', label: 'Kabul edilebilir kullanım' },
+  { id: 'icerik', label: 'Kullanıcı içeriği ve topluluk' },
+  { id: 'bildirme', label: 'Bildirme ve engelleme' },
+  { id: 'premium', label: 'Ücretsiz plan ve Premium' },
+  { id: 'hesaplamalar', label: 'Hesaplamalar ve veriler' },
+  { id: 'fikri', label: 'Fikri mülkiyet' },
+  { id: 'sorumluluk', label: 'Sorumluluğun sınırı' },
+  { id: 'fesih', label: 'Askıya alma, fesih ve silme' },
+  { id: 'degisiklik', label: 'Değişiklikler' },
+  { id: 'hukuk', label: 'Uygulanacak hukuk' },
+  { id: 'iletisim', label: 'İletişim' },
+];
+---
+
+<Legal
+  title="Kullanım Şartları"
+  description="Takip+ uygulamalarının kullanım şartları: hesap, topluluk kuralları, kullanıcı içeriği, Premium abonelikler ve sorumluluklar."
+  path="/kullanim-sartlari"
+  ogImage="kullanim-sartlari"
+  updated="2026-09-24"
+  toc={toc}
+>
+  <h2 id="kapsam">1. Kapsam</h2>
+  <p>
+    Bu şartlar, {site.founder} tarafından geliştirilen Takip+ uygulamalarının (şu an Takip+ YKS, “Uygulama”)
+    kullanımını düzenler. Hesap oluştururken bu şartları okuyup kabul edersin. Kişisel verilerinin işlenmesi bu
+    şartların değil, <a href="/gizlilik">Gizlilik Politikası</a> ve <a href="/kvkk-aydinlatma">KVKK Aydınlatma Metni</a>’nin
+    konusudur; bu şartları kabul etmen açık rıza verdiğin anlamına gelmez.
+  </p>
+
+  <h2 id="hesap">2. Hesap ve sorumluluklar</h2>
+  <ul>
+    <li>Uygulamaya yalnızca Google hesabınla giriş yapılır. Hesabının güvenliği ve hesabında yapılan işlemler senin sorumluluğundadır.</li>
+    <li>Profil bilgilerini doğru ve başkalarının haklarını ihlal etmeyecek şekilde girmelisin. Başka birinin kimliğine bürünen kullanıcı adları ve fotoğraflar kullanılamaz.</li>
+    <li>18 yaşından küçüksen Uygulamayı velinin bilgisi dahilinde kullanmalısın.</li>
+  </ul>
+
+  <h2 id="kullanim">3. Kabul edilebilir kullanım</h2>
+  <p>Uygulamayı kullanırken şunları yapmamayı kabul edersin:</p>
+  <ul>
+    <li>Yasa dışı, yanıltıcı ya da başkalarına zarar veren amaçlarla kullanmak,</li>
+    <li>Arkadaşlık, mesajlaşma, Global Sohbet, klan, düello ve Soru Paylaşımı üzerinden taciz, hakaret, tehdit, nefret söylemi, müstehcen içerik ya da spam göndermek,</li>
+    <li>Kişisel bilgileri (telefon, adres vb.) izinsiz paylaşmak,</li>
+    <li>Telif hakkıyla korunan içerikleri (örneğin yayınevlerinin soru kitaplarından) hak sahibinin izni olmadan toplu hâlde paylaşmak,</li>
+    <li>Sıralamaları ya da düello sonuçlarını hileyle değiştirmeye çalışmak,</li>
+    <li>Başkasının hesabına yetkisiz erişmek, Uygulamanın güvenliğini aşmaya çalışmak ya da kaynak kodunu tersine mühendislikle çözmek.</li>
+  </ul>
+
+  <h2 id="icerik">4. Kullanıcı içeriği ve topluluk</h2>
+  <p>
+    Profilinde, hikâyelerinde, mesajlarında, Global Sohbet’te, klan sohbetinde, herkese açık düellolarda ve Soru
+    Paylaşımı’nda paylaştığın içerik (fotoğraf, metin, yanıt) senindir ve ondan sen sorumlusun. İçeriğini
+    Uygulamada gösterebilmemiz için bize, yalnızca Uygulamanın işleyişiyle sınırlı, ücretsiz ve münhasır olmayan
+    bir kullanım izni vermiş olursun. İçeriğini sildiğinde bu izin sona erer.
+  </p>
+  <ul>
+    <li><strong>Hikâyeler</strong> paylaşımdan 24 saat sonra kaybolur.</li>
+    <li><strong>Global Sohbet ve Soru Paylaşımı</strong> herkese açıktır; burada paylaştığın içeriği tüm kullanıcılar görebilir.</li>
+    <li><strong>Herkese açık düellolar</strong> tüm kullanıcılara listelenir; katıldığında kullanıcı adın ve sonucun diğer katılımcılara görünür.</li>
+    <li><strong>Sıralamalarda</strong> kullanıcı adın ve haftalık çalışma süren görünür.</li>
+  </ul>
+  <p>Topluluk kurallarını ihlal eden içerikleri kaldırma ve ilgili hesabı kısıtlama hakkımız saklıdır.</p>
+
+  <h2 id="bildirme">5. Uygunsuz içeriği bildirme ve engelleme</h2>
+  <p>
+    Uygunsuz bir içerik ya da davranışla karşılaşırsan uygulamadaki “Bize Bildir” formuyla ya da
+    <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine yazarak bildirebilirsin. Bildirimleri inceler,
+    gerekirse içeriği kaldırır ve hesabı kısıtlarız. İstemediğin kullanıcıları engelleyebilir, engellediklerini
+    Gizlilik Ayarları’ndan yönetebilirsin.
+  </p>
+
+  <h2 id="premium">6. Ücretsiz plan ve Premium</h2>
+  <ul>
+    <li><strong>Ücretsiz plan:</strong> Sosyal ve Hedef Belirleme özelliklerini içerir.</li>
+    <li><strong>Premium:</strong> Ücretsiz plana ek olarak Konu Takibi, Deneme Takibi, Optik Çözüm ve puan hesaplama, Çalışma Planlama (Pomodoro, rutinler, ders programı) ile Yapamadıklarım ve aralıklı tekrar özelliklerini açar.</li>
+    <li><strong>Planlar:</strong> Haftalık, Aylık ve Sınava Kadar. Güncel fiyatlar satın alma ekranında gösterilir.</li>
+    <li><strong>Ücretsiz deneme:</strong> Yalnızca Aylık planda {pricing.monthlyTrialDays} günlük ücretsiz deneme vardır. Deneme bitmeden iptal etmezsen plan ücretli aboneliğe dönüşür. Haftalık ve Sınava Kadar planlarında deneme yoktur.</li>
+    <li><strong>Sınava Kadar:</strong> Fiyatı, satın alma anında sınava kalan ay sayısına göre hesaplanır (aylık plan fiyatının yaklaşık %{100 - saving}’i × kalan ay; aylık plana göre yaklaşık %{saving} tasarruf). Hesapta kullanılan sınav tarihi {new Date(pricing.examDate).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}’dir. Sınav ayına girildiğinde bu plan yeni satın almalar için kapanır; mevcut abonelikler etkilenmez.</li>
+    <li><strong>Yenileme ve iptal:</strong> Abonelikler, dönem sonunda iptal edilmedikçe otomatik yenilenir. İptal ve yönetim Google Play ya da App Store hesap ayarlarından yapılır.</li>
+    <li><strong>Ödeme ve iade:</strong> Ödemeler Google ve Apple tarafından alınır; iadeler ilgili mağazanın politikalarına tabidir. Tüketici mevzuatından doğan hakların saklıdır.</li>
+  </ul>
+
+  <h2 id="hesaplamalar">7. Hesaplamalar ve veriler</h2>
+  <p>
+    Net, puan ve sıralama hesapları, uygulamaya gömülü ve YÖK Atlas kaynaklı geçmiş yıl verilerine dayanan
+    tahminlerdir. Yol göstermek içindir; resmî ÖSYM sonuçlarının ya da YÖK verilerinin yerine geçmez ve kesinlik
+    garantisi vermez.
+  </p>
+
+  <h2 id="fikri">8. Fikri mülkiyet</h2>
+  <p>
+    Uygulamanın tasarımı, yazılımı, Takip+ adı ve logosu {site.founder}’e aittir. Uygulamayı kişisel kullanımın dışında
+    kopyalayamaz, dağıtamaz ya da üzerinde türev çalışma yapamazsın. Marka kullanımına ilişkin kurallar
+    <a href="/marka">Marka kiti</a> sayfasındadır.
+  </p>
+
+  <h2 id="sorumluluk">9. Sorumluluğun sınırı</h2>
+  <p>
+    Uygulamayı kesintisiz ve hatasız sunmak için çalışırız ancak bunu garanti edemeyiz. Kanunun izin verdiği
+    ölçüde, Uygulamanın kullanımından doğan dolaylı zararlardan sorumlu değiliz. Kasıt ve ağır ihmal hâlleri ile
+    tüketici mevzuatından doğan zorunlu sorumluluklar saklıdır.
+  </p>
+
+  <h2 id="fesih">10. Askıya alma, fesih ve hesap silme</h2>
+  <p>
+    Bu şartları ihlal ettiğini tespit edersek hesabını uyarabilir, kısıtlayabilir, askıya alabilir ya da
+    kapatabiliriz. <strong>Uygulamadan çıkış yapmak hesabını silmez;</strong> yalnızca o cihazdaki oturumu kapatır.
+    Hesabının ve verilerinin silinmesini istiyorsan <a href="/hesap-silme">Hesap silme</a> sayfasındaki adımları izle.
+    Aktif bir aboneliğin varsa, hesabını silmeden önce mağaza hesap ayarlarından iptal etmelisin.
+  </p>
+
+  <h2 id="degisiklik">11. Değişiklikler</h2>
+  <p>
+    Bu şartları zaman zaman güncelleyebiliriz. Önemli değişiklikleri yürürlüğe girmeden önce uygulama içinden
+    duyururuz. Değişiklikleri kabul etmiyorsan hesabını silebilirsin.
+  </p>
+
+  <h2 id="hukuk">12. Uygulanacak hukuk</h2>
+  <p>
+    Bu şartlar Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklarda, tüketici sıfatıyla sahip olduğun tüketici
+    hakem heyetine ve tüketici mahkemesine başvuru hakların saklıdır.
+  </p>
+
+  <h2 id="iletisim">13. İletişim</h2>
+  <p>Sorularını <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine iletebilirsin.</p>
+</Legal>

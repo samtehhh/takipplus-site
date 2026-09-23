@@ -1,0 +1,108 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { contactEmail } from '../config/site';
+
+const subject = encodeURIComponent('Hesap silme talebi');
+const body = encodeURIComponent('Merhaba,\n\nTakip+ hesabımın ve verilerimin silinmesini istiyorum.\n\nKullanıcı adım: \n\n');
+const mailto = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
+
+const toc = [
+  { id: 'adimlar', label: 'Adım adım hesap silme' },
+  { id: 'silinenler', label: 'Silinen veriler' },
+  { id: 'saklananlar', label: 'Saklanan veriler ve süreleri' },
+  { id: 'kismi', label: 'Hesabı silmeden veri silme' },
+  { id: 'veli', label: 'Veli talepleri' },
+];
+---
+
+<Legal
+  title="Hesap silme"
+  h1="Takip+ hesabını ve verilerini silme"
+  description="Takip+ YKS hesabını silme adımları, silinen veriler, saklanan veriler ve saklama süreleri."
+  path="/hesap-silme"
+  ogImage="hesap-silme"
+  updated="2026-09-24"
+  toc={toc}
+>
+  <p>
+    Bu sayfa, <strong>Takip+ YKS</strong> uygulamasının (geliştirici: Takip+) hesap ve veri silme yöntemini
+    anlatır. Uygulamadan çıkış yapmak hesabını silmez; yalnızca o cihazdaki oturumu kapatır.
+  </p>
+
+  <h2 id="adimlar">1. Adım adım hesap silme</h2>
+  <ol>
+    <li>
+      <strong>Aktif aboneliğin varsa önce iptal et.</strong> Hesabını silmek aboneliğini otomatik olarak iptal
+      etmez. Android’de Google Play › Ödemeler ve abonelikler; iPhone’da Ayarlar › Apple Kimliği › Abonelikler.
+    </li>
+    <li>
+      <strong>Silme talebini gönder.</strong> Uygulamaya giriş yaptığın Google e-posta adresinden
+      <a href={mailto}>{contactEmail}</a> adresine “Hesap silme talebi” konulu bir e-posta gönder ve kullanıcı adını
+      yaz. İstersen talebini uygulamadaki “Bize Bildir” formundan da iletebilirsin.
+    </li>
+    <li>
+      <strong>Doğrulama.</strong> Talep, hesabına bağlı e-posta adresinden geldiyse ek bir şey istemeyiz. Başka bir
+      adresten yazdıysan hesabın sana ait olduğunu doğrulamak için kısa bir soru sorabiliriz.
+    </li>
+    <li>
+      <strong>Silme.</strong> Hesabın ve aşağıdaki veriler talebin doğrulandıktan sonra en geç
+      <strong>30 gün</strong> içinde silinir. İşlem tamamlanınca sana e-postayla haber veririz.
+    </li>
+    <li>
+      <strong>Cihazındaki veriler.</strong> Cihazında yerel olarak tutulan veriler (örneğin Optik Çözüm oturumları)
+      uygulamayı kaldırdığında silinir.
+    </li>
+  </ol>
+  <p>
+    <a class="btn btn--primary btn--md" href={mailto}>Silme talebi e-postası oluştur</a>
+  </p>
+
+  <h2 id="silinenler">2. Silinen veriler</h2>
+  <ul>
+    <li>Hesap bilgilerin: Google ile giriş kaydı, ad, e-posta, kullanıcı adı.</li>
+    <li>Profil ve kapak fotoğrafların, başlangıç netlerin ve hedefin.</li>
+    <li>Konu, deneme, çalışma sayacı, rutin, ders programı ve plan verilerin; Optik Çözüm sonuçların ve raporların.</li>
+    <li>Yapamadıklarım’a eklediğin soru fotoğrafları, notlar ve tekrar takvimi.</li>
+    <li>Arkadaş listen, arkadaşlık isteklerin, klan üyeliklerin, düello kayıtların ve sıralamalardaki yerin.</li>
+    <li>Hikâyelerin, Soru Paylaşımı gönderilerin ve fotoğrafların, başarımların, Gizlilik Ayarları tercihlerin.</li>
+    <li>Birebir mesajların, Global Sohbet ve klan sohbeti mesajların.</li>
+    <li>Bildirim belirtecin (cihaz bildirim kaydı).</li>
+  </ul>
+  <p>
+    Başka kullanıcıların sana verdiği yanıtlar gibi, birden fazla kişiyi ilgilendiren içerikler silinemediği
+    durumlarda senin adınla ilişkisi kesilerek “Silinmiş kullanıcı” olarak gösterilir.
+  </p>
+
+  <h2 id="saklananlar">3. Saklanan veriler ve süreleri</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Veri</th><th scope="col">Neden</th><th scope="col">Süre</th></tr></thead>
+      <tbody>
+        <tr><td>Sistem yedeklerindeki kopyalar</td><td>Teknik zorunluluk</td><td>Silme tarihinden itibaren en fazla 30 gün</td></tr>
+        <tr><td>“Bize Bildir” ve destek e-postaları</td><td>Talebin yanıtlanması ve kayıt</td><td>En fazla 1 yıl</td></tr>
+        <tr><td>Kötüye kullanım bildirimleri ve bunlara ilişkin kayıtlar</td><td>Güvenlik ve olası hukuki talepler</td><td>En fazla 1 yıl</td></tr>
+        <tr><td>Yasal olarak saklanması gereken kayıtlar</td><td>Hukuki yükümlülük</td><td>İlgili mevzuattaki süre boyunca</td></tr>
+        <tr><td>Satın alma ve abonelik kayıtları</td><td>Google Play ve App Store tarafından tutulur</td><td>Mağazaların kendi politikalarına göre</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Süre dolduğunda bu kayıtlar da silinir ya da anonim hâle getirilir.</p>
+
+  <h2 id="kismi">4. Hesabını silmeden veri silme</h2>
+  <p>
+    Hesabını korumak ama belirli verilerini (örneğin bir fotoğrafı, mesaj geçmişini ya da çalışma kayıtlarını)
+    sildirmek istiyorsan aynı adrese hangi verinin silinmesini istediğini yazman yeterli. Bazı içerikleri (örneğin
+    Soru Paylaşımı gönderilerini) uygulama içinden kendin de silebilirsin.
+  </p>
+
+  <h2 id="veli">5. Veli talepleri</h2>
+  <p>
+    18 yaşından küçük bir kullanıcının velisiysen, çocuğunun hesabının silinmesini aynı adrese yazarak
+    isteyebilirsin. Talebi değerlendirebilmemiz için çocuğunun kullanıcı adını ya da hesabına bağlı e-posta
+    adresini belirt.
+  </p>
+  <p>
+    Ayrıntılar için <a href="/gizlilik">Gizlilik Politikası</a> ve <a href="/kvkk-aydinlatma">KVKK Aydınlatma Metni</a>’ne
+    bakabilirsin.
+  </p>
+</Legal>

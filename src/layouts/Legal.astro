@@ -1,0 +1,273 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  h1?: string;
+  description: string;
+  path: string;
+  ogImage: string;
+  updated: string;
+  toc: { id: string; label: string }[];
+  draft?: boolean;
+}
+
+const { title, h1 = title, description, path, ogImage, updated, toc, draft = true } = Astro.props;
+const updatedLabel = new Date(updated).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base title={title} description={description} path={path} ogImage={ogImage} breadcrumbs={[{ name: h1, path }]}>
+  <article class="legal">
+    <div class="container legal__grid">
+      <header class="legal__head">
+        <nav class="crumbs" aria-label="Sayfa yolu">
+          <a href="/">Ana sayfa</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{h1}</span>
+        </nav>
+        <h1 class="h2">{h1}</h1>
+        <p class="legal__updated">Son güncelleme: <time datetime={updated}>{updatedLabel}</time></p>
+        {
+          draft && (
+            <p class="legal__draft" role="note">
+              <strong>Taslak, hukuki inceleme bekliyor.</strong> Bu metin yayından önce bir hukukçu tarafından
+              gözden geçirilecek. İçerikte değişiklik olabilir.
+            </p>
+          )
+        }
+      </header>
+
+      <nav class="toc" aria-labelledby="toc-title">
+        <details class="toc__box" open>
+          <summary id="toc-title" class="toc__title">İçindekiler</summary>
+          <ol>
+            {toc.map((t) => <li><a href={`#${t.id}`}>{t.label}</a></li>)}
+          </ol>
+        </details>
+      </nav>
+
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style is:global>
+  .legal {
+    padding-block: var(--space-6) var(--section-y);
+  }
+
+  .legal__grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'head' 'toc' 'body';
+  }
+
+  .legal__grid > * {
+    min-width: 0;
+  }
+
+  .legal__head {
+    grid-area: head;
+    display: grid;
+    gap: var(--space-3);
+    max-width: 44rem;
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--text-3);
+  }
+
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .legal__updated {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .legal__draft {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: rgb(245 158 11 / 0.1);
+    border: 1px solid rgb(245 158 11 / 0.35);
+    font-size: var(--text-sm);
+    color: var(--slate-300);
+  }
+
+  .legal__draft strong {
+    color: var(--amber-500);
+  }
+
+  .toc {
+    grid-area: toc;
+  }
+
+  .toc__box {
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .toc__title {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 var(--space-4);
+    font-family: var(--font-display);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .toc ol {
+    display: grid;
+    padding: 0 var(--space-4) var(--space-3) calc(var(--space-4) + 1.25rem);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .prose {
+    grid-area: body;
+    max-width: 42rem;
+    color: var(--slate-300);
+  }
+
+  .prose > * + * {
+    margin-top: var(--space-4);
+  }
+
+  .prose h2 {
+    margin-top: var(--space-8);
+    font-size: var(--text-xl);
+    color: var(--text);
+    scroll-margin-top: 6rem;
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose h3 {
+    margin-top: var(--space-6);
+    font-size: var(--text-md);
+    color: var(--text);
+  }
+
+  .prose ul,
+  .prose ol {
+    display: grid;
+    gap: var(--space-2);
+    padding-left: 1.25rem;
+  }
+
+  .prose li::marker {
+    color: var(--violet-400);
+  }
+
+  .prose strong {
+    color: var(--text);
+  }
+
+  .prose a {
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .prose .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .prose th {
+    color: var(--text);
+    font-weight: 600;
+    background: var(--surface);
+  }
+
+  .prose tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .placeholder {
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    background: rgb(245 158 11 / 0.14);
+    color: var(--amber-500);
+  }
+
+  @media (hover: hover) {
+    .toc a:hover {
+      color: var(--text);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .legal__grid {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      grid-template-areas: 'head head' 'toc body';
+      column-gap: var(--space-9);
+    }
+
+    .toc {
+      position: sticky;
+      top: 6rem;
+      align-self: start;
+      max-height: calc(100vh - 7rem);
+      overflow-y: auto;
+    }
+
+    .toc__box {
+      background: transparent;
+      border: 0;
+    }
+
+    .toc__title {
+      padding: 0;
+      pointer-events: none;
+      list-style: none;
+    }
+
+    .toc__title::-webkit-details-marker {
+      display: none;
+    }
+
+    .toc ol {
+      padding: 0 0 0 1.25rem;
+    }
+  }
+</style>

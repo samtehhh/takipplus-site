@@ -1,0 +1,30 @@
+---
+// Brevo çift onay (double opt-in) bağlantısına tıklayınca gelinen sayfa.
+import Base from '../../layouts/Base.astro';
+import Button from '../../components/Button.astro';
+---
+
+<Base title="Kaydın onaylandı" description="Takip+ erken erişim kaydın onaylandı." path="/erken-erisim/onaylandi" noindex>
+  <section class="ok">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container container-narrow ok__inner">
+      <h1 class="h2">Kaydın onaylandı.</h1>
+      <p class="lead">Artık erken erişim listesindesin. Takip+ YKS mağazalara çıktığında ilk sen haberdar olacaksın.</p>
+      <Button href="/yks">Takip+ YKS’yi incele</Button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ok {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-9);
+  }
+
+  .ok__inner {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site, contactEmail } from '../config/site';
+
+const toc = [
+  { id: 'sorumlu', label: 'Veri sorumlusu' },
+  { id: 'amaclar', label: 'Amaçlar ve hukuki sebepler' },
+  { id: 'bekleme-listesi', label: 'Bekleme listesi' },
+  { id: 'toplama', label: 'Toplama yöntemi' },
+  { id: 'aktarim', label: 'Aktarım ve yurt dışı' },
+  { id: 'kucukler', label: '18 yaş altı ve veli onayı' },
+  { id: 'haklar', label: 'Hakların' },
+  { id: 'basvuru', label: 'Başvuru yöntemi' },
+];
+---
+
+<Legal
+  title="KVKK Aydınlatma Metni"
+  description="6698 sayılı KVKK kapsamında Takip+ veri sorumlusu, işleme amaçları, hukuki sebepler, yurt dışına aktarım ve başvuru yöntemi."
+  path="/kvkk-aydinlatma"
+  ogImage="kvkk-aydinlatma"
+  updated="2026-09-24"
+  toc={toc}
+>
+  <p>
+    Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“KVKK”) 10. maddesi ve Aydınlatma
+    Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, Takip+ uygulamaları
+    ve takipplus.com.tr kapsamında kişisel verilerinin nasıl işlendiği hakkında seni bilgilendirmek için
+    hazırlanmıştır. Hangi verilerin işlendiğinin ayrıntılı listesi <a href="/gizlilik">Gizlilik Politikası</a>’nda yer alır.
+  </p>
+
+  <h2 id="sorumlu">1. Veri sorumlusu</h2>
+  <div class="table-wrap">
+    <table>
+      <tbody>
+        <tr><th scope="row">Veri sorumlusu</th><td>{site.founder}</td></tr>
+        <tr><th scope="row">E-posta</th><td><a href={`mailto:${contactEmail}`}>{contactEmail}</a></td></tr>
+        <tr><th scope="row">Posta adresi</th><td><span class="placeholder">{site.contact.postalAddress}</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="amaclar">2. İşleme amaçları ve hukuki sebepler</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Amaç</th><th scope="col">Veri kategorileri</th><th scope="col">Hukuki sebep (KVKK md. 5)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Hesap oluşturma, Google ile giriş, oturum yönetimi</td>
+          <td>Kimlik, iletişim (ad, e-posta), Google profil fotoğrafı bağlantısı, kullanıcı kimliği</td>
+          <td>Sözleşmenin kurulması ve ifası (md. 5/2-c)</td>
+        </tr>
+        <tr>
+          <td>Uygulamanın temel işlevleri: konu, deneme, çalışma, plan, Optik Çözüm, Yapamadıklarım, hedef ve net hesapları</td>
+          <td>Çalışma ve performans verileri, yüklenen soru fotoğrafları, hedef bilgileri</td>
+          <td>Sözleşmenin ifası (md. 5/2-c)</td>
+        </tr>
+        <tr>
+          <td>Sosyal özellikler: arkadaşlık, mesajlaşma, Global Sohbet, klanlar, düellolar, sıralamalar, hikâyeler, anlık durum, Soru Paylaşımı</td>
+          <td>Profil bilgileri, mesaj ve paylaşım içerikleri, haftalık çalışma süresi, etkileşim kayıtları</td>
+          <td>Sözleşmenin ifası (md. 5/2-c); kullanıcının kendisi tarafından alenileştirilen içerikler için md. 5/2-d</td>
+        </tr>
+        <tr>
+          <td>Bildirim gönderme</td>
+          <td>Bildirim belirteci, uygulama sürümü, platform</td>
+          <td>Sözleşmenin ifası (md. 5/2-c)</td>
+        </tr>
+        <tr>
+          <td>Güvenlik, kötüye kullanımın önlenmesi, bildirilen içeriklerin incelenmesi</td>
+          <td>İşlem güvenliği kayıtları, bildirilen içerikler, engelleme kayıtları</td>
+          <td>Meşru menfaat (md. 5/2-f); hukuki yükümlülük (md. 5/2-ç)</td>
+        </tr>
+        <tr>
+          <td>Destek ve geri bildirim (“Bize Bildir”)</td>
+          <td>İletişim bilgileri, mesaj içeriği</td>
+          <td>Meşru menfaat (md. 5/2-f)</td>
+        </tr>
+        <tr>
+          <td>Abonelik durumunun yönetimi</td>
+          <td>Abonelik durumu (ödeme bilgisi mağazalarda kalır)</td>
+          <td>Sözleşmenin ifası (md. 5/2-c)</td>
+        </tr>
+        <tr>
+          <td>Hukuki taleplere yanıt ve yasal yükümlülükler</td>
+          <td>İlgili veri kategorileri</td>
+          <td>Hukuki yükümlülük (md. 5/2-ç); hakkın tesisi, kullanılması veya korunması (md. 5/2-e)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Uygulamayı kullanman, açık rıza gerektiren bir işleme onay verdiğin anlamına gelmez. Açık rızaya dayanan
+    işlemler (aşağıdaki bekleme listesi ve gerekmesi hâlinde yurt dışına aktarım) için onayın ayrıca ve açıkça
+    alınır; onayını istediğin zaman geri çekebilirsin.
+  </p>
+
+  <h2 id="bekleme-listesi">3. Web sitesi bekleme listesi</h2>
+  <p>
+    takipplus.com.tr’deki erken erişim formuna yazdığın e-posta adresi, onay tarihin ve formu gönderdiğin sayfa;
+    Takip+ uygulamalarının yayını ve erken erişim hakkında sana e-posta göndermek amacıyla işlenir. Hukuki
+    sebep açık rızandır (md. 5/1) ve ticari elektronik ileti için onayındır. Form üzerindeki onay kutusu
+    işaretsiz gelir. Onayını her e-postadaki bağlantıyla ya da bize yazarak geri çekebilirsin; bu durumda
+    e-posta adresin listeden çıkarılır.
+  </p>
+
+  <h2 id="toplama">4. Toplama yöntemi</h2>
+  <p>
+    Kişisel verilerin; Google ile giriş sırasında Google’dan, uygulamada ve web sitesinde doldurduğun alanlardan,
+    yüklediğin fotoğraflardan ve uygulamayı kullanırken oluşan kayıtlardan, elektronik ortamda ve otomatik
+    yollarla toplanır.
+  </p>
+
+  <h2 id="aktarim">5. Aktarım ve yurt dışına aktarım</h2>
+  <p>Kişisel verilerin, yukarıdaki amaçlarla sınırlı olarak şu alıcı gruplarına aktarılabilir:</p>
+  <ul>
+    <li><strong>Altyapı ve barındırma hizmeti sağlayıcıları:</strong> Google (Firebase Authentication, Realtime Database, Storage, Cloud Functions, Cloud Messaging, Google ile Giriş), e-posta hizmeti sağlayıcısı, Brevo (bekleme listesi), Vercel (web sitesi barındırma).</li>
+    <li><strong>Diğer kullanıcılar:</strong> yalnızca sosyal özelliklerde ve <a href="/gizlilik#gorunurluk">Gizlilik Politikası</a>’nda anlatılan kapsamda.</li>
+    <li><strong>Yetkili kamu kurum ve kuruluşları:</strong> hukuki bir yükümlülük olması hâlinde.</li>
+  </ul>
+  <p>
+    Bu hizmet sağlayıcıların sunucuları Türkiye dışında bulunabildiğinden verilerin yurt dışına aktarılır.
+    Aktarım, KVKK’nın 9. maddesi uyarınca öncelikle bu maddede sayılan uygun güvencelerden biri (örneğin Kurul’a
+    bildirilen standart sözleşme) sağlanarak yapılır. Bu güvencelerin sağlanamadığı hâllerde aktarım, yalnızca
+    arızi olarak ve kanunda sayılan istisnalar kapsamında gerçekleştirilir.
+  </p>
+
+  <h2 id="kucukler">6. 18 yaş altı kullanıcılar ve veli onayı</h2>
+  <p>
+    Takip+ YKS’nin hedef kitlesi lise öğrencileridir. 18 yaşından küçük kullanıcılar uygulamayı velilerinin
+    bilgisi dahilinde kullanmalıdır. Açık rızaya dayanan işlemlerde 18 yaşından küçük kullanıcılar için veli
+    onayı aranır. Veliler, çocuklarına ait veriler hakkında aşağıdaki yöntemle başvurabilir; başvuruda veli
+    olunduğunu gösteren makul bir bilgi istenebilir.
+  </p>
+
+  <h2 id="haklar">7. Hakların (KVKK md. 11)</h2>
+  <ul>
+    <li>Kişisel verilerinin işlenip işlenmediğini öğrenme,</li>
+    <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
+    <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+    <li>Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme,</li>
+    <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme,</li>
+    <li>KVKK’nın 7. maddesindeki şartlar çerçevesinde silinmesini veya yok edilmesini isteme,</li>
+    <li>Düzeltme, silme ve yok etme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+    <li>Otomatik sistemlerle analiz edilmesi sonucu aleyhine bir sonucun ortaya çıkmasına itiraz etme,</li>
+    <li>Kanuna aykırı işleme nedeniyle zarara uğraman hâlinde zararın giderilmesini talep etme.</li>
+  </ul>
+
+  <h2 id="basvuru">8. Başvuru yöntemi ve yanıt süresi</h2>
+  <p>
+    Haklarını kullanmak için başvurunu, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun
+    olarak şu yollarla iletebilirsin:
+  </p>
+  <ul>
+    <li>Uygulamada kayıtlı e-posta adresinden <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine “KVKK Başvurusu” konulu e-posta,</li>
+    <li>Yukarıdaki posta adresine ıslak imzalı dilekçe.</li>
+  </ul>
+  <p>
+    Başvurunda adını, soyadını, uygulamadaki kullanıcı adını ya da e-posta adresini ve talebini açıkça yaz.
+    Başvurun, niteliğine göre en geç <strong>30 gün</strong> içinde ücretsiz olarak sonuçlandırılır. İşlemin ayrıca
+    bir maliyet gerektirmesi hâlinde Kurul’un belirlediği tarifedeki ücret alınabilir. Başvurunun reddedilmesi,
+    yanıtı yetersiz bulman ya da süresinde yanıt verilmemesi hâlinde Kişisel Verileri Koruma Kurulu’na şikâyette
+    bulunabilirsin.
+  </p>
+</Legal>

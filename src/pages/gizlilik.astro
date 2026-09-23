@@ -1,0 +1,182 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site, contactEmail } from '../config/site';
+
+const toc = [
+  { id: 'kapsam', label: 'Kapsam ve veri sorumlusu' },
+  { id: 'veriler', label: 'İşlediğimiz veriler' },
+  { id: 'gorunurluk', label: 'Başkalarına görünen bilgiler' },
+  { id: 'amaclar', label: 'Verileri neden işliyoruz' },
+  { id: 'cihaz', label: 'Cihazında saklananlar' },
+  { id: 'altyapi', label: 'Hizmet sağlayıcılar ve yurt dışı' },
+  { id: 'saklama', label: 'Saklama süreleri ve silme' },
+  { id: 'kucukler', label: '18 yaş altı kullanıcılar' },
+  { id: 'haklar', label: 'Hakların' },
+  { id: 'odeme', label: 'Abonelik ve ödeme' },
+  { id: 'degisiklik', label: 'Değişiklikler' },
+  { id: 'iletisim', label: 'İletişim' },
+];
+---
+
+<Legal
+  title="Gizlilik Politikası"
+  description="Takip+ uygulamasında hangi kişisel verilerin, hangi amaçla ve ne kadar süre işlendiği; başkalarına neyin göründüğü ve hakların."
+  path="/gizlilik"
+  ogImage="gizlilik"
+  updated="2026-09-24"
+  toc={toc}
+>
+  <h2 id="kapsam">1. Kapsam ve veri sorumlusu</h2>
+  <p>
+    Bu politika, Takip+ markasıyla sunulan mobil uygulamalar (şu an Takip+ YKS) ve takipplus.com.tr için
+    geçerlidir. Veri sorumlusu: {site.founder}. Bize <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresinden
+    ulaşabilirsin. 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamındaki ayrıntılı bilgilendirme
+    <a href="/kvkk-aydinlatma">KVKK Aydınlatma Metni</a>’nde yer alır.
+  </p>
+  <p>
+    Bu metin seni bilgilendirmek içindir; tek başına bir onay ya da açık rıza yerine geçmez. Açık rıza
+    gereken işlemler için ayrıca ve açıkça onayın istenir.
+  </p>
+
+  <h2 id="veriler">2. İşlediğimiz veriler</h2>
+  <h3>Hesap</h3>
+  <ul>
+    <li>Takip+’a yalnızca Google hesabınla giriş yapılır. Google’dan ad, e-posta adresi ve profil fotoğrafı bağlantısı alınır; hesabına özel bir kullanıcı kimliği oluşturulur.</li>
+    <li>İlk kurulumda girdiğin ad, kullanıcı adı, profil ve kapak fotoğrafı, başlangıç netlerin ve hedefin (üniversite/bölüm).</li>
+  </ul>
+  <h3>Çalışma verileri</h3>
+  <ul>
+    <li>Konular ve durumları (çalışılıyor, bitti, tekrar), konu takvimi.</li>
+    <li>Çalışma sayacı kayıtları (süreler), rutinler, doğru/yanlış girişleri, haftalık ders programı, günlük takvim ve plan görevleri.</li>
+    <li>Deneme netleri, deneme ve soru takvimi, analiz panosundaki veriler.</li>
+    <li>Optik Çözüm oturumları: işaretlediğin cevaplar, soru başına süreler ve analiz raporları.</li>
+    <li>Yapamadıklarım: eklediğin soru fotoğrafları, notların ve aralıklı tekrar takvimi.</li>
+    <li>Başarımların.</li>
+  </ul>
+  <h3>Sosyal özellikler</h3>
+  <ul>
+    <li>Arkadaş listen ve arkadaşlık istekleri; arkadaşlarınla birebir mesajların.</li>
+    <li>Global Sohbet’e ve klan sohbetine yazdığın mesajlar; klan üyeliklerin.</li>
+    <li>Pomodoro ve Optik düelloları, herkese açık topluluk düelloları ve sonuçları.</li>
+    <li>Soru Paylaşımı’nda paylaştığın soru fotoğrafları, açıklamalar, yanıtlar ve beğeniler.</li>
+    <li>24 saat sonra kaybolan hikâyelerin (story).</li>
+    <li>Anlık aktivite durumun (örneğin “Optik sınav çözüyor”) ve çevrimiçi durumun.</li>
+    <li>Haftalık çalışma süren; genel, alan ve bölüm sıralamalarında kullanılır.</li>
+    <li>Gizlilik Ayarları tercihlerin ve engellediğin kullanıcılar.</li>
+  </ul>
+  <h3>Geri bildirim, bildirim ve cihaz</h3>
+  <ul>
+    <li>“Bize Bildir” formuyla gönderdiğin mesajlar. Bu mesajlar bir sunucu fonksiyonu (Firebase Cloud Functions) ve bir e-posta servisi aracılığıyla bize e-posta olarak iletilir.</li>
+    <li>Bildirim gönderebilmek için cihazına ait bildirim belirteci (Firebase Cloud Messaging) ile temel uygulama sürümü ve platform bilgisi.</li>
+  </ul>
+  <h3>Bekleme listesi (web sitesi)</h3>
+  <ul>
+    <li>takipplus.com.tr’deki erken erişim formuna yazdığın e-posta adresi, onay tarihin ve formu gönderdiğin sayfa.</li>
+  </ul>
+  <h3>İşlemediğimiz veriler</h3>
+  <p>
+    Konumunu, rehberini, SMS ya da arama geçmişini istemeyiz ve toplamayız. Optik Çözüm kamerayla optik form
+    taramaz; soruları ekranda işaretlersin. Kamerana ya da galerine yalnızca bir fotoğraf eklemeyi (profil,
+    kapak, Yapamadıklarım, Soru Paylaşımı) sen seçtiğinde erişilir.
+  </p>
+
+  <h2 id="gorunurluk">3. Başkalarına görünen bilgiler</h2>
+  <p>Sosyal özellikler gereği bazı bilgilerin diğer kullanıcılara görünür. Aşağıdaki tablo hangisinin kime görünebileceğini özetler.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Bilgi</th><th scope="col">Kimler görebilir</th><th scope="col">Kontrol</th></tr></thead>
+      <tbody>
+        <tr><td>Ad, kullanıcı adı, profil ve kapak fotoğrafı, başarımlar</td><td>Uygulamadaki diğer kullanıcılar</td><td>Profilinden değiştirebilirsin</td></tr>
+        <tr><td>Hedef üniversite/bölüm</td><td>Profilini görüntüleyenler</td><td>“Hedef üniversitemi gizle”</td></tr>
+        <tr><td>TYT/AYT netlerin</td><td>Profilini görüntüleyenler</td><td>“Netlerimi gizle”</td></tr>
+        <tr><td>Çevrimiçi durumu</td><td>Arkadaşların</td><td>“Aktifliğimi gizle”</td></tr>
+        <tr><td>Anlık aktivite (ne yaptığın)</td><td>Arkadaşların</td><td>“Aktivitemi gizle”</td></tr>
+        <tr><td>Haftalık çalışma süresi ve sıralaman</td><td>Herkese açık sıralamalarda tüm kullanıcılar</td><td>Sıralamalarda kullanıcı adın ve süren görünür</td></tr>
+        <tr><td>Hikâyeler</td><td>Hikâyeleri görebilen kullanıcılar, 24 saat boyunca</td><td>Paylaşmadan önce sen karar verirsin</td></tr>
+        <tr><td>Global Sohbet ve Soru Paylaşımı içerikleri</td><td>Tüm kullanıcılar</td><td>Paylaştığın içerikten sen sorumlusun</td></tr>
+        <tr><td>Klan sohbeti</td><td>Klan üyeleri</td><td>Klandan ayrılabilirsin</td></tr>
+        <tr><td>Birebir mesajlar</td><td>Yalnızca mesajlaştığın kişi</td><td>Kişiyi engelleyebilirsin</td></tr>
+        <tr><td>Topluluk düelloları</td><td>Katılan kullanıcılar</td><td>Katılmak senin tercihin</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Engellediğin kişilerin seninle etkileşimi kısıtlanır; engellediklerini Gizlilik Ayarları’ndan yönetirsin. Uygunsuz bir içerik ya da
+    davranışı <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine ya da uygulamadaki “Bize Bildir” formuyla
+    bildirebilirsin.
+  </p>
+
+  <h2 id="amaclar">4. Verileri neden işliyoruz</h2>
+  <ul>
+    <li>Hesabını oluşturmak ve oturumunu güvenle yönetmek.</li>
+    <li>Çalışma verilerini saklamak, cihazların arasında eşitlemek, analiz ve raporları hazırlamak.</li>
+    <li>Net, puan ve tahmini sıralama hesaplarını yapmak (uygulamaya gömülü, YÖK Atlas kaynaklı veri setiyle).</li>
+    <li>Arkadaşlık, mesajlaşma, klan, düello, sıralama, hikâye ve Soru Paylaşımı özelliklerini çalıştırmak.</li>
+    <li>Tekrar zamanı, sınav geri sayımı ve sosyal etkinlikler için bildirim göndermek.</li>
+    <li>Kötüye kullanımı önlemek, bildirilen içerikleri incelemek ve topluluk kurallarını uygulamak.</li>
+    <li>Hataları gidermek, destek taleplerini ve geri bildirimleri yanıtlamak.</li>
+    <li>Bekleme listesindekilere yayın ve erken erişim duyurusu göndermek (onayına dayanarak).</li>
+  </ul>
+  <p>Verilerini reklam amacıyla kullanmayız, satmayız ya da reklam ağlarıyla paylaşmayız.</p>
+
+  <h2 id="cihaz">5. Cihazında saklananlar</h2>
+  <p>
+    Bazı veriler, uygulamanın hızlı ve çevrimdışı çalışabilmesi için cihazında yerel bir veritabanında
+    (SQLite) tutulur; örneğin Optik Çözüm oturumların. Uygulamayı sildiğinde bu yerel veriler de cihazından
+    silinir.
+  </p>
+
+  <h2 id="altyapi">6. Hizmet sağlayıcılar ve yurt dışına aktarım</h2>
+  <p>Uygulama aşağıdaki hizmetleri kullanır. Bu sağlayıcılar verileri bizim adımıza ve hizmeti sunmak için işler.</p>
+  <ul>
+    <li><strong>Google Firebase</strong>: kimlik doğrulama (Authentication), veritabanı (Realtime Database), dosya depolama (Storage), sunucu fonksiyonları (Cloud Functions) ve bildirimler (Cloud Messaging).</li>
+    <li><strong>Google ile Giriş</strong>: hesap girişi.</li>
+    <li><strong>E-posta servisi</strong>: “Bize Bildir” mesajlarının bize iletilmesi. <span class="placeholder">[Servis adı: site sahibi ekleyecek]</span></li>
+    <li><strong>Brevo</strong>: web sitesindeki bekleme listesi.</li>
+    <li><strong>Vercel</strong>: web sitesinin barındırılması ve çerez kullanmayan ziyaret istatistikleri.</li>
+  </ul>
+  <p>
+    Bu sağlayıcıların sunucuları Türkiye dışında (örneğin AB ve ABD) bulunabilir. Yurt dışına aktarım,
+    KVKK’nın 9. maddesindeki şartlara uygun olarak yapılır. Ayrıntılar
+    <a href="/kvkk-aydinlatma#aktarim">KVKK Aydınlatma Metni</a>’nde.
+  </p>
+
+  <h2 id="saklama">7. Saklama süreleri ve silme</h2>
+  <p>
+    Verilerini hesabın açık olduğu sürece saklarız. Hesabını silmek istediğinde izleyeceğin adımlar, hangi
+    verilerin silindiği ve hangilerinin ne kadar süre tutulduğu <a href="/hesap-silme">Hesap silme</a> sayfasında
+    ayrıntılı olarak yazıyor. Hikâyeler paylaşımdan 24 saat sonra kaybolur.
+  </p>
+
+  <h2 id="kucukler">8. 18 yaş altı kullanıcılar</h2>
+  <p>
+    Takip+ YKS lise öğrencilerine yöneliktir ve kullanıcılarımızın önemli bir kısmı 18 yaşından küçüktür. 18
+    yaşından küçüksen uygulamayı velinin bilgisi dahilinde kullanmalısın; açık rıza gerektiren işlemlerde
+    velinin onayı aranır. Veliler, çocuklarının hesabıyla ilgili bilgi almak ya da hesabın silinmesini istemek
+    için bize yazabilir.
+  </p>
+
+  <h2 id="haklar">9. Hakların</h2>
+  <p>
+    KVKK’nın 11. maddesi uyarınca verilerinin işlenip işlenmediğini öğrenme, bilgi isteme, düzeltme, silme,
+    aktarıldığı kişileri öğrenme ve itiraz etme gibi hakların var. Başvuru yöntemi ve 30 günlük yanıt süresi
+    <a href="/kvkk-aydinlatma#basvuru">KVKK Aydınlatma Metni</a>’nde anlatılıyor.
+  </p>
+
+  <h2 id="odeme">10. Abonelik ve ödeme</h2>
+  <p>
+    Premium abonelikler Google Play ve App Store üzerinden satın alınır. Kart ve ödeme bilgilerini biz görmeyiz
+    ve saklamayız; bunlar Google ve Apple tarafından kendi gizlilik politikalarına göre işlenir. Aboneliğinin
+    durumunu (aktif, deneme, bitiş) görebiliriz.
+  </p>
+
+  <h2 id="degisiklik">11. Değişiklikler</h2>
+  <p>
+    Uygulamaya yeni özellikler eklendikçe (örneğin yapay zekâ destekli özellikler) bu politikayı güncelleriz.
+    Önemli değişiklikleri uygulama içinden ya da bu sayfadan duyururuz. Güncel sürüm her zaman bu adreste yer
+    alır.
+  </p>
+
+  <h2 id="iletisim">12. İletişim</h2>
+  <p>Gizlilikle ilgili her soru için: <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+</Legal>

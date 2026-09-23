@@ -1,0 +1,65 @@
+---
+// Android ana ekran widget'ı: TYT, AYT ve YDT sayacı.
+// Tarihler uygulamadaki (ana_panel.dart) değerlerle aynı. Gün sayısı
+// derlemede hesaplanır, sayfa açıldığında tarayıcıda güncellenir.
+const exams = [
+  { k: 'TYT', date: '2027-06-19T10:15:00+03:00', c: 'var(--violet-500)' },
+  { k: 'AYT', date: '2027-06-20T10:15:00+03:00', c: 'var(--teal-400)' },
+  { k: 'YDT', date: '2027-06-20T15:45:00+03:00', c: 'var(--amber-500)' },
+];
+const days = (iso: string) => Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000));
+---
+
+<div class="widget" role="img" aria-label="Android widget örneği: TYT, AYT ve YDT'ye kalan gün sayısı">
+  {
+    exams.map((e) => (
+      <div class="widget__cell" style={`--c:${e.c}`}>
+        <span class="widget__k">{e.k}</span>
+        <span class="widget__d num" data-countdown={e.date}>
+          {days(e.date)}
+        </span>
+        <span class="widget__u">gün</span>
+      </div>
+    ))
+  }
+</div>
+
+
+<style is:global>
+  .widget {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 24px;
+    background: rgb(15 23 42 / 0.88);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-3);
+  }
+
+  .widget__cell {
+    display: grid;
+    justify-items: center;
+    padding: 0.75rem 0.25rem;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+  }
+
+  .widget__k {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: color-mix(in srgb, var(--c) 70%, white);
+  }
+
+  .widget__d {
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .widget__u {
+    font-size: 0.75rem;
+    color: var(--text-2);
+  }
+</style>

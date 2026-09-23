@@ -1,0 +1,148 @@
+---
+// Deneme analizi: son 6 TYT denemesinin net grafiği. Değerler örnektir.
+const nets = [71.25, 74.5, 73, 79.75, 82.5, 86.25];
+const W = 320;
+const H = 150;
+const pad = { l: 8, r: 8, t: 16, b: 10 };
+const min = 65;
+const max = 90;
+const x = (i: number) => pad.l + (i * (W - pad.l - pad.r)) / (nets.length - 1);
+const y = (v: number) => pad.t + ((max - v) * (H - pad.t - pad.b)) / (max - min);
+const d = nets.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+const area = `${d} L${x(nets.length - 1)} ${H} L${x(0)} ${H} Z`;
+const fmt = (v: number) => v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const last = nets[nets.length - 1];
+const diff = last - nets[0];
+---
+
+<div class="mock netc" data-animate>
+  <div class="netc__head">
+    <div>
+      <p class="netc__label">TYT net ortalaması</p>
+      <p class="netc__value num">{fmt(last)}</p>
+    </div>
+    <span class="netc__delta num">+{fmt(diff)}</span>
+  </div>
+  <svg class="netc__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Son altı TYT denemesinin netleri: ${nets.map(fmt).join(', ')}. Örnek veri.`}>
+    <defs>
+      <linearGradient id="netc-area" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2DD4BF" stop-opacity="0.28" />
+        <stop offset="1" stop-color="#2DD4BF" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    {[70, 80].map((g) => <line x1="0" x2={W} y1={y(g)} y2={y(g)} class="netc__grid" />)}
+    <path d={area} fill="url(#netc-area)" class="netc__area" />
+    <path d={d} class="netc__line" />
+    {
+      nets.map((v, i) => (
+        <circle cx={x(i)} cy={y(v)} r={i === nets.length - 1 ? 5 : 3.5} class:list={['netc__dot', { 'netc__dot--last': i === nets.length - 1 }]} style={`--i:${i}`} />
+      ))
+    }
+  </svg>
+  <div class="netc__axis" aria-hidden="true">
+    {nets.map((_, i) => <span>{i + 1}. deneme</span>)}
+  </div>
+</div>
+
+<style is:global>
+  .netc {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .netc__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .netc__label {
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .netc__value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .netc__delta {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9px;
+    background: rgb(16 185 129 / 0.14);
+    color: var(--emerald-500);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .netc__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .netc__grid {
+    stroke: rgb(148 163 184 / 0.14);
+    stroke-dasharray: 3 5;
+  }
+
+  .netc__line {
+    fill: none;
+    stroke: var(--teal-400);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .netc__dot {
+    fill: var(--bg);
+    stroke: var(--teal-400);
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .netc__dot--last {
+    fill: var(--teal-400);
+  }
+
+  .netc__axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    color: var(--text-3);
+  }
+
+  .netc__axis span:not(:first-child):not(:last-child) {
+    visibility: hidden;
+  }
+
+  @media (min-width: 30rem) {
+    .netc__axis span:not(:first-child):not(:last-child) {
+      visibility: visible;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .netc:not(.is-in) :is(.netc__line, .netc__area) {
+      opacity: 0;
+    }
+
+    .motion .netc:not(.is-in) .netc__dot {
+      transform: scale(0);
+    }
+
+    .motion .netc :is(.netc__line, .netc__area) {
+      transition: opacity 800ms var(--ease-out) 300ms;
+    }
+
+    .motion .netc .netc__dot {
+      transition: transform 500ms var(--ease-spring);
+      transition-delay: calc(var(--i) * 110ms);
+    }
+  }
+</style>

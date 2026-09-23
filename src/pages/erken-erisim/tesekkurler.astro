@@ -1,0 +1,65 @@
+---
+// JS kapalıyken form gönderildiğinde api/waitlist bu sayfaya yönlendirir.
+import Base from '../../layouts/Base.astro';
+import Button from '../../components/Button.astro';
+import { contactEmail } from '../../config/site';
+---
+
+<Base title="Erken erişim" description="Takip+ erken erişim listesi." path="/erken-erisim/tesekkurler" noindex>
+  <section class="ty">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container container-narrow ty__inner">
+      <div class="ty__ok">
+        <h1 class="h2">Listedesin.</h1>
+        <p class="lead">
+          Takip+ YKS yayına çıktığında sana ilk biz yazacağız. Onay e-postası aldıysan içindeki bağlantıya tıklayarak
+          kaydını tamamla.
+        </p>
+      </div>
+      <div class="ty__err">
+        <p class="h2">Kayıt tamamlanamadı.</p>
+        <p class="lead">
+          E-posta adresini ve onay kutusunu kontrol edip tekrar dene. Sorun sürerse
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine yaz.
+        </p>
+      </div>
+      <Button href="/">Ana sayfaya dön</Button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ty {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-9);
+  }
+
+  .ty__inner {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .ty__inner > div {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .ty__inner > .ty__err {
+    display: none;
+  }
+
+  .ty__err a {
+    color: var(--text);
+  }
+
+  :global(.is-error) .ty__inner > .ty__ok {
+    display: none;
+  }
+
+  :global(.is-error) .ty__inner > .ty__err {
+    display: grid;
+  }
+</style>
+

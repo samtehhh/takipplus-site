@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+---
+
+<Base title="Sayfa bulunamadı" description="Aradığın sayfa taşınmış ya da hiç var olmamış olabilir." path="/404" noindex>
+  <section class="nf">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container nf__inner">
+      <p class="nf__code num" aria-hidden="true">404</p>
+      <h1 class="h2">Bu sayfa bulunamadı.</h1>
+      <p class="lead">Adres yanlış yazılmış ya da sayfa taşınmış olabilir. Aradığın şey büyük ihtimalle şunlardan birinde:</p>
+      <div class="nf__actions">
+        <Button href="/">Ana sayfaya dön</Button>
+        <Button href="/yks" variant="secondary">Takip+ YKS</Button>
+        <Button href="/iletisim" variant="ghost">İletişim</Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-9);
+  }
+
+  .nf__inner {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .nf__code {
+    font-size: clamp(4rem, 3rem + 8vw, 9rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    background: linear-gradient(135deg, var(--violet-400), var(--teal-400));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+</style>

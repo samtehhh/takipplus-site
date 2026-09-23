@@ -1,0 +1,172 @@
+---
+// Yapamadıklarım: yanlış/boş sorunun fotoğrafı + aralıklı tekrar takvimi. Örnek.
+const steps = [
+  { d: '1. gün', state: 'done' },
+  { d: '3. gün', state: 'done' },
+  { d: '7. gün', state: 'today' },
+  { d: '14. gün', state: 'next' },
+  { d: '30. gün', state: 'next' },
+];
+---
+
+<div class="mock repeat" data-animate>
+  <div class="repeat__card">
+    <div class="repeat__photo" aria-hidden="true">
+      <span></span><span></span><span></span><span class="short"></span>
+      <i class="repeat__opts"><b></b><b></b><b class="x"></b><b></b></i>
+    </div>
+    <div class="repeat__meta">
+      <p class="repeat__subject">AYT Fizik · Elektrik</p>
+      <p class="repeat__note">Yanlış: işaret hatası</p>
+    </div>
+  </div>
+  <ol class="repeat__steps" role="list" aria-label="Tekrar takvimi, örnek">
+    {
+      steps.map((s, i) => (
+        <li class={`rstep rstep--${s.state}`} style={`--i:${i}`}>
+          <span class="rstep__dot" aria-hidden="true" />
+          <span class="rstep__d">{s.d}</span>
+          <span class="sr-only">{s.state === 'done' ? 'tekrar edildi' : s.state === 'today' ? 'bugün tekrar' : 'planlandı'}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="repeat__today"><span class="num">3</span> soru bugün tekrar bekliyor</p>
+</div>
+
+<style is:global>
+  .repeat {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .repeat__card {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .repeat__photo {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    aspect-ratio: 3 / 4;
+    padding: 0.75rem 0.625rem;
+    border-radius: 14px;
+    background: linear-gradient(170deg, #e9edf5, #cfd6e4);
+    rotate: -3deg;
+    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.6);
+  }
+
+  .repeat__photo span {
+    height: 5px;
+    border-radius: 3px;
+    background: #64748b;
+    opacity: 0.55;
+  }
+
+  .repeat__photo span.short {
+    width: 60%;
+  }
+
+  .repeat__opts {
+    display: grid;
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .repeat__opts b {
+    height: 5px;
+    width: 70%;
+    border-radius: 3px;
+    background: #94a3b8;
+  }
+
+  .repeat__opts b.x {
+    background: #ef4444;
+  }
+
+  .repeat__subject {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .repeat__note {
+    font-size: 0.875rem;
+    color: var(--text-2);
+  }
+
+  .repeat__steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    list-style: none;
+  }
+
+  .repeat__steps::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: rgb(148 163 184 / 0.2);
+  }
+
+  .rstep {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-2);
+  }
+
+  .rstep__dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ink-800);
+    border: 2px solid var(--line-strong);
+  }
+
+  .rstep--done .rstep__dot {
+    border-color: var(--emerald-500);
+    background: var(--emerald-500);
+  }
+
+  .rstep--today .rstep__dot {
+    border-color: var(--amber-500);
+    background: var(--ink-900);
+    box-shadow: 0 0 0 5px rgb(245 158 11 / 0.18);
+  }
+
+  .rstep--today .rstep__d {
+    color: var(--amber-500);
+    font-weight: 600;
+  }
+
+  .repeat__today {
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background: rgb(245 158 11 / 0.1);
+    border: 1px solid rgb(245 158 11 / 0.3);
+    font-size: 0.9375rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .repeat:not(.is-in) .rstep__dot {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+
+    .motion .repeat .rstep__dot {
+      transition:
+        transform 450ms var(--ease-spring),
+        opacity 300ms var(--ease-out);
+      transition-delay: calc(var(--i) * 120ms + 200ms);
+    }
+  }
+</style>

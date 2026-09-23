@@ -1,0 +1,146 @@
+---
+import Logo from './Logo.astro';
+import { liveProducts, statusLabel } from '../data/products';
+import { legalLinks, companyLinks } from '../data/nav';
+import { site, contactEmail } from '../config/site';
+
+const socials = [
+  ['instagram', 'Instagram'],
+  ['x', 'X'],
+  ['tiktok', 'TikTok'],
+  ['youtube', 'YouTube'],
+  ['linkedin', 'LinkedIn'],
+]
+  .map(([k, label]) => ({ label, href: site.social[k as keyof typeof site.social] }))
+  .filter((s) => s.href);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <Logo size={32} id="ftr" />
+        <p class="muted">Kendi ilerlemeni sen yönet.</p>
+        <a class="site-footer__mail" href={`mailto:${contactEmail}`}>{contactEmail}</a>
+      </div>
+
+      <nav aria-label="Ürünler">
+        <h2 class="site-footer__title">Ürünler</h2>
+        <ul>
+          {
+            liveProducts.map((p) => (
+              <li>
+                <a href={`/${p.slug}`}>{p.name}</a>
+                <span class="site-footer__status">{statusLabel[p.status]}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Takip+">
+        <h2 class="site-footer__title">Takip+</h2>
+        <ul>
+          {companyLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          {socials.map((s) => <li><a href={s.href} rel="noopener" target="_blank">{s.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="Yasal">
+        <h2 class="site-footer__title">Yasal</h2>
+        <ul>
+          {legalLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+
+    <p class="site-footer__copy">© {year} Takip+ · {site.founder}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-8);
+    padding-block: var(--space-8) var(--space-7);
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--surface), var(--bg) 70%);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-6) var(--space-5);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-3);
+    justify-items: start;
+  }
+
+  .site-footer__mail {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .site-footer__title {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0;
+  }
+
+  .site-footer ul {
+    list-style: none;
+  }
+
+  .site-footer li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 0.5rem;
+  }
+
+  .site-footer nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  .site-footer__status {
+    font-size: var(--text-xs);
+    color: var(--text-3);
+  }
+
+  .site-footer__copy {
+    margin-top: var(--space-7);
+    font-size: var(--text-xs);
+    color: var(--text-3);
+  }
+
+  @media (hover: hover) {
+    .site-footer nav a:hover {
+      color: var(--text);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+</style>

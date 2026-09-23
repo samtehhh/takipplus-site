@@ -1,0 +1,133 @@
+---
+// Hedef&Net + Net Sihirbazı: net → puan → sıralama. Tamamen örnek hesap.
+---
+
+<div class="mock wizard" data-animate>
+  <div class="wizard__target">
+    <p class="wizard__k">Hedef</p>
+    <p class="wizard__dept">Bilgisayar Mühendisliği</p>
+    <p class="wizard__uni">Seçtiğin üniversite</p>
+  </div>
+
+  <ol class="wizard__chain" role="list">
+    <li class="wstep" style="--i:0">
+      <span class="wstep__k">Netlerin</span>
+      <span class="wstep__v num">TYT 86,25 · AYT 62,50</span>
+    </li>
+    <li class="wstep" style="--i:1">
+      <span class="wstep__k">Tahmini puan</span>
+      <span class="wstep__v num">431,8 SAY</span>
+    </li>
+    <li class="wstep wstep--rank" style="--i:2">
+      <span class="wstep__k">Tahmini sıralama</span>
+      <span class="wstep__v num">~48.000</span>
+    </li>
+  </ol>
+
+  <div class="wizard__gap">
+    <span>Hedefe kalan</span>
+    <strong class="num">+9,5 AYT neti</strong>
+  </div>
+</div>
+
+<style is:global>
+  .wizard {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .wizard__target {
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgb(16 185 129 / 0.1);
+    border: 1px solid rgb(16 185 129 / 0.35);
+  }
+
+  .wizard__k {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--emerald-500);
+  }
+
+  .wizard__dept {
+    margin-top: 0.25rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  .wizard__uni {
+    font-size: 0.875rem;
+    color: var(--text-2);
+  }
+
+  .wizard__chain {
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .wstep {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background: rgb(10 10 26 / 0.35);
+    border: 1px solid var(--line);
+  }
+
+  .wstep + .wstep::before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: 1.5rem;
+    width: 2px;
+    height: 0.5rem;
+    background: var(--line-strong);
+  }
+
+  .wstep__k {
+    font-size: 0.875rem;
+    color: var(--text-2);
+  }
+
+  .wstep__v {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-align: right;
+  }
+
+  .wstep--rank .wstep__v {
+    color: var(--violet-400);
+  }
+
+  .wizard__gap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    border-radius: 14px;
+    background: var(--grad-primary);
+    font-size: 0.9375rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .wizard:not(.is-in) .wstep {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .motion .wizard .wstep {
+      transition:
+        opacity 500ms var(--ease-out),
+        transform 500ms var(--ease-out);
+      transition-delay: calc(var(--i) * 160ms + 150ms);
+    }
+  }
+</style>

@@ -1,0 +1,302 @@
+---
+import Button from './Button.astro';
+import { contactEmail } from '../config/site';
+
+interface Props {
+  id?: string;
+  product?: string;
+  title?: string;
+  text?: string;
+}
+
+const {
+  id = 'erken-erisim',
+  product = 'yks',
+  title = 'Erken erişime katıl',
+  text = 'Takip+ YKS mağazalara çıktığında ilk sen haberdar ol. Tek ihtiyacımız e-posta adresin; yalnızca yayın ve erken erişim hakkında yazarız.',
+} = Astro.props;
+const uid = `${id}-f`;
+---
+
+<section class="waitlist" id={id} aria-labelledby={`${uid}-title`}>
+  <div class="waitlist__copy">
+    <h2 class="h2" id={`${uid}-title`}>{title}</h2>
+    <p class="muted">{text}</p>
+  </div>
+
+  <form class="waitlist__form" action="/api/waitlist" method="post" data-waitlist novalidate>
+    <input type="hidden" name="product" value={product} />
+    <!-- Bot tuzağı: insanlar görmez, doldurulursa kayıt yapılmaz -->
+    <div class="waitlist__hp" aria-hidden="true">
+      <label for={`${uid}-company`}>Şirket</label>
+      <input id={`${uid}-company`} name="company" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for={`${uid}-email`}>E-posta adresin</label>
+      <input
+        class="field__input"
+        id={`${uid}-email`}
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        enterkeyhint="send"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="ad@ornek.com"
+        required
+        aria-describedby={`${uid}-email-err`}
+      />
+      <p class="field__error" id={`${uid}-email-err`} data-error="email" aria-live="polite"></p>
+    </div>
+
+    <div class="field field--check">
+      <input
+        class="check"
+        id={`${uid}-consent`}
+        name="consent"
+        type="checkbox"
+        value="yes"
+        required
+        aria-describedby={`${uid}-consent-err`}
+      />
+      <label for={`${uid}-consent`}>
+        E-posta adresimin erken erişim duyuruları için işlenmesine ilişkin
+        <a href="/kvkk-aydinlatma#bekleme-listesi">KVKK Aydınlatma Metni</a>'ni okudum ve
+        bu amaçla e-posta almayı kabul ediyorum.
+      </label>
+      <p class="field__error" id={`${uid}-consent-err`} data-error="consent" aria-live="polite"></p>
+    </div>
+
+    <Button type="submit" size="lg" class="waitlist__submit" track="waitlist_submit">
+      <span class="waitlist__submit-label">Listeye katıl</span>
+    </Button>
+
+    <p class="field__error waitlist__status" data-status role="alert"></p>
+
+    <div class="waitlist__success" data-success tabindex="-1" hidden>
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="rgb(16 185 129 / .16)"></circle>
+        <path d="M7 12.5l3.2 3L17 9" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <div>
+        <p class="waitlist__success-title">Listedesin.</p>
+        <p class="muted">Takip+ YKS yayına çıktığında sana ilk biz yazacağız.</p>
+        <p class="muted" data-doi hidden>
+          Kaydını tamamlamak için gelen kutuna gönderdiğimiz onay bağlantısına tıkla. Göremiyorsan
+          spam klasörüne de bak.
+        </p>
+      </div>
+    </div>
+
+    <p class="fine">
+      İstediğin zaman e-postalardaki bağlantıyla ya da <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+      adresine yazarak listeden çıkabilirsin.
+    </p>
+  </form>
+</section>
+
+<style is:global>
+  .waitlist {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(40rem 20rem at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+      var(--grad-card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-3);
+    scroll-margin-top: 5rem;
+  }
+
+  .waitlist__copy {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 30rem;
+  }
+
+  .waitlist__form {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .waitlist__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .field__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .field__input {
+    width: 100%;
+    min-height: 56px;
+    padding: 0 1.125rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: rgb(10 10 26 / 0.55);
+    color: var(--text);
+    font-size: 1rem; /* 16px: iOS yakınlaştırma yapmaz */
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
+    /* Klavye açılınca gönder butonu da görünür kalsın */
+    scroll-margin-bottom: 11rem;
+  }
+
+  .field__input::placeholder {
+    color: var(--text-3);
+  }
+
+  .field__input:focus-visible {
+    outline: none;
+    border-color: var(--violet-400);
+    box-shadow: 0 0 0 4px rgb(139 92 246 / 0.25);
+  }
+
+  .field__input[aria-invalid='true'] {
+    border-color: var(--red-400);
+  }
+
+  .field__error {
+    min-height: 0;
+    color: var(--red-400);
+    font-size: var(--text-sm);
+    line-height: 1.45;
+  }
+
+  .field__error:empty {
+    display: none;
+  }
+
+  .field--check {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    column-gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  .field--check label {
+    padding-top: 0.6rem;
+  }
+
+  .field--check .field__error {
+    grid-column: 2;
+  }
+
+  .field--check a {
+    color: var(--text);
+  }
+
+  .check {
+    appearance: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 0 0 -10px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .check::before {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 7px;
+    background: rgb(10 10 26 / 0.55);
+    transition:
+      background-color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out);
+  }
+
+  .check:checked::before {
+    border-color: var(--violet-500);
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 16px no-repeat,
+      var(--violet-600);
+  }
+
+  .check[aria-invalid='true']::before {
+    border-color: var(--red-400);
+  }
+
+  .check:focus-visible {
+    outline: none;
+  }
+
+  .check:focus-visible::before {
+    box-shadow: 0 0 0 3px var(--focus);
+  }
+
+  .waitlist__submit {
+    width: 100%;
+  }
+
+  .waitlist__submit[data-loading] .waitlist__submit-label::after {
+    content: '…';
+  }
+
+  .waitlist__success {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: rgb(16 185 129 / 0.08);
+    border: 1px solid rgb(16 185 129 / 0.3);
+  }
+
+  .waitlist__success[hidden] {
+    display: none;
+  }
+
+  .waitlist__success svg {
+    flex: none;
+  }
+
+  .waitlist__success-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+  }
+
+  .waitlist__success:focus {
+    outline: none;
+  }
+
+  .waitlist__form[data-state='success'] > :is(.field, .waitlist__submit) {
+    display: none;
+  }
+
+  .waitlist .fine a {
+    color: var(--text-2);
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 48rem) {
+    .waitlist {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: var(--space-8);
+      padding: var(--space-8);
+    }
+  }
+</style>

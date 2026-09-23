@@ -1,0 +1,201 @@
+---
+// Sosyal katman: Pomodoro düellosu + haftalık çalışma süresi sıralaması.
+// İsimler ve süreler örnektir.
+const rows = [
+  { n: 1, name: 'Elif K.', t: '38 sa 20 dk', h: 30 },
+  { n: 2, name: 'Mert A.', t: '35 sa 05 dk', h: 200 },
+  { n: 3, name: 'Sen', t: '33 sa 40 dk', h: 262, me: true },
+  { n: 4, name: 'Zeynep T.', t: '31 sa 15 dk', h: 330 },
+];
+---
+
+<div class="social-mock">
+  <div class="mock duel">
+    <p class="duel__title">Pomodoro düellosu</p>
+    <div class="duel__vs">
+      <div class="duel__p">
+        <span class="avatar" style="--h:262">S</span>
+        <span class="duel__name">Sen</span>
+        <span class="duel__t num">42:10</span>
+      </div>
+      <span class="duel__x" aria-hidden="true">ile</span>
+      <div class="duel__p">
+        <span class="avatar" style="--h:172">D</span>
+        <span class="duel__name">Deniz</span>
+        <span class="duel__t num">38:55</span>
+      </div>
+    </div>
+    <div class="duel__bar" aria-hidden="true"><span style="width:52%"></span></div>
+  </div>
+
+  <div class="mock board">
+    <div class="board__head">
+      <p class="duel__title">Haftalık sıralama</p>
+      <div class="board__tabs" aria-hidden="true">
+        <span class="on">Genel</span><span>Alan</span><span>Bölüm</span>
+      </div>
+    </div>
+    <ol class="board__rows" role="list" aria-label="Haftalık çalışma süresi sıralaması, örnek">
+      {
+        rows.map((r) => (
+          <li class:list={['brow', { 'brow--me': r.me }]}>
+            <span class="brow__n num">{r.n}</span>
+            <span class="avatar" style={`--h:${r.h}`} aria-hidden="true">{r.name[0]}</span>
+            <span class="brow__name">{r.name}</span>
+            <span class="brow__t num">{r.t}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style is:global>
+  .social-mock {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .duel,
+  .board {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .duel__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .duel__vs {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .duel__p {
+    display: grid;
+    justify-items: center;
+    gap: 0.25rem;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: hsl(var(--h) 70% 55% / 0.22);
+    color: hsl(var(--h) 80% 78%);
+    font-family: var(--font-display);
+    font-weight: 700;
+    box-shadow: 0 0 0 2px hsl(var(--h) 70% 60% / 0.5);
+  }
+
+  .duel__name {
+    font-size: 0.875rem;
+    color: var(--text-2);
+  }
+
+  .duel__t {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .duel__x {
+    font-size: 0.8125rem;
+    color: var(--text-3);
+  }
+
+  .duel__bar {
+    height: 8px;
+    border-radius: 99px;
+    background: rgb(45 212 191 / 0.45);
+    overflow: hidden;
+  }
+
+  .duel__bar span {
+    display: block;
+    height: 100%;
+    background: var(--violet-500);
+    border-radius: inherit;
+  }
+
+  .board__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .board__tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 12px;
+    background: rgb(10 10 26 / 0.4);
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .board__tabs span {
+    padding: 0.25rem 0.625rem;
+    border-radius: 9px;
+  }
+
+  .board__tabs .on {
+    background: rgb(139 92 246 / 0.2);
+    color: var(--violet-300);
+    font-weight: 600;
+  }
+
+  .board__rows {
+    display: grid;
+    gap: 0.375rem;
+    list-style: none;
+  }
+
+  .brow {
+    display: grid;
+    grid-template-columns: 1.25rem auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-size: 0.9375rem;
+  }
+
+  .brow .avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 0.875rem;
+  }
+
+  .brow--me {
+    background: rgb(139 92 246 / 0.12);
+    border-color: rgb(139 92 246 / 0.4);
+  }
+
+  .brow__n {
+    color: var(--text-2);
+    font-size: 0.875rem;
+  }
+
+  .brow__name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .brow__t {
+    font-size: 0.8125rem;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+</style>
