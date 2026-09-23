@@ -40,11 +40,6 @@
       "source": "/basin",
       "destination": "/marka",
       "statusCode": 301
-    },
-    {
-      "source": "/:page((?!404$)[a-z0-9-]+(?:/[a-z0-9-]+)*)\\.html",
-      "destination": "/:page",
-      "statusCode": 301
     }
   ],
   "rewrites": [
@@ -53,8 +48,12 @@
       "destination": "/sitemap-index.xml"
     },
     {
-      "source": "/:page((?!api/|_vercel/)[a-z0-9-]+(?:/[a-z0-9-]+)*)",
+      "source": "/:page([a-z0-9-]+)",
       "destination": "/:page.html"
+    },
+    {
+      "source": "/:dir([a-z0-9-]+)/:page([a-z0-9-]+)",
+      "destination": "/:dir/:page.html"
     }
   ],
   "headers": [
