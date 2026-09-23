@@ -561,6 +561,22 @@ const gallery = available.filter((s) => s !== 'bugun');
       grid-template-columns: repeat(4, 1fr);
     }
 
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .split--flip .split__copy {
+      order: 2;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dive + .dive {
+      padding-top: 0;
+    }
   }
 
   /* Geniş ekran: üç dikey kart yan yana */
@@ -582,20 +598,7 @@ const gallery = available.filter((s) => s !== 'bugun');
     }
 
     .split {
-      grid-template-columns: 1fr 1fr;
       gap: var(--space-9);
-    }
-
-    .split--flip .split__copy {
-      order: 2;
-    }
-
-    .feature-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .dive + .dive {
-      padding-top: 0;
     }
   }
 </style>
