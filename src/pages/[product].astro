@@ -524,12 +524,17 @@ const gallery = available.filter((s) => s !== 'bugun');
       padding: var(--space-8);
     }
 
-    .extras {
-      grid-template-columns: repeat(2, 1fr);
+    /* Tablet ve dar dizüstü: her kart yatay, metin solda, örnek sağda */
+    .extra {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+      align-items: center;
+      gap: var(--space-7);
+      padding: var(--space-6);
     }
 
-    .extra:last-child {
-      grid-column: 1 / -1;
+    .extra__visual {
+      margin-top: 0;
     }
   }
 
@@ -551,12 +556,23 @@ const gallery = available.filter((s) => s !== 'bugun');
       grid-template-columns: repeat(4, 1fr);
     }
 
+  }
+
+  /* Geniş ekran: üç dikey kart yan yana */
+  @media (min-width: 80rem) {
     .extras {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .extra:last-child {
-      grid-column: auto;
+    .extra {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      padding: var(--space-5);
+    }
+
+    .extra__visual {
+      margin-top: auto;
     }
 
     .split {

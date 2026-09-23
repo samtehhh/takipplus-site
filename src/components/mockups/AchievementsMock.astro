@@ -81,6 +81,7 @@ const items = [
 
 <style is:global>
   .ach {
+    container-type: inline-size;
     display: grid;
     gap: 0.875rem;
     padding: 1rem;
@@ -170,6 +171,12 @@ const items = [
     font-size: 0.8125rem;
     line-height: 1.4;
     color: var(--text-2);
+  }
+
+  @container (max-width: 19rem) {
+    .ach__tiers {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .ach__item.is-locked {
