@@ -79,7 +79,7 @@ const boilerplate =
           logos.map((l) => (
             <li class="logo-card">
               <div class:list={['logo-card__stage', `logo-card__stage--${l.bg}`]}>
-                <img src={`/brand/${l.file}`} alt={`Takip+ ${l.name.toLowerCase()}`} loading="lazy" decoding="async" />
+                <img class:list={{ 'is-icon': l.file.includes('icon'), 'is-word': l.file.includes('wordmark') }} src={`/brand/${l.file}`} alt={`Takip+ ${l.name.toLowerCase()}`} loading="lazy" decoding="async" />
               </div>
               <div class="logo-card__meta">
                 <p class="logo-card__name">{l.name}</p>
@@ -267,6 +267,14 @@ const boilerplate =
     width: auto;
     height: auto;
     object-fit: contain;
+  }
+
+  .logo-card__stage img.is-icon {
+    border-radius: 22%;
+  }
+
+  .logo-card__stage img.is-word {
+    max-height: 64px;
   }
 
   .logo-card__stage--dark {
