@@ -25,7 +25,7 @@ Node 22.12 veya üstü gerekir.
 
 `npm run build` sırasında:
 
-1. `scripts/brand-assets.mjs`: logo varyantları, favicon seti, uygulama ikonları (`public/brand`, `public/icons`).
+1. `scripts/brand-assets.mjs`: `assets/brand/` altındaki orijinal logolardan favicon seti, uygulama ikonları ve basın kiti dosyaları (`public/brand`, `public/icons`).
 2. `scripts/og-images.mjs`: her sayfa için 1200×630 OG görseli (`public/og`).
 3. `astro build`: sayfalar, sitemap, `robots.txt`, `.well-known` dosyaları.
 4. `scripts/check-dist.mjs`: kırık iç link/varlık, eksik çapa, sayfa başına tek H1, başlık ≤ 60 ve açıklama ≤ 155
@@ -69,7 +69,7 @@ başlıkları ve önbellek kurallarını içerir. `main` dalına push yeterli.
 ## Yapı
 
 ```
-assets/logo.png            uygulama ikonu (kaynak)
+assets/brand/               orijinal logo dosyaları (kaynak; değiştirilmez)
 assets/screens/            uygulama ekran görüntüleri (site sahibi ekleyecek, bkz. README orada)
 api/waitlist.js            Vercel Serverless Function: bekleme listesi → Brevo
 src/config/site.ts         iletişim, e-posta, sosyal medya, analiz, sosyal kanıt, Premium fiyatları

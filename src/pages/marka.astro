@@ -5,13 +5,12 @@ import { contactEmail } from '../config/site';
 import { products } from '../data/products';
 
 const logos = [
-  { name: 'Sembol', file: 'takipplus-symbol', bg: 'dark', svg: true, png: 'takipplus-symbol-1024.png', note: 'Uygulama ikonu biçimi. Her zeminde kullanılabilir.' },
-  { name: 'Yatay logo, koyu zemin', file: 'takipplus-horizontal-on-dark', bg: 'dark', svg: true, png: 'takipplus-horizontal-on-dark.png' },
-  { name: 'Yatay logo, açık zemin', file: 'takipplus-horizontal-on-light', bg: 'light', svg: true, png: 'takipplus-horizontal-on-light.png' },
-  { name: 'İşaret, koyu zemin', file: 'takipplus-mark-on-dark', bg: 'dark', svg: true },
-  { name: 'İşaret, açık zemin', file: 'takipplus-mark-on-light', bg: 'light', svg: true },
-  { name: 'Yazı logo, koyu zemin', file: 'takipplus-wordmark-on-dark', bg: 'dark', svg: true },
-  { name: 'Yazı logo, açık zemin', file: 'takipplus-wordmark-on-light', bg: 'light', svg: true },
+  { name: 'Logo', file: 'takipplus-logo-512.png', bg: 'dark', note: 'Uygulama logosu, köşeleri şeffaf. Her zeminde kullanılabilir.', dl: [['PNG · 512 px', 'takipplus-logo-512.png']] },
+  { name: 'Uygulama ikonu', file: 'takipplus-icon-1024.png', bg: 'dark', note: 'Tam zeminli ikon. Mağaza görselleri ve profil fotoğrafları için.', dl: [['PNG · 1024 px', 'takipplus-icon-1024.png']] },
+  { name: 'Işıltılı logo', file: 'takipplus-logo-glow-1024.png', bg: 'dark', note: 'Mor ışıltılı sürüm. Koyu zeminde afiş ve sunumlar için.', dl: [['PNG · 1024 px', 'takipplus-logo-glow-1024.png']] },
+  { name: 'Yatay logo, koyu zemin', file: 'takipplus-horizontal-on-dark.png', bg: 'dark', dl: [['PNG', 'takipplus-horizontal-on-dark.png'], ['Şeffaf PNG', 'takipplus-horizontal-transparent.png']] },
+  { name: 'Yatay logo, açık zemin', file: 'takipplus-horizontal-on-light.png', bg: 'light', dl: [['PNG', 'takipplus-horizontal-on-light.png']] },
+  { name: 'Yazı logo', file: 'takipplus-wordmark-on-dark.svg', bg: 'dark', note: 'Outfit 800, vektörel.', dl: [['SVG koyu zemin', 'takipplus-wordmark-on-dark.svg'], ['SVG açık zemin', 'takipplus-wordmark-on-light.svg']] },
 ];
 
 const colors = [
@@ -73,21 +72,24 @@ const boilerplate =
     <div class="container">
       <div class="section-head">
         <h2 class="h2" id="logo-title">Logolar</h2>
-        <p class="lead">Tüm logolar vektörel (SVG). Sosyal medya ve sunumlar için PNG sürümleri de var.</p>
+        <p class="lead">Uygulamada kullandığımız orijinal logo dosyaları. Yazı logo vektörel (SVG), diğerleri yüksek çözünürlüklü PNG.</p>
       </div>
       <ul class="logos" role="list">
         {
           logos.map((l) => (
             <li class="logo-card">
               <div class:list={['logo-card__stage', `logo-card__stage--${l.bg}`]}>
-                <img src={`/brand/${l.file}.svg`} alt={`Takip+ ${l.name.toLowerCase()}`} loading="lazy" width="240" height="80" />
+                <img src={`/brand/${l.file}`} alt={`Takip+ ${l.name.toLowerCase()}`} loading="lazy" decoding="async" />
               </div>
               <div class="logo-card__meta">
                 <p class="logo-card__name">{l.name}</p>
                 {l.note && <p class="fine">{l.note}</p>}
                 <div class="logo-card__dl">
-                  <a href={`/brand/${l.file}.svg`} download>SVG indir</a>
-                  {l.png && <a href={`/brand/${l.png}`} download>PNG indir</a>}
+                  {l.dl.map(([label, f]) => (
+                    <a href={`/brand/${f}`} download>
+                      {label}
+                    </a>
+                  ))}
                 </div>
               </div>
             </li>
@@ -101,7 +103,7 @@ const boilerplate =
           <ul>
             <li>Logonun çevresinde en az “+” işaretinin yüksekliği kadar boşluk bırak.</li>
             <li>Koyu zeminde koyu zemin, açık zeminde açık zemin sürümünü kullan.</li>
-            <li>Yatay logoyu en az 96 px, sembolü en az 24 px genişlikte kullan.</li>
+            <li>Yatay logoyu en az 96 px, logoyu en az 24 px genişlikte kullan.</li>
             <li>Ürün adını “Takip+ YKS” biçiminde, artı işaretiyle ve bitişik yaz.</li>
           </ul>
         </div>
@@ -109,7 +111,7 @@ const boilerplate =
           <h3 class="h3">Böyle kullanma</h3>
           <ul>
             <li>Logonun renklerini, oranlarını ya da harf aralığını değiştirme.</li>
-            <li>Logoya gölge, parlama ya da kontur ekleme.</li>
+            <li>Logoya kendin gölge, parlama ya da kontur ekleme; ışıltılı sürüm gerekiyorsa hazır dosyayı kullan.</li>
             <li>Kalabalık fotoğrafların ya da düşük kontrastlı zeminlerin üstüne koyma.</li>
             <li>“Takip Plus”, “TakipPlus” ya da “Takip +” yazma.</li>
           </ul>
@@ -185,7 +187,7 @@ const boilerplate =
 
   <section class="section">
     <div class="container kit-contact">
-      <Logo size={40} id="kit" />
+      <Logo size={40} />
       <p class="muted">Basın ve iş birliği talepleri için: <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
     </div>
   </section>
@@ -255,13 +257,16 @@ const boilerplate =
   .logo-card__stage {
     display: grid;
     place-items: center;
-    height: 160px;
+    height: 176px;
     padding: var(--space-5);
   }
 
   .logo-card__stage img {
-    max-height: 72px;
+    max-height: 112px;
+    max-width: 100%;
     width: auto;
+    height: auto;
+    object-fit: contain;
   }
 
   .logo-card__stage--dark {
@@ -284,7 +289,8 @@ const boilerplate =
 
   .logo-card__dl {
     display: flex;
-    gap: var(--space-4);
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
   }
 
   .logo-card__dl a {

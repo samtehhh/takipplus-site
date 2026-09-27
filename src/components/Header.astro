@@ -23,7 +23,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 <header class="site-header" data-header>
   <div class="container site-header__row">
     <a class="site-header__brand tap" href="/" aria-label="Takip+ ana sayfa">
-      <Logo size={32} id="hdr" />
+      <Logo size={32} eager />
     </a>
 
     <nav class="site-header__nav" aria-label="Ana menü">
@@ -61,7 +61,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 <dialog id="site-menu" class="menu" aria-label="Menü" data-menu>
   <div class="menu__inner">
     <div class="menu__top">
-      <a class="tap" href="/" aria-label="Takip+ ana sayfa"><Logo size={32} id="menu" /></a>
+      <a class="tap" href="/" aria-label="Takip+ ana sayfa"><Logo size={32} /></a>
       <button class="menu__close" type="button" data-menu-close>
         <span class="sr-only">Menüyü kapat</span>
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">

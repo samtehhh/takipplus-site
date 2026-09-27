@@ -1,19 +1,35 @@
 ---
-import { markSvg } from '../lib/mark';
+/**
+ * Takip+ logosu: orijinal uygulama logosu (assets/brand/takipplus-logo-512.png)
+ * + uygulamadaki wordmark (Outfit 800, harf aralığı −0.2).
+ */
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/takipplus-logo-512.png';
 
 interface Props {
   size?: number;
-  id?: string;
   wordmark?: boolean;
   class?: string;
+  /** Hero gibi ilk ekranda görünen yerlerde true */
+  eager?: boolean;
 }
 
-const { size = 32, id = 'logo', wordmark = true, class: cls } = Astro.props;
-const svg = markSvg({ id }).replace('role="img" aria-label="Takip+"', 'aria-hidden="true" focusable="false"');
+const { size = 32, wordmark = true, class: cls, eager = false } = Astro.props;
 ---
 
 <span class:list={['logo', cls]} style={`--logo-size:${size}px`}>
-  <span class="logo__mark" set:html={svg} />
+  <Image
+    class="logo__mark"
+    src={logo}
+    alt=""
+    width={size}
+    height={size}
+    densities={[1, 2, 3]}
+    format="webp"
+    quality={90}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+  />
   {wordmark && <span class="logo__word">Takip+</span>}
 </span>
 
@@ -24,15 +40,10 @@ const svg = markSvg({ id }).replace('role="img" aria-label="Takip+"', 'aria-hidd
     gap: 0.625rem;
   }
 
-  .logo__mark {
+  .logo :global(.logo__mark) {
     width: var(--logo-size);
     height: var(--logo-size);
     flex: none;
-  }
-
-  .logo__mark :global(svg) {
-    width: 100%;
-    height: 100%;
   }
 
   .logo__word {

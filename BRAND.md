@@ -35,22 +35,26 @@ ortaktır.
 
 ## 2. Logo
 
-Kaynak geometri: `src/lib/mark.ts` (uygulama ikonunun vektör hâli). Tüm dosyalar `npm run build` sırasında
-`scripts/brand-assets.mjs` ile üretilir ve `/marka` sayfasından indirilebilir.
+Kaynak: `assets/brand/` altındaki **orijinal logo dosyaları** (uygulamada kullanılanlar). Bu dosyalar
+değiştirilmez; `scripts/brand-assets.mjs` derleme sırasında yalnızca boyutlandırıp sıkıştırır ve favicon,
+uygulama ikonları, OG görselleri ve basın kiti dosyalarını bunlardan üretir.
 
-| Dosya | Kullanım |
+| Kaynak dosya | Kullanım |
 |---|---|
-| `takipplus-symbol.svg` / `-512.png` / `-1024.png` | Sembol (uygulama ikonu biçimi), her zeminde |
-| `takipplus-horizontal-on-dark.svg` / `.png` | Koyu zeminde yatay logo |
-| `takipplus-horizontal-on-light.svg` / `.png` | Açık zeminde yatay logo |
-| `takipplus-mark-on-dark.svg`, `-on-light.svg` | Karo olmadan T+ işareti |
-| `takipplus-wordmark-on-dark.svg`, `-on-light.svg` | Yazı logo (yola dönüştürülmüş, font gerektirmez) |
-| `takipplus-app-icon.png` | Orijinal raster uygulama ikonu (512 px, optimize) |
+| `takipplus-logo-512.png` | Ana logo (köşeleri şeffaf karo). Site header/footer, favicon, OG görselleri |
+| `takipplus-icon-1024.png` | Tam zeminli uygulama ikonu. apple-touch-icon, maskable ikon, mağaza görselleri |
+| `takipplus-logo-glow-1024.png` | Mor ışıltılı sürüm. Koyu zeminde afiş ve sunumlar |
 
-Kurallar: çevrede en az "+" yüksekliği kadar boşluk; yatay logo en az 96 px, sembol en az 24 px; renk, oran
-ve harf aralığı değiştirilmez; gölge, parlama, kontur eklenmez. Yazım her zaman **Takip+** (artı bitişik).
+Basın kitinde bunlara ek olarak yatay logo (logo + wordmark; koyu, açık ve şeffaf zemin PNG) ve vektörel yazı
+logo (SVG) var. `/marka` sayfasından indirilebilir.
 
-Wordmark: Outfit 800, harf aralığı −0.2 (Flutter) ≈ −0.0125em.
+**Wordmark:** uygulamadaki `TakipPlusWordmark` ile aynı: Outfit 800, harf aralığı −0.2 (≈ −0.0125em).
+Giriş ekranındaki büyük başlıkta açık mor–beyaz gradyan (`#E2D4FF → #FFFFFF → #D6C5FF`) kullanılır.
+
+Kurallar: çevrede en az "+" yüksekliği kadar boşluk; yatay logo en az 96 px, logo en az 24 px; renk ve oran
+değiştirilmez; kendin gölge, parlama, kontur ekleme (ışıltılı sürüm hazır dosya olarak var). Yazım her zaman
+**Takip+** (artı bitişik). Logonun vektörel yeniden çizimi yapılmaz; yeni boyut gerekiyorsa orijinal dosyadan
+üretilir.
 
 ## 3. Renk
 

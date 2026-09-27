@@ -4,7 +4,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
 import sharp from 'sharp';
-import { markSvg } from '../src/lib/mark.ts';
+import { fileURLToPath } from 'node:url';
 import { satoriFonts } from './lib/fonts.mjs';
 
 const outDir = new URL('../public/og/', import.meta.url);
@@ -23,7 +23,8 @@ const pages = {
   'kvkk-aydinlatma': { kicker: 'KVKK Aydınlatma Metni', title: 'Kişisel verilerin ve hakların.', sub: '6698 sayılı Kanun kapsamında aydınlatma metni.' },
 };
 
-const markData = `data:image/png;base64,${new Resvg(markSvg({ id: 'og' }), { fitTo: { mode: 'width', value: 192 } }).render().asPng().toString('base64')}`;
+const logoPath = fileURLToPath(new URL('../assets/brand/takipplus-logo-512.png', import.meta.url));
+const markData = `data:image/png;base64,${(await sharp(logoPath).resize(192).png().toBuffer()).toString('base64')}`;
 
 const h = (type, style, children) => ({ type, props: { style, children } });
 

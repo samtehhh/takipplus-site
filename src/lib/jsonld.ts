@@ -9,7 +9,7 @@ export const organizationLd = () => ({
   '@id': abs('/#organization'),
   name: 'Takip+',
   url: site.url,
-  logo: abs('/brand/takipplus-symbol-512.png'),
+  logo: abs('/brand/takipplus-logo-512.png'),
   email: contactEmail,
   founder: { '@type': 'Person', name: site.founder },
   foundingDate: String(site.foundingYear),
