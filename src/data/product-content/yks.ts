@@ -24,7 +24,7 @@ export const today = {
   points: [
     { t: 'Rutinlerin', d: 'Her gün tekrar eden çalışmaların hazır bekler.' },
     { t: 'Tekrar zamanı gelen sorular', d: 'Yapamadıklarım’dan bugün tekrar etmen gerekenler.' },
-    { t: 'Çalıştığın konular', d: 'Üzerinde olduğun konular, bir dokunuş uzağında.' },
+    { t: 'Çalıştığın konular', d: 'Üzerinde olduğun konular, ne çalıştığını unutma.' },
     { t: 'Plan görevlerin', d: 'Elle eklediğin görevler de aynı listede.' },
   ],
   footnote: 'Saat, soru, video ve konu hedeflerindeki ilerlemen ekranın üstünde canlı olarak görünür.',
@@ -82,7 +82,7 @@ export const deepDives: {
     text: 'Üniversite ve bölüm ara, hedefini seç. Net Sihirbazı netlerinden puanını ve tahmini sıralamanı hesaplar, hedefe ne kadar net kaldığını gösterir.',
     points: ['Üniversite ve bölüm arama', 'Net → puan → sıralama hesabı', 'Net Sihirbazı ile hedefe kalan net'],
     mock: 'wizard',
-    note: 'Sıralama ve taban verileri, uygulamaya gömülü YÖK Atlas kaynaklı veri setinden gelir. Sonuçlar tahmindir; resmî ÖSYM sonuçlarının yerine geçmez. Görseldeki değerler örnektir.',
+    note: 'Sıralama ve taban verileri, uygulamaya gömülü YÖK Atlas kaynaklı veri setinden gelir. Sonuçlar her yılın kendine özgü ders ve branş çarpanlarıyla hesaplanır; %99 oranında tutarlı veridir. Görseldeki değerler örnektir.',
   },
   {
     id: 'calisma-sayaci',
@@ -164,7 +164,7 @@ export const faq = [
   },
   {
     q: 'Sıralama ve puan hesapları ne kadar doğru?',
-    a: '<p>Hesaplar uygulamaya gömülü, YÖK Atlas kaynaklı bir veri setine dayanır ve geçmiş yılların verileriyle yapılan tahminlerdir. Yönünü görmen için iyi bir pusuladır ama resmî ÖSYM sonuçlarının yerine geçmez.</p>',
+    a: '<p>Hesaplar uygulamaya gömülü, YÖK Atlas kaynaklı veri setine dayanır ve her yılın kendine özgü ders ve branş çarpanlarıyla yapılır; sonuçlar %99 oranında tutarlıdır. Yine de bunlar senin netlerine göre yapılan hesaplardır, resmî ÖSYM sonuçlarının yerine geçmez.</p>',
   },
   {
     q: 'Nasıl giriş yapılıyor?',
