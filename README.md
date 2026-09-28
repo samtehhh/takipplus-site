@@ -420,7 +420,7 @@ Kodun dışında kalan, yalnızca senin hesaplarınla yapılabilecek işler. Sı
 14. Apple Team ID (developer.apple.com › Membership) → `apps.yks.ids.appleTeamId`.
 15. Android paket adı (öneri `tr.com.takipplus.yks`) ve Play Console › App integrity › App signing › SHA-256 →
     `androidPackage`, `androidSha256`.
-16. Sosyal medya hesap linkleri → `site.social`.
+16. ~~Sosyal medya hesap linkleri~~ (Instagram, TikTok, YouTube eklendi; X ve LinkedIn açılırsa `site.social`).
 
 **Hukuk**
 

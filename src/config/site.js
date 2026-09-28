@@ -44,10 +44,10 @@ export const site = {
 
   /** Sosyal medya hesapları (tam URL). YER TUTUCU: boş olanlar sitede ve şemada görünmez. */
   social: {
-    instagram: '',
+    instagram: 'https://www.instagram.com/takipplus_yks/',
     x: '',
-    tiktok: '',
-    youtube: '',
+    tiktok: 'https://www.tiktok.com/@takipplus_yks',
+    youtube: 'https://www.youtube.com/@takipplus_yks',
     linkedin: '',
   },
 
