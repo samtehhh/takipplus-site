@@ -1,102 +1,73 @@
-// Favicon seti, uygulama ikonları ve basın kiti dosyaları.
-// Kaynak: assets/brand/ altındaki orijinal Takip+ logoları (değiştirilmez,
-// yalnızca boyutlandırılır ve sıkıştırılır). Wordmark uygulamadaki gibi
-// Outfit 800, harf aralığı −0.2 (lib/widgets/takip_plus_wordmark.dart).
-// Çıktı: public/favicon.ico, public/apple-touch-icon.png, public/icons/, public/brand/
-import { mkdirSync, writeFileSync } from 'node:fs';
+// Favicon seti, PWA ikonları ve basın kiti dosyaları.
+// Kaynak: assets/brand/kit/ — Takip+ marka kiti v1.0 (Eylül 2026) dosyaları, olduğu gibi.
+// Logolar yeniden çizilmez ya da renklendirilmez; bu betik yalnızca kopyalar, gerekirse
+// rasterleştirir ve tek tıkla indirilebilen basın kiti zip'ini paketler.
+// Çıktı: public/favicon.ico, public/favicon.svg, public/apple-touch-icon.png, public/icons/, public/brand/
+import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
-import satori from 'satori';
-import sharp from 'sharp';
-import { satoriFonts } from './lib/fonts.mjs';
+import { zipSync } from 'fflate';
 
-const root = new URL('../', import.meta.url);
-const src = (f) => new URL(`assets/brand/${f}`, root).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const out = (p) => new URL(`public/${p}`, root);
-mkdirSync(out('icons'), { recursive: true });
-mkdirSync(out('brand'), { recursive: true });
+const root = fileURLToPath(new URL('../', import.meta.url));
+const kit = join(root, 'assets/brand/kit');
+const pub = (p) => join(root, 'public', p);
 
-const LOGO = decodeURIComponent(src('takipplus-logo-512.png')); // karo, köşeler şeffaf
-const GLOW = decodeURIComponent(src('takipplus-logo-glow-1024.png')); // glow'lu
-const ICON = decodeURIComponent(src('takipplus-icon-1024.png')); // tam zeminli uygulama ikonu
-
-const png = (input, size) => sharp(input).resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9, effort: 10 }).toBuffer();
-
-async function wordmarkSvg(color) {
-  return satori(
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', fontFamily: 'Outfit, Outfit Ext', fontWeight: 800, fontSize: 200, letterSpacing: -2.5, color, lineHeight: 1 },
-        children: 'Takip+',
-      },
-    },
-    { width: 640, height: 220, fonts: satoriFonts() },
-  );
+// Web ikonları (kitin 03_Web klasörü, Takip+ YKS = ana marka rengi)
+const web = join(kit, 'yks/web');
+rmSync(pub('icons'), { recursive: true, force: true });
+mkdirSync(pub('icons'), { recursive: true });
+cpSync(join(web, 'favicon.ico'), pub('favicon.ico'));
+cpSync(join(web, 'favicon.svg'), pub('favicon.svg'));
+cpSync(join(web, 'apple-touch-icon.png'), pub('apple-touch-icon.png'));
+for (const f of ['favicon-16x16.png', 'favicon-32x32.png', 'favicon-48x48.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'mask-icon.svg']) {
+  cpSync(join(web, f), pub(`icons/${f}`));
 }
 
-async function horizontal(textColor, bg) {
-  // 1800×480: logo 400 px, yanında wordmark
-  const H = 480;
-  const logo = await png(LOGO, 400);
-  const word = new Resvg(await wordmarkSvg(textColor), { fitTo: { mode: 'width', value: 760 } }).render().asPng();
-  const wordTrim = await sharp(word).trim().toBuffer({ resolveWithObject: true });
-  const W = 40 + 400 + 56 + wordTrim.info.width + 60;
-  return sharp({ create: { width: W, height: H, channels: 4, background: bg } })
-    .composite([
-      { input: logo, left: 40, top: 40 },
-      { input: wordTrim.data, left: 40 + 400 + 56, top: Math.round((H - wordTrim.info.height) / 2) + 6 },
-    ])
-    .png({ compressionLevel: 9, effort: 10 })
-    .toBuffer();
+// Basın kiti: indirme dosyaları public/brand/kit/ altında kitteki klasör yapısıyla
+rmSync(pub('brand'), { recursive: true, force: true });
+mkdirSync(pub('brand'), { recursive: true });
+const files = walk(kit).filter((f) => !f.startsWith('yks/web/'));
+for (const f of files) {
+  mkdirSync(join(pub('brand/kit'), f, '..'), { recursive: true });
+  cpSync(join(kit, f), join(pub('brand/kit'), f));
 }
 
-async function main() {
-  // Favicon (.ico içinde PNG)
-  const icoSizes = [16, 32, 48];
-  const icoPngs = await Promise.all(icoSizes.map((s) => png(LOGO, s)));
-  writeFileSync(out('favicon.ico'), buildIco(icoPngs, icoSizes));
-  writeFileSync(out('icons/icon-96.png'), await png(LOGO, 96));
+// Kare raster logo (JSON-LD Organization.logo): düz uygulama karosu, 512 px
+const tile = readFileSync(join(kit, 'yks/svg/uygulama-karosu-duz.svg'));
+writeFileSync(pub('brand/takipplus-logo-512.png'), new Resvg(tile, { fitTo: { mode: 'width', value: 512 } }).render().asPng());
 
-  // Uygulama ikonları
-  writeFileSync(out('apple-touch-icon.png'), await png(ICON, 180));
-  writeFileSync(out('icons/icon-192.png'), await png(LOGO, 192));
-  writeFileSync(out('icons/icon-512.png'), await png(LOGO, 512));
-  writeFileSync(out('icons/maskable-512.png'), await png(ICON, 512));
+// Tek tıkla "Tüm kiti indir" (.zip)
+const readme = `TAKİP+ MARKA KİTİ · v1.0 · Eylül 2026
+https://takipplus.com.tr/marka
 
-  // Basın kiti
-  writeFileSync(out('brand/takipplus-logo-512.png'), await png(LOGO, 512));
-  writeFileSync(out('brand/takipplus-logo-glow-1024.png'), await png(GLOW, 1024));
-  writeFileSync(out('brand/takipplus-icon-1024.png'), await png(ICON, 1024));
-  writeFileSync(out('brand/takipplus-horizontal-on-dark.png'), await horizontal('#F8FAFC', '#0F172A'));
-  writeFileSync(out('brand/takipplus-horizontal-on-light.png'), await horizontal('#0F172A', '#F8FAFC'));
-  writeFileSync(out('brand/takipplus-horizontal-transparent.png'), await horizontal('#F8FAFC', { r: 0, g: 0, b: 0, alpha: 0 }));
-  writeFileSync(out('brand/takipplus-wordmark-on-dark.svg'), await wordmarkSvg('#F8FAFC'));
-  writeFileSync(out('brand/takipplus-wordmark-on-light.svg'), await wordmarkSvg('#0F172A'));
+ana/     Takip+ yatay logo ve yazı logo (ürün adı olmadan), koyu ve açık zemin
+yks/     Takip+ YKS (mor): sembol ve yatay logo SVG, ışıltılı sembol ve uygulama ikonu PNG
+lgs/     Takip+ LGS (mavi) · yakında
+kpss/    Takip+ KPSS (turuncu) · yakında
+renkler.css · renkler.json   Renk değerleri
 
-  console.log('brand-assets: tamam');
+Kurallar
+- Işıltılı logo yalnızca koyu zeminde ve 64 px ve üzerinde. Küçük boyutta ve açık zeminde düz SVG sürümleri.
+- Düz sürümlere sonradan gölge, parlama ya da kontur ekleme; oranları ve renkleri değiştirme.
+- Artı (+) her zaman beyazdır (açık zeminde lacivert #0F172A).
+- Yazım: "Takip+ YKS". "Takip Plus", "TakipPlus" ya da "Takip +" değil.
+`;
+const entries = { 'Takip+_Marka_Kiti/OKU_BENI.txt': [new TextEncoder().encode(readme), { level: 9 }] };
+for (const f of files) {
+  // PNG zaten sıkıştırılmış: yeniden sıkıştırmak yalnızca süre harcar
+  entries[`Takip+_Marka_Kiti/${f}`] = [readFileSync(join(kit, f)), { level: f.endsWith('.png') ? 0 : 9 }];
 }
+const zip = zipSync(entries, { mtime: new Date('2026-09-28T12:00:00Z') });
+writeFileSync(pub('brand/takipplus-marka-kiti.zip'), zip);
 
-function buildIco(pngs, sizes) {
-  const header = Buffer.alloc(6);
-  header.writeUInt16LE(0, 0);
-  header.writeUInt16LE(1, 2);
-  header.writeUInt16LE(pngs.length, 4);
-  const dir = Buffer.alloc(16 * pngs.length);
-  let offset = 6 + dir.length;
-  pngs.forEach((buf, i) => {
-    const o = i * 16;
-    dir.writeUInt8(sizes[i], o);
-    dir.writeUInt8(sizes[i], o + 1);
-    dir.writeUInt16LE(1, o + 4);
-    dir.writeUInt16LE(32, o + 6);
-    dir.writeUInt32LE(buf.length, o + 8);
-    dir.writeUInt32LE(offset, o + 12);
-    offset += buf.length;
-  });
-  return Buffer.concat([header, dir, ...pngs]);
+console.log(`brand-assets: tamam (${files.length} dosya, zip ${(zip.length / 1024 / 1024).toFixed(1)} MB)`);
+
+function walk(dir, base = dir) {
+  return readdirSync(dir)
+    .flatMap((n) => {
+      const p = join(dir, n);
+      return statSync(p).isDirectory() ? walk(p, base) : [relative(base, p).replaceAll('\\', '/')];
+    })
+    .sort();
 }
-
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});

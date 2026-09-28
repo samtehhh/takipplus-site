@@ -35,34 +35,42 @@ ortaktır.
 
 ## 2. Logo
 
-Kaynak: `assets/brand/` altındaki **orijinal logo dosyaları** (uygulamada kullanılanlar). Bu dosyalar
-değiştirilmez; `scripts/brand-assets.mjs` derleme sırasında yalnızca boyutlandırıp sıkıştırır ve favicon,
-uygulama ikonları, OG görselleri ve basın kiti dosyalarını bunlardan üretir.
+Kaynak: `assets/brand/kit/`, **Takip+ marka kiti v1.0 (Eylül 2026)** dosyaları, kitten olduğu gibi kopyalandı.
+Logolar yeniden çizilmez, renklendirilmez; `scripts/brand-assets.mjs` derleme sırasında favicon setini ve PWA
+ikonlarını yerine koyar, indirme dosyalarını `public/brand/kit/` altına kopyalar ve tek tıkla indirilen
+`public/brand/takipplus-marka-kiti.zip` dosyasını paketler. Kitin tamamı (mağaza ikonları, Android `res/`,
+sosyal medya, kılavuz PDF) projede değil, kit klasöründe durur.
 
-| Kaynak dosya | Kullanım |
+| Klasör | İçerik |
 |---|---|
-| `takipplus-logo-512.png` | Ana logo (köşeleri şeffaf karo). Site header/footer, favicon, OG görselleri |
-| `takipplus-icon-1024.png` | Tam zeminli uygulama ikonu. apple-touch-icon, maskable ikon, mağaza görselleri |
-| `takipplus-logo-glow-1024.png` | Mor ışıltılı sürüm. Koyu zeminde afiş ve sunumlar |
+| `kit/yks/` | Takip+ YKS (mor): SVG sembol (renkli, açık zemin, beyaz, lacivert, düz karo), yatay logo SVG/PNG, ışıltılı sembol ve uygulama ikonu PNG |
+| `kit/yks/web/` | Favicon (.ico, .svg, 16/32/48), apple-touch-icon, 192/512 ve maskable ikon, mask-icon |
+| `kit/ana/` | Ürün adı olmadan Takip+ yatay logo ve yazı logo |
+| `kit/lgs/`, `kit/kpss/` | Yakında gelecek ürünlerin sembol ve yatay logoları (mavi, turuncu) |
 
-Basın kitinde bunlara ek olarak yatay logo (logo + wordmark; koyu, açık ve şeffaf zemin PNG) ve vektörel yazı
-logo (SVG) var. `/marka` sayfasından indirilebilir.
+**Sürümler:** Işıltılı (parlamalı) sürüm yalnızca koyu zeminde ve 64 px ve üzerinde: uygulama ikonu, mağaza,
+afiş. 64 px altında ve açık zeminde aynı geometrideki düz SVG sürümü kullanılır (favicon, site header/footer,
+OG görsellerindeki küçük logo). Açık zeminde artı lacivert (`#0F172A`) olur. Yatay logo en az 96 px genişlik.
+
+**Ürün ailesi:** T+ geometrisi bütün ürünlerde aynı; yalnızca T'nin gradyanı değişir (YKS mor, LGS mavi, KPSS
+turuncu). Artı her zaman beyaz. Sitede ağırlık Takip+ YKS'de; LGS ve KPSS `/marka` sayfasında yalnızca küçük
+"Yakında" kartlarıyla görünür.
 
 **Wordmark:** uygulamadaki `TakipPlusWordmark` ile aynı: Outfit 800, harf aralığı −0.2 (≈ −0.0125em).
-Giriş ekranındaki büyük başlıkta açık mor–beyaz gradyan (`#E2D4FF → #FFFFFF → #D6C5FF`) kullanılır.
+Yatay logodaki ürün adı Outfit 500, ürün renginde. Giriş ekranındaki büyük başlıkta açık mor–beyaz gradyan
+(`#E2D4FF → #FFFFFF → #D6C5FF`) kullanılır.
 
-Kurallar: çevrede en az "+" yüksekliği kadar boşluk; yatay logo en az 96 px, logo en az 24 px; renk ve oran
-değiştirilmez; kendin gölge, parlama, kontur ekleme (ışıltılı sürüm hazır dosya olarak var). Yazım her zaman
-**Takip+** (artı bitişik). Logonun vektörel yeniden çizimi yapılmaz; yeni boyut gerekiyorsa orijinal dosyadan
-üretilir.
+Kurallar: çevrede en az "+" yüksekliği kadar boşluk; renk ve oran değiştirilmez, döndürülmez; artı
+renklendirilmez. Parlama yalnızca hazır "ışıltılı" dosyalarda vardır, düz sürüme sonradan gölge, parlama ya da
+kontur eklenmez. Uygulama ikonu ikinci bir çerçevenin içine konmaz. Yazım her zaman **Takip+** (artı bitişik).
 
 ## 3. Renk
 
 | Token | Hex | Rol |
 |---|---|---|
-| `--violet-500` | `#8B5CF6` | Birincil (Electric Violet), Takip+ YKS vurgusu |
+| `--violet-500` | `#8B5CF6` | Birincil (Electric Violet), Takip+ YKS UI vurgusu |
 | `--violet-700` | `#6D28D9` | Birincil gradyan sonu |
-| `--teal-400` | `#2DD4BF` | İkincil |
+| `--teal-400` | `#2DD4BF` | Veri rengi (grafik, Günün Odağı: Soru); marka rengi değil |
 | `--emerald-500` | `#10B981` | Başarı |
 | `--amber-500` | `#F59E0B` | Uyarı |
 | `--red-500` | `#EF4444` | Hata |
@@ -71,10 +79,16 @@ değiştirilmez; kendin gölge, parlama, kontur ekleme (ışıltılı sürüm ha
 | `--ink-750 → --ink-800` | `#232B44 → #1A2036` | Kart gradyanı |
 | `--white` | `#F8FAFC` | Metin |
 | `--slate-400` | `#94A3B8` | İkincil metin |
-| `--ink-950` | `#0A0A1A` | Uygulama ikonu zemini |
+| `--ink-950` | `#0B0B10` | Uygulama ikonu ve açılış ekranı zemini (kit v1.0; eskiden `#0A0A1A`) |
 
 **Günün Odağı dörtlüsü:** Saat = violet, Soru = turkuaz, Video = amber, Konu = kırmızı. Uygulamadaki hedef
 kartlarıyla aynı; sitedeki mockup'lar ve OG görselleri bu dörtlüyü markanın veri dili olarak kullanır.
+
+**Logo gradyanı (Takip+ YKS):** `#2A0E8F → #7C3AED → #E056FD` (45°). LGS: `#0A1F9E → #1D6BFF → #22E1FF`,
+KPSS: `#8A2100 → #F25C05 → #FFA51F`. Değerler kitteki `renkler.css` / `renkler.json` dosyalarında.
+
+**Turkuaz neden veri rengi:** `#2DD4BF`, Takip+ LGS'nin mavi-camgöbeği tonuna çok yakın. Ana marka rengi gibi
+kullanılırsa ürün rengiyle karışır; bu yüzden yalnızca grafik ve göstergelerde kalır.
 
 **Ürün vurgusu:** Her ürün `src/data/products.ts` içinde `accent` / `accentDeep` tanımlar. Ürün sayfası
 `--accent` değişkenini bu renkle ezer.

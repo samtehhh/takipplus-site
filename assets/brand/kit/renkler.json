@@ -1,0 +1,45 @@
+{
+  "arka_plan_ikon": "#0B0B10",
+  "sayfa_zemini": "#0F172A",
+  "yuzey": "#141C2E",
+  "metin": "#F8FAFC",
+  "ikincil_metin": "#94A3B8",
+  "urunler": {
+    "YKS": {
+      "renk_adi": "mor",
+      "gradyan": [
+        "#2A0E8F",
+        "#7C3AED",
+        "#E056FD"
+      ],
+      "ui_vurgu": "#8B5CF6",
+      "ui_vurgu_koyu": "#6D28D9",
+      "ui_vurgu_acik_metin": "#A78BFA",
+      "parlama": "#8B5CF6"
+    },
+    "LGS": {
+      "renk_adi": "mavi",
+      "gradyan": [
+        "#0A1F9E",
+        "#1D6BFF",
+        "#22E1FF"
+      ],
+      "ui_vurgu": "#3B82F6",
+      "ui_vurgu_koyu": "#1D4ED8",
+      "ui_vurgu_acik_metin": "#60A5FA",
+      "parlama": "#2F7BFF"
+    },
+    "KPSS": {
+      "renk_adi": "turuncu",
+      "gradyan": [
+        "#8A2100",
+        "#F25C05",
+        "#FFA51F"
+      ],
+      "ui_vurgu": "#F97316",
+      "ui_vurgu_koyu": "#C2410C",
+      "ui_vurgu_acik_metin": "#FB923C",
+      "parlama": "#FF6A00"
+    }
+  }
+}

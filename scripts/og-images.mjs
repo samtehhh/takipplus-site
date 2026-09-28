@@ -1,6 +1,6 @@
 // 1200×630 markalı Open Graph görselleri. Tek şablon, sayfa başına metin.
 // Çıktı: public/og/<slug>.png
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
 import sharp from 'sharp';
@@ -24,8 +24,9 @@ const pages = {
   'kvkk-aydinlatma': { kicker: 'KVKK Aydınlatma Metni', title: 'Kişisel verilerin ve hakların.', sub: '6698 sayılı Kanun kapsamında aydınlatma metni.' },
 };
 
-const logoPath = fileURLToPath(new URL('../assets/brand/takipplus-logo-512.png', import.meta.url));
-const markData = `data:image/png;base64,${(await sharp(logoPath).resize(192).png().toBuffer()).toString('base64')}`;
+// Küçük boyutta (64 px) düz uygulama karosu; ışıltılı sürüm bu boyutta çamurlaşır (marka kiti s.05)
+const logoPath = fileURLToPath(new URL('../assets/brand/kit/yks/svg/uygulama-karosu-duz.svg', import.meta.url));
+const markData = `data:image/png;base64,${new Resvg(readFileSync(logoPath), { fitTo: { mode: 'width', value: 192 } }).render().asPng().toString('base64')}`;
 
 const h = (type, style, children) => ({ type, props: { style, children } });
 

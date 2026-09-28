@@ -1,10 +1,10 @@
 ---
 /**
- * Takip+ logosu: orijinal uygulama logosu (assets/brand/takipplus-logo-512.png)
+ * Takip+ logosu: marka kitindeki düz uygulama karosu (assets/brand/kit/yks/svg/uygulama-karosu-duz.svg)
  * + uygulamadaki wordmark (Outfit 800, harf aralığı −0.2).
+ * Kit kuralı: 64 px altında ışıltılı değil düz sürüm; header ve footer 32–40 px.
  */
-import { Image } from 'astro:assets';
-import logo from '../../assets/brand/takipplus-logo-512.png';
+import tile from '../../assets/brand/kit/yks/svg/uygulama-karosu-duz.svg';
 
 interface Props {
   size?: number;
@@ -18,15 +18,12 @@ const { size = 32, wordmark = true, class: cls, eager = false } = Astro.props;
 ---
 
 <span class:list={['logo', cls]} style={`--logo-size:${size}px`}>
-  <Image
+  <img
     class="logo__mark"
-    src={logo}
+    src={tile.src}
     alt=""
     width={size}
     height={size}
-    densities={[1, 2, 3]}
-    format="webp"
-    quality={90}
     loading={eager ? 'eager' : 'lazy'}
     decoding="async"
   />
@@ -40,7 +37,7 @@ const { size = 32, wordmark = true, class: cls, eager = false } = Astro.props;
     gap: 0.625rem;
   }
 
-  .logo :global(.logo__mark) {
+  .logo__mark {
     width: var(--logo-size);
     height: var(--logo-size);
     flex: none;

@@ -1,0 +1,31 @@
+:root{
+  --tp-icon-bg:#0B0B10;
+  --tp-bg:#0F172A;
+  --tp-surface:#141C2E;
+  --tp-text:#F8FAFC;
+  --tp-text-2:#94A3B8;
+  /* Takip+ YKS (mor) */
+  --tp-yks-deep:#2A0E8F;
+  --tp-yks-core:#7C3AED;
+  --tp-yks-light:#E056FD;
+  --tp-yks-accent:#8B5CF6;
+  --tp-yks-accent-strong:#6D28D9;
+  --tp-yks-accent-text:#A78BFA;
+  --tp-yks-gradient:linear-gradient(45deg,#2A0E8F 0%,#7C3AED 55%,#E056FD 100%);
+  /* Takip+ LGS (mavi) */
+  --tp-lgs-deep:#0A1F9E;
+  --tp-lgs-core:#1D6BFF;
+  --tp-lgs-light:#22E1FF;
+  --tp-lgs-accent:#3B82F6;
+  --tp-lgs-accent-strong:#1D4ED8;
+  --tp-lgs-accent-text:#60A5FA;
+  --tp-lgs-gradient:linear-gradient(45deg,#0A1F9E 0%,#1D6BFF 55%,#22E1FF 100%);
+  /* Takip+ KPSS (turuncu) */
+  --tp-kpss-deep:#8A2100;
+  --tp-kpss-core:#F25C05;
+  --tp-kpss-light:#FFA51F;
+  --tp-kpss-accent:#F97316;
+  --tp-kpss-accent-strong:#C2410C;
+  --tp-kpss-accent-text:#FB923C;
+  --tp-kpss-gradient:linear-gradient(45deg,#8A2100 0%,#F25C05 55%,#FFA51F 100%);
+}

@@ -51,7 +51,7 @@ http://localhost:4322. Canlıya en yakın yerel ortam budur. Node 22.12 veya üs
 `npm run build` sırasında sırayla:
 
 1. `scripts/lastmod.mjs`: her sayfanın kaynak dosyalarının son commit tarihini okur (sitemap `lastmod`).
-2. `scripts/brand-assets.mjs`: `assets/brand/` altındaki orijinal logolardan favicon seti, uygulama ikonları ve basın kiti dosyaları.
+2. `scripts/brand-assets.mjs`: `assets/brand/kit/` (marka kiti v1.0) dosyalarından favicon seti, PWA ikonları, basın kiti dosyaları ve `takipplus-marka-kiti.zip`.
 3. `scripts/og-images.mjs`: her sayfa için 1200×630 OG görseli (`public/og`).
 4. `astro build`: sayfalar, sitemap, `robots.txt`, `.well-known` dosyaları. Derlemenin sonunda
    `scripts/lib/style-attrs.mjs` satır içi `style="…"` özniteliklerini harici bir CSS dosyasına taşır (CSP için).
@@ -454,7 +454,7 @@ yazıp çıktıyı **sıfır JS'li düz HTML** olarak üretiyor. Sitede tek bir 
 ### Yapı
 
 ```
-assets/brand/               orijinal logo dosyaları (kaynak; değiştirilmez)
+assets/brand/kit/           marka kiti v1.0 dosyaları (kaynak; değiştirilmez)
 assets/screens/             uygulama ekran görüntüleri (site sahibi ekleyecek, bkz. README orada)
 api/waitlist.js             Vercel fonksiyonu: bekleme listesi → Brevo
 api/csp-report.js           Vercel fonksiyonu: CSP ihlal raporlarını loglar
