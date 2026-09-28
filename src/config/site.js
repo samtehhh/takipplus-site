@@ -64,6 +64,15 @@ export const site = {
   },
 
   /**
+   * Arama motoru sahiplik doğrulama kodları. Boş olanın etiketi basılmaz.
+   * Google, alan adı mülkü olduğu için DNS TXT kaydıyla doğrulanıyor.
+   */
+  verification: {
+    /** Bing Webmaster Tools › HTML Meta Tag › msvalidate.01 değeri. */
+    bing: '756D90E943A86E1C0CED69B01F5D53FE',
+  },
+
+  /**
    * Sosyal kanıt alanı. Gerçek ve doğrulanabilir veri gelene kadar kapalı.
    * Uydurma yorum, kullanıcı sayısı ya da istatistik eklenmez.
    * @type {{ visible: boolean, items: { quote: string, author: string, context: string }[] }}

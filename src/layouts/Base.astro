@@ -75,6 +75,7 @@ const accentStyle = accent
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {robotsNoindex && <meta name="robots" content="noindex, follow" />}
+    {site.verification.bing && <meta name="msvalidate.01" content={site.verification.bing} />}
 
     <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={outfitTr} as="font" type="font/woff2" crossorigin />
