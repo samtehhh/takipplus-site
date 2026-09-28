@@ -18,14 +18,23 @@ try {
   available = false;
 }
 
-// Vercel ve CI sığ klon yapar; geçmiş eksikse tamamlamayı dene.
-if (available && git('rev-parse', '--is-shallow-repository') === 'true') {
+// Vercel ve CI sığ klon yapar (Vercel: son 10 commit); geçmiş eksikse tamamlamayı dene.
+// Vercel klonunda `origin` yok; depo herkese açık olduğu için Vercel'in verdiği
+// VERCEL_GIT_* değerleriyle GitHub'dan doğrudan derinleştirilir.
+const isShallow = () => available && git('rev-parse', '--is-shallow-repository') === 'true';
+const tryFetch = (args) => {
   try {
-    execFileSync('git', ['fetch', '--unshallow', '--quiet'], { cwd: root, stdio: 'ignore', timeout: 60_000 });
+    execFileSync('git', ['fetch', '--unshallow', '--quiet', ...args], { cwd: root, stdio: 'ignore', timeout: 60_000 });
   } catch {
     /* ağ ya da uzak depo yoksa sığ geçmişle devam */
   }
+};
+if (isShallow()) tryFetch([]);
+const { VERCEL_GIT_PROVIDER, VERCEL_GIT_REPO_OWNER, VERCEL_GIT_REPO_SLUG, VERCEL_GIT_COMMIT_SHA } = process.env;
+if (isShallow() && VERCEL_GIT_PROVIDER === 'github' && VERCEL_GIT_REPO_OWNER && VERCEL_GIT_REPO_SLUG) {
+  tryFetch([`https://github.com/${VERCEL_GIT_REPO_OWNER}/${VERCEL_GIT_REPO_SLUG}.git`, VERCEL_GIT_COMMIT_SHA || 'HEAD']);
 }
+if (isShallow()) console.warn('lastmod: git geçmişi sığ; sınırın ötesindeki sayfalara lastmod yazılmayacak');
 
 // Sığ klonun sınır commit'i, o ana kadarki bütün dosyaları "eklemiş" görünür.
 // Böyle bir tarih gerçek değişiklik tarihi değildir, kullanılmaz.

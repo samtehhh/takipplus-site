@@ -54,6 +54,7 @@ export async function checkSite({ get, apex, live = false }) {
   }
   const scriptSrc = csp.match(/script-src([^;]*)/)?.[1] ?? '';
   ok(!/'unsafe-inline'|'unsafe-eval'/.test(scriptSrc), `CSP script-src 'unsafe-*' içermemeli: "${scriptSrc.trim()}"`);
+  ok(!/'unsafe-inline'/.test(csp), `CSP hiçbir yerde 'unsafe-inline' içermemeli`);
   ok(h['x-content-type-options'] === 'nosniff', 'X-Content-Type-Options: nosniff');
   ok(h['referrer-policy'] === 'strict-origin-when-cross-origin', `Referrer-Policy: ${h['referrer-policy']}`);
   ok(/camera=\(\)/.test(h['permissions-policy'] || ''), 'Permissions-Policy kamera kapalı');
