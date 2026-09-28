@@ -1,0 +1,66 @@
+# Her push ve PR'da: derleme + derleme sonrası kontroller (yönlendirme/başlık
+# testleri dahil), HTML doğrulama, kırık link, Lighthouse bütçeleri, bağımlılık
+# ve gizli anahtar taraması. Ayrıntı: README → "Otomatik testler".
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # sitemap lastmod git geçmişinden okunur
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Bağımlılık taraması (yayına giden paketler)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Derleme + check-dist
+        run: npm run build
+      - name: HTML doğrulama
+        run: npx --no-install html-validate "dist/**/*.html"
+      - name: Kırık link ve varlık (lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          fail: true
+          args: >-
+            --root-dir ${{ github.workspace }}/dist
+            --fallback-extensions html
+            --exclude '^https://(www\.)?takipplus\.com\.tr'
+            --exclude 'linkedin\.com'
+            --accept '200..=299,403,429'
+            --max-retries 2
+            --no-progress
+            'dist/**/*.html'
+      - name: Lighthouse CI (mobil)
+        run: npx --yes @lhci/cli@0.15.1 autorun
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          if-no-files-found: ignore
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tüm geçmiş taranır
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

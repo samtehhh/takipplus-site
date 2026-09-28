@@ -4,13 +4,17 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/brand-assets.mjs && node scripts/og-images.mjs",
+    "prebuild": "node scripts/lastmod.mjs && node scripts/brand-assets.mjs && node scripts/og-images.mjs",
     "build": "astro build",
     "postbuild": "node scripts/check-dist.mjs",
     "preview": "astro preview",
     "qa:shots": "node scripts/qa/shots.mjs http://localhost:4322 ./.qa",
     "qa:behavior": "node scripts/qa/behavior.mjs http://localhost:4322 ./.qa",
-    "fonts": "python scripts/subset-fonts.py"
+    "fonts": "python scripts/subset-fonts.py",
+    "serve": "node scripts/serve.mjs 4322",
+    "test:live": "node scripts/smoke.mjs",
+    "validate:html": "html-validate \"dist/**/*.html\"",
+    "qa:visual": "node scripts/qa/visual.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -23,6 +27,8 @@
     "@fontsource/inter": "^5.3.0",
     "@fontsource/outfit": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
+    "@vercel/routing-utils": "^6.6.0",
+    "html-validate": "^11.16.1",
     "puppeteer-core": "^25.12.0",
     "satori": "^0.33.5",
     "sharp": "^0.35.4"

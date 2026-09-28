@@ -1,0 +1,30 @@
+# Canlı sitenin kabul testleri (scripts/smoke.mjs): her production deploy'undan
+# sonra, her gün bir kez ve elle. Günlük çalışma başarısız olursa GitHub e-posta
+# ile bildirir; basit bir çalışma süresi (uptime) izlemesi yerine de geçer.
+name: Canlı test
+
+on:
+  deployment_status:
+  schedule:
+    - cron: '17 5 * * *' # her gün 08:17 (TSİ)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Alan adının yeni deploy'a geçmesini bekle
+        if: github.event_name == 'deployment_status'
+        run: sleep 45
+      - name: Yönlendirme, başlık ve 404 testleri
+        run: node scripts/smoke.mjs

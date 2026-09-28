@@ -5,6 +5,8 @@
 // JSON isteğe JSON yanıt döner (site betiği). JS kapalıyken gelen klasik form
 // gönderimini de kabul eder ve teşekkür sayfasına yönlendirir.
 
+import { site } from '../src/config/site.js';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ALLOWED_PRODUCTS = new Set(['yks', 'genel']);
 
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
         email,
         includeListIds: [listId],
         templateId,
-        redirectionUrl: process.env.BREVO_DOI_REDIRECT_URL || 'https://www.takipplus.com.tr/erken-erisim/onaylandi',
+        redirectionUrl: process.env.BREVO_DOI_REDIRECT_URL || `${site.url}/erken-erisim/onaylandi`,
         attributes,
       }
     : { email, listIds: [listId], updateEnabled: true, attributes };

@@ -54,7 +54,7 @@ const gallery = available.filter((s) => s !== 'bugun');
   ogImage={product.slug}
   ogAlt={`${product.name}: ${product.tagline}`}
   accent={{ base: product.accent, deep: product.accentDeep }}
-  jsonLd={[mobileAppLd(product, c.seo.description), faqLd(c.faq)]}
+  jsonLd={[...(product.released ? [mobileAppLd(product, c.seo.description)] : []), faqLd(c.faq)]}
   breadcrumbs={[{ name: product.name, path: `/${product.slug}` }]}
   ctaHref="#erken-erisim"
   stickyCta

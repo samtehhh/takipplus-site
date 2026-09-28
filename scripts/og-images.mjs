@@ -6,6 +6,7 @@ import satori from 'satori';
 import sharp from 'sharp';
 import { fileURLToPath } from 'node:url';
 import { satoriFonts } from './lib/fonts.mjs';
+import { canonicalHost } from '../src/config/site.js';
 
 const outDir = new URL('../public/og/', import.meta.url);
 mkdirSync(outDir, { recursive: true });
@@ -81,7 +82,7 @@ async function render(slug, p) {
           { type: 'img', props: { src: markData, width: 64, height: 64 } },
           h('div', { fontFamily: 'Outfit, Outfit Ext', fontWeight: 800, fontSize: 38, letterSpacing: -0.5 }, 'Takip+'),
         ]),
-        h('div', { fontSize: 22, color: '#94A3B8' }, 'takipplus.com.tr'),
+        h('div', { fontSize: 22, color: '#94A3B8' }, canonicalHost),
       ]),
       h('div', { display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 40 }, [
         h('div', { display: 'flex', flexDirection: 'column', maxWidth: p.metrics ? 560 : 720 }, [

@@ -5,9 +5,9 @@
 import { contactEmail } from '../../config/site';
 
 export const seo = {
-  title: 'Takip+ YKS: YKS takip uygulaması',
+  title: 'Takip+ YKS (Takip Plus): YKS takip uygulaması',
   description:
-    'Konu takibi, deneme ve net analizi, Optik Çözüm, hedef üniversite ve çalışma planı tek uygulamada. Takip+ YKS için erken erişim listesine katıl.',
+    'YKS takip uygulaması: TYT AYT konu takibi, deneme takibi, net hesaplama, hedef üniversite, YKS çalışma programı ve Optik Çözüm tek uygulamada.',
 };
 
 export const hero = {

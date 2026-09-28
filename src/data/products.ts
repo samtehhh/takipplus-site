@@ -1,13 +1,14 @@
 /**
- * Takip+ ürün listesi.
+ * Takip+ ürün listesi (görünen bilgiler).
  *
  * Yeni ürün eklemek için: bu listeye bir kayıt ekle ve ürünün içerik dosyasını
  * `src/data/product-content/<slug>.ts` altında oluştur. `/<slug>` sayfası
  * `src/pages/[product].astro` şablonuyla otomatik üretilir.
  *
- * Mağaza, paket adı ve derin link bilgileri de burada tutulur; yayın günü
- * sadece `released` değeri true yapılır.
+ * Yayın bayrağı (`released`), mağaza linkleri ve paket kimlikleri burada
+ * değil, tek yapılandırma dosyasında: `src/config/site.js` → `apps.<slug>`.
  */
+import { apps } from '../config/site';
 
 export type ProductStatus = 'development' | 'early-access' | 'live' | 'planned';
 
@@ -55,19 +56,7 @@ export const products: Product[] = [
     tagline: 'YKS hazırlığının tamamı tek uygulamada: konu, deneme, hedef ve plan.',
     audience: 'YKS’ye hazırlanan lise öğrencileri',
     platforms: ['android', 'ios'],
-    released: false,
-    stores: {
-      googlePlayUrl: '',
-      appStoreUrl: '',
-      appStoreId: '',
-    },
-    ids: {
-      iosBundleId: 'com.samettondes.takipplus',
-      appleTeamId: '',
-      // Şu anki `com.example.flutter_application_1` Play Store'a yüklenemez.
-      androidPackage: '',
-      androidSha256: [],
-    },
+    ...apps.yks,
   },
 ];
 

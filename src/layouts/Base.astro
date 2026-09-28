@@ -58,6 +58,9 @@ const ld = [...jsonLd];
 if (breadcrumbs?.length) ld.push(breadcrumbLd(breadcrumbs));
 
 const releasedIos = products.find((p) => p.released && p.stores.appStoreId);
+// Vercel önizleme derlemeleri indekslenmez (vercel.json ayrıca X-Robots-Tag gönderir).
+// Kanonik adres her ortamda production adresidir.
+const robotsNoindex = noindex || process.env.VERCEL_ENV === 'preview';
 const accentStyle = accent
   ? `--accent:${accent.base};--accent-deep:${accent.deep};`
   : undefined;
@@ -71,7 +74,7 @@ const accentStyle = accent
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {robotsNoindex && <meta name="robots" content="noindex, follow" />}
 
     <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={outfitTr} as="font" type="font/woff2" crossorigin />

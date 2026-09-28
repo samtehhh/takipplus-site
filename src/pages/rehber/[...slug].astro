@@ -5,6 +5,7 @@
  */
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { articleLd } from '../../lib/jsonld';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('rehber', (p) => !p.data.draft)).sort(
@@ -50,6 +51,16 @@ const Content = post ? (await render(post)).Content : null;
       title={post.data.title}
       description={post.data.description}
       path={`/rehber/${post.id}`}
+      jsonLd={[
+        articleLd({
+          title: post.data.title,
+          description: post.data.description,
+          path: `/rehber/${post.id}`,
+          published: post.data.published,
+          updated: post.data.updated,
+          image: '/og/default.png',
+        }),
+      ]}
       breadcrumbs={[
         { name: 'Rehber', path: '/rehber' },
         { name: post.data.title, path: `/rehber/${post.id}` },
