@@ -148,7 +148,7 @@ export const plans = [
 export const faq = [
   {
     q: 'Takip+ (Takip Plus) nedir?',
-    a: '<p>Takip+ (Takip Plus), öğrencilerin kendi ilerlemesini takip etmesi için uygulamalar geliştiren bir girişim. İlk ürünü Takip+ YKS; YKS’ye hazırlanan öğrenciler için konu, deneme, net ve çalışma süresi takibini tek uygulamada toplar.</p>',
+    a: '<p>Takip+ (Takip Plus), YKS’ye hazırlanan öğrenciler için geliştirilmiş bir YKS takip ve analiz uygulaması. Konu takibi, deneme netleri, çalışma süresi, hedef sıralama ve optik çözüm analizlerini tek uygulamada toplar. Böylece öğrenci nerede olduğunu kendisi görür, eksiklerini kendisi bulur ve kendi koçluğunu yapabilir.</p><p>Takip+, bu kadar kapsamlı takip ve analizi tek yerde, yalnızca öğrenciye odaklanarak sunmak için tasarlandı.</p>',
   },
   {
     q: 'Takip+ bir sosyal medya takipçi hizmeti mi?',
