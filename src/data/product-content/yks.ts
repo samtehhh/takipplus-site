@@ -147,6 +147,14 @@ export const plans = [
 
 export const faq = [
   {
+    q: 'Takip+ (Takip Plus) nedir?',
+    a: '<p>Takip+ (Takip Plus), öğrencilerin kendi ilerlemesini takip etmesi için uygulamalar geliştiren bir girişim. İlk ürünü Takip+ YKS; YKS’ye hazırlanan öğrenciler için konu, deneme, net ve çalışma süresi takibini tek uygulamada toplar.</p>',
+  },
+  {
+    q: 'Takip+ bir sosyal medya takipçi hizmeti mi?',
+    a: '<p>Hayır. Takip+ takipçi, beğeni ya da izlenme satmaz; adındaki “takip”, öğrencinin kendi ders ve deneme takibini anlatır. Resmî sitemiz takipplus.com.tr, resmî hesaplarımız Instagram, TikTok ve YouTube’da @takipplus_yks.</p>',
+  },
+  {
     q: 'Takip+ YKS ne zaman çıkacak?',
     a: '<p>Uygulama Android ve iOS için geliştiriliyor, henüz mağazalarda değil. Yayın tarihi kesinleştiğinde erken erişim listesindekilere ilk biz haber vereceğiz.</p>',
   },
