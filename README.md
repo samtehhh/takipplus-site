@@ -314,13 +314,13 @@ Alan adı Metunic'te, DNS de orada (`ns1/ns2.metunic.com.tr`).
 
 | Kayıt | Ne işe yarar | Durum (28 Eylül 2026) |
 |---|---|---|
-| `A @ 76.76.21.21` (ve Vercel'in verdiği diğerleri), `CNAME www → …vercel-dns…` | Siteyi Vercel'e bağlar | Var |
-| **CAA** | Hangi sertifika sağlayıcılarının bu alan adına sertifika verebileceğini sınırlar | Yok |
-| **DNSSEC** (DS kaydı) | DNS yanıtlarının sahte olmadığını imzayla kanıtlar; `.tr` bölgesi imzalı, destekleniyor | Kapalı |
+| `A @ 216.198.79.1`, `CNAME www → …vercel-dns…` | Siteyi Vercel'e bağlar | Var (eski `76.76.21.21` silindi) |
+| **CAA** | Hangi sertifika sağlayıcılarının bu alan adına sertifika verebileceğini sınırlar | Var (aşağıdaki 5 kayıt) |
+| **DNSSEC** (DS kaydı) | DNS yanıtlarının sahte olmadığını imzayla kanıtlar; `.tr` bölgesi imzalı, destekleniyor | Kapalı: Metunic DNS'i bölgeyi imzalamıyor (DNSKEY yok), bkz. 8. madde |
 | **MX** | Gelen e-postanın hangi sunucuya gideceği | Yok (alan adı e-postası kurulmadı) |
-| **SPF** (`TXT @ v=spf1 …`) | Bu alan adı adına hangi sunucuların e-posta gönderebileceği | Yok |
+| **SPF** (`TXT @ v=spf1 …`) | Bu alan adı adına hangi sunucuların e-posta gönderebileceği | Var (`v=spf1 -all`) |
 | **DKIM** (`TXT <seçici>._domainkey`) | Giden e-postaya imza atar; alıcı, e-postanın yolda değişmediğini ve gerçekten senden geldiğini doğrular | Yok |
-| **DMARC** (`TXT _dmarc`) | SPF/DKIM'i geçemeyen e-postaya ne yapılacağını söyler ve sana rapor gönderttirir | Yok |
+| **DMARC** (`TXT _dmarc`) | SPF/DKIM'i geçemeyen e-postaya ne yapılacağını söyler ve sana rapor gönderttirir | Var (`p=reject`) |
 
 **CAA:** Vercel'in kendi DNS'inde yayınladığı CAA listesiyle aynı sağlayıcılar (www bu listeyi CNAME üzerinden zaten
 kullanıyor). Tek sağlayıcıyla sınırlamak, Vercel sağlayıcı değiştirdiğinde sertifika yenilemesini kırar.
@@ -375,33 +375,39 @@ Kodun dışında kalan, yalnızca senin hesaplarınla yapılabilecek işler. Sı
 1. ~~Vercel › Domains: `takipplus.com.tr` Production'a bağlandı, yönlendirme kaldırıldı~~ (28 Eylül 2026, yapıldı).
    Kalıcı kural: iki alan adı da Production'a bağlı kalmalı, panelde **apex → www yönlendirmesi asla açılmamalı**;
    www→apex 301'i `vercel.json` yapıyor, ikisi birlikte döngü oluşturur.
-2. **Vercel › Project › Analytics › Enable** (Web Analytics). Açılmazsa her sayfada analiz betiği 404 verir.
-3. **Google Search Console:** "Alan adı" mülkü ekle (`takipplus.com.tr`), verilen `TXT` kaydını Metunic DNS'e gir,
-   doğrula. Sitemaps › `https://takipplus.com.tr/sitemap-index.xml` gönder. URL Denetimi ile `/`, `/yks`,
-   `/hakkimizda` için "Dizine eklenmesini iste". Eski `www` mülkün varsa kalsın; alan adı mülkü ikisini de kapsar.
-4. **Bing Webmaster Tools:** "Search Console'dan içe aktar" ile tek tıkla.
-5. **Rich Results Test** (Google girişi istiyor, bu yüzden otomatik yapılamadı): https://search.google.com/test/rich-results
-   ile `https://takipplus.com.tr/` ve `/yks`'i test et. Beklenen: Breadcrumb ve SSS "geçerli", hata yok. (Schema Markup
-   Validator'da ikisi de 0 hata, 0 uyarı.)
+2. ~~Vercel › Project › Analytics › Enable~~ (yapıldı; `/_vercel/insights/script.js` 200 veriyor).
+3. ~~Google Search Console~~ (28 Eylül 2026, yapıldı): alan adı mülkü DNS `TXT` ile doğrulandı. `sitemap-0.xml`
+   "Başarılı, 9 sayfa". `sitemap-index.xml` ilk gönderimde "Getirilemedi" gösterdi; dosya sağlam, yeniden
+   gönderildi, bir sonraki okumada düzelir. `/` ve `/yks` dizinde (Google'ın seçtiği standart URL apex),
+   `/hakkimizda` için dizine ekleme istendi.
+4. ~~Bing Webmaster Tools~~ (28 Eylül 2026, yapıldı): `msvalidate.01` meta etiketiyle doğrulandı (kod
+   `site.verification.bing`), `sitemap-index.xml` gönderildi. **Etiketi kaldırma**, Bing doğrulamayı periyodik yeniler.
+5. ~~Rich Results Test~~ (yapıldı): `/yks` İçerik haritası (Breadcrumb) geçerli, hata yok. `FAQPage` şeması sayfada
+   ve geçerli ama test onu listelemiyor: Google SSS zengin sonuçlarını yalnızca resmî kurum ve sağlık sitelerine
+   gösteriyor. Hata değil.
 
 **DNS (Metunic paneli)**
 
-6. **Eski Vercel IP'sini kaldır:** apex'te iki A kaydı var (`76.76.21.21` ve `216.198.79.1`). Vercel Domains ekranı
-   "DNS Change Recommended" diyor; "View DNS configuration"da önerilen kaydı bırak, `76.76.21.21`'i sil. SSL Labs yeni
-   IP'ye A+, eskisine A veriyor (eski uçta HSTS görünmüyor).
-7. CAA kayıtları ([yukarıda](#dns-ve-e-posta-kayıtları)).
-8. DNSSEC'i aç (Metunic panelinde varsa "DNSSEC" ya da destekten talep). `.tr` imzalı olduğu için mümkün.
-9. Şimdilik `v=spf1 -all` ve DMARC `p=reject` kayıtları. Alan adı e-postasını kurunca MX/SPF/DKIM/DMARC `p=none` ile
+6. ~~Eski Vercel IP'sini kaldır~~ (yapıldı; apex'te yalnızca `216.198.79.1`).
+7. ~~CAA kayıtları~~ (yapıldı).
+8. **DNSSEC: DS kaydı ekleme.** Metunic panelindeki DNSSEC sekmesi yalnızca kayıt kuruluşuna DS kaydı gönderir;
+   `ns1/ns2.metunic.com.tr` bölgeyi imzalamıyor (DNSKEY yok). İmzasız bölgeye DS eklemek, doğrulama yapan
+   çözümleyicilerde (Google, Cloudflare) siteyi tamamen erişilemez yapar. Yol: Metunic destekten "DNS bölgemi
+   imzalayabilir misiniz, DS değerlerini verir misiniz?" diye sor; ya da DNS'i imzalayan bir sağlayıcıya taşı
+   (Cloudflare ücretsiz), onun verdiği DS'i bu sekmeye gir.
+9. ~~`v=spf1 -all` ve DMARC `p=reject`~~ (yapıldı). Alan adı e-postasını kurunca MX/SPF/DKIM/DMARC `p=none` ile
    değiştir ve `src/config/site.js` → `useDomainEmail: true`.
 
 **Hesap güvenliği**
 
 10. İki adımlı doğrulama (tercihen uygulama ya da güvenlik anahtarı, SMS değil): Vercel, GitHub, Metunic, Google hesabı.
-11. Metunic: alan adı **transfer kilidi** açık, **otomatik yenileme** açık, iletişim e-postası erişebildiğin bir adres.
-12. **HSTS preload:** eski A kaydı (6. madde) kaldırılıp `npm run test:live` temiz geçtikten sonra https://hstspreload.org/ adresine
-    `takipplus.com.tr` gir. Önce şunu kabul et: listeye girdikten sonra **bütün alt alan adları** (gelecekte açılacak
-    `api.`, `panel.`, `mail.` dahil) yalnızca HTTPS ile çalışabilir; listeden çıkmak aylar sürer. Şu an tek alt alan
-    adı `www` ve HTTPS.
+11. Metunic: **transfer kilidi** kapalı ve panelden açılmıyor (28 Eylül 2026: "Veri başarıyla güncellendi" diyor
+    ama durum "kapalı" kalıyor); Metunic destekten açtır. Panelde otomatik yenileme seçeneği yok: bitiş
+    **19.09.2027**, takvime hatırlatıcı koy ya da cüzdana bakiye yükleyip destekten otomatik yenilemeyi sor.
+    İletişim e-postası erişebildiğin bir adres olsun.
+12. ~~HSTS preload~~ (gönderildi; hstspreload.org durumu "pending", hata/uyarı yok, Chrome sürümüne girmesi haftalar
+    sürer). Kalıcı kural: **bütün alt alan adları** (gelecekte açılacak `api.`, `panel.`, `mail.` dahil) yalnızca
+    HTTPS ile çalışabilir; listeden çıkmak aylar sürer.
 
 **İzleme**
 
