@@ -24,11 +24,12 @@ jobs:
           fetch-depth: 0 # sitemap lastmod git geçmişinden okunur
       - uses: actions/setup-node@v4
         with:
-          # Yerel geliştirmeyle aynı sürüm: Node 22'nin npm 10'u, Windows'ta npm 11
-          # ile üretilen lockfile'daki platforma özel isteğe bağlı paketleri reddediyor
           node-version: 24
           cache: npm
-      - run: npm ci
+      # Vercel'in kurulumuyla aynı: `npm install` (lockfile'daki sürümlere uyar).
+      # `npm ci`, yalnızca wasm32 için gereken isteğe bağlı @emnapi paketleri
+      # lockfile'ın kökünde olmadığı için bazı npm sürümlerinde reddediyor.
+      - run: npm install --no-audit --no-fund
       - name: Bağımlılık taraması (yayına giden paketler)
         run: npm audit --omit=dev --audit-level=high
       - name: Derleme + check-dist
