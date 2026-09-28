@@ -9,7 +9,9 @@
 // `get(url)` yönlendirmeyi takip etmeden { status, headers, body } döndürür;
 // başlık adları küçük harf.
 
-export async function checkSite({ get, apex, live = false }) {
+// preview: Vercel önizleme derlemesi (VERCEL_ENV=preview). Sayfalar bilerek
+// noindex taşır; kanonik yine production adresidir.
+export async function checkSite({ get, apex, live = false, preview = false }) {
   const errors = [];
   const passed = [];
   const origin = `https://${apex}`;
@@ -86,7 +88,9 @@ export async function checkSite({ get, apex, live = false }) {
     ok(r.status === 200, `sitemap ${loc}: ${r.status}`);
     const canon = r.body?.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
     ok(canon === loc, `sitemap ${loc}: canonical ${canon}`);
-    ok(!/<meta name="robots" content="noindex/.test(r.body || '') && !/noindex/i.test(r.headers['x-robots-tag'] || ''), `sitemap ${loc}: noindex olmamalı`);
+    const noindex = /<meta name="robots" content="noindex/.test(r.body || '') || /noindex/i.test(r.headers['x-robots-tag'] || '');
+    if (preview) ok(noindex, `önizleme ${loc}: noindex olmalı`);
+    else ok(!noindex, `sitemap ${loc}: noindex olmamalı`);
     if (lastmod) ok(!Number.isNaN(Date.parse(lastmod)) && Date.parse(lastmod) <= Date.now() + 864e5, `sitemap ${loc}: lastmod geçersiz ${lastmod}`);
   }
 
@@ -142,8 +146,8 @@ export async function checkSite({ get, apex, live = false }) {
   ok(!/^Disallow:\s*\/\s*$/m.test(robots.body || '') && !/Disallow:\s*\/\.well-known/.test(robots.body || ''), 'robots.txt siteyi ya da /.well-known/ yolunu engellememeli');
 
   // 7) Önizleme ve *.vercel.app adresleri indekslenmez
-  const preview = await get('https://takipplus-site.vercel.app/');
-  ok(/noindex/i.test(preview.headers['x-robots-tag'] || ''), `takipplus-site.vercel.app X-Robots-Tag: ${preview.headers['x-robots-tag'] || 'yok'}`);
+  const vercelApp = await get('https://takipplus-site.vercel.app/');
+  ok(/noindex/i.test(vercelApp.headers['x-robots-tag'] || ''), `takipplus-site.vercel.app X-Robots-Tag: ${vercelApp.headers['x-robots-tag'] || 'yok'}`);
 
   // 8) Yalnızca canlıda ölçülebilenler
   if (live) {

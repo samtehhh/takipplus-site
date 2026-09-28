@@ -170,7 +170,7 @@ const get = async (href) => {
   headers['content-type'] ??= types[extname(r.file)] || 'application/octet-stream';
   return { status: r.status, headers, body: readFileSync(join(dist, r.file), 'utf8') };
 };
-const http = await checkSite({ get, apex: canonicalHost });
+const http = await checkSite({ get, apex: canonicalHost, preview: isPreviewBuild });
 for (const e of http.errors) errors.push(`http: ${e}`);
 console.log(`check-dist: ${http.passed.length} HTTP kontrolü geçti (vercel.json yerel taklit)`);
 
