@@ -4,7 +4,8 @@
 // Kullanım: node scripts/serve.mjs [port] [dist-klasörü]   (varsayılan 4322, ./dist)
 // Farklı bir alan adını taklit etmek için isteğe `Host` başlığı ekle.
 import { createServer } from 'node:http';
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { brotliCompressSync, gzipSync, constants } from 'node:zlib';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadRoutes, resolve } from './lib/vercel-routing.mjs';
@@ -55,7 +56,20 @@ createServer((req, res) => {
   }
   const file = fileFor(r.file);
   if (!headers['Content-Type']) headers['Content-Type'] = types[extname(file)] || 'application/octet-stream';
+  // Vercel gibi metin yanıtlarını sıkıştır (Lighthouse ölçümleri canlıya yakın olsun)
+  let body = readFileSync(file);
+  const accept = String(req.headers['accept-encoding'] || '');
+  if (/^(text\/|application\/(json|xml|manifest)|image\/svg)/.test(headers['Content-Type'])) {
+    if (/\bbr\b/.test(accept)) {
+      body = brotliCompressSync(body, { params: { [constants.BROTLI_PARAM_QUALITY]: 5 } });
+      headers['Content-Encoding'] = 'br';
+    } else if (/\bgzip\b/.test(accept)) {
+      body = gzipSync(body);
+      headers['Content-Encoding'] = 'gzip';
+    }
+    headers['Vary'] = 'Accept-Encoding';
+  }
+  headers['Content-Length'] = body.length;
   res.writeHead(r.status, headers);
-  if (req.method === 'HEAD') return res.end();
-  createReadStream(file).pipe(res);
+  res.end(req.method === 'HEAD' ? undefined : body);
 }).listen(port, () => console.log(`dist → http://localhost:${port} (vercel.json kurallarıyla)`));
