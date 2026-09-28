@@ -372,47 +372,53 @@ Kodun dışında kalan, yalnızca senin hesaplarınla yapılabilecek işler. Sı
 
 **Alan adı ve yayın**
 
-1. **Vercel › Project › Settings › Domains:** `takipplus.com.tr` "Redirect to www" ayarını kaldır, Production'a bağla.
-   `www.takipplus.com.tr` da Production'a bağlı kalsın, **yönlendirme seçme** (www→apex 301'i `vercel.json` yapıyor).
-   Bu adım yeni kod yayına girmeden **önce** yapılmalı; aksi hâlde apex→www ve www→apex döngüye girer.
+1. ~~Vercel › Domains: `takipplus.com.tr` Production'a bağlandı, yönlendirme kaldırıldı~~ (28 Eylül 2026, yapıldı).
+   Kalıcı kural: iki alan adı da Production'a bağlı kalmalı, panelde **apex → www yönlendirmesi asla açılmamalı**;
+   www→apex 301'i `vercel.json` yapıyor, ikisi birlikte döngü oluşturur.
 2. **Vercel › Project › Analytics › Enable** (Web Analytics). Açılmazsa her sayfada analiz betiği 404 verir.
 3. **Google Search Console:** "Alan adı" mülkü ekle (`takipplus.com.tr`), verilen `TXT` kaydını Metunic DNS'e gir,
    doğrula. Sitemaps › `https://takipplus.com.tr/sitemap-index.xml` gönder. URL Denetimi ile `/`, `/yks`,
    `/hakkimizda` için "Dizine eklenmesini iste". Eski `www` mülkün varsa kalsın; alan adı mülkü ikisini de kapsar.
 4. **Bing Webmaster Tools:** "Search Console'dan içe aktar" ile tek tıkla.
+5. **Rich Results Test** (Google girişi istiyor, bu yüzden otomatik yapılamadı): https://search.google.com/test/rich-results
+   ile `https://takipplus.com.tr/` ve `/yks`'i test et. Beklenen: Breadcrumb ve SSS "geçerli", hata yok. (Schema Markup
+   Validator'da ikisi de 0 hata, 0 uyarı.)
 
 **DNS (Metunic paneli)**
 
-5. CAA kayıtları ([yukarıda](#dns-ve-e-posta-kayıtları)).
-6. DNSSEC'i aç (Metunic panelinde varsa "DNSSEC" ya da destekten talep). `.tr` imzalı olduğu için mümkün.
-7. Şimdilik `v=spf1 -all` ve DMARC `p=reject` kayıtları. Alan adı e-postasını kurunca MX/SPF/DKIM/DMARC `p=none` ile
+6. **Eski Vercel IP'sini kaldır:** apex'te iki A kaydı var (`76.76.21.21` ve `216.198.79.1`). Vercel Domains ekranı
+   "DNS Change Recommended" diyor; "View DNS configuration"da önerilen kaydı bırak, `76.76.21.21`'i sil. SSL Labs yeni
+   IP'ye A+, eskisine A veriyor (eski uçta HSTS görünmüyor).
+7. CAA kayıtları ([yukarıda](#dns-ve-e-posta-kayıtları)).
+8. DNSSEC'i aç (Metunic panelinde varsa "DNSSEC" ya da destekten talep). `.tr` imzalı olduğu için mümkün.
+9. Şimdilik `v=spf1 -all` ve DMARC `p=reject` kayıtları. Alan adı e-postasını kurunca MX/SPF/DKIM/DMARC `p=none` ile
    değiştir ve `src/config/site.js` → `useDomainEmail: true`.
 
 **Hesap güvenliği**
 
-8. İki adımlı doğrulama (tercihen uygulama ya da güvenlik anahtarı, SMS değil): Vercel, GitHub, Metunic, Google hesabı.
-9. Metunic: alan adı **transfer kilidi** açık, **otomatik yenileme** açık, iletişim e-postası erişebildiğin bir adres.
-10. **HSTS preload:** apex yayına geçip `npm run test:live` temiz geçtikten sonra https://hstspreload.org/ adresine
+10. İki adımlı doğrulama (tercihen uygulama ya da güvenlik anahtarı, SMS değil): Vercel, GitHub, Metunic, Google hesabı.
+11. Metunic: alan adı **transfer kilidi** açık, **otomatik yenileme** açık, iletişim e-postası erişebildiğin bir adres.
+12. **HSTS preload:** eski A kaydı (6. madde) kaldırılıp `npm run test:live` temiz geçtikten sonra https://hstspreload.org/ adresine
     `takipplus.com.tr` gir. Önce şunu kabul et: listeye girdikten sonra **bütün alt alan adları** (gelecekte açılacak
     `api.`, `panel.`, `mail.` dahil) yalnızca HTTPS ile çalışabilir; listeden çıkmak aylar sürer. Şu an tek alt alan
     adı `www` ve HTTPS.
 
 **İzleme**
 
-11. UptimeRobot (ücretsiz, 5 dk): (a) `https://takipplus.com.tr/` anahtar kelime "Kendi ilerlemeni", (b)
+13. UptimeRobot (ücretsiz, 5 dk): (a) `https://takipplus.com.tr/` anahtar kelime "Kendi ilerlemeni", (b)
     `https://takipplus.com.tr/gizlilik-politikasi.html` yönlendirmeyi takip ederek anahtar kelime "Gizlilik Politikası"
     (uygulamanın açtığı adres). Bildirim: e-posta. Form kalkacağı için form uç noktası izlenmiyor.
 
 **Uygulama ve içerik değerleri** (`src/config/site.js`)
 
-12. Apple Team ID (developer.apple.com › Membership) → `apps.yks.ids.appleTeamId`.
-13. Android paket adı (öneri `tr.com.takipplus.yks`) ve Play Console › App integrity › App signing › SHA-256 →
+14. Apple Team ID (developer.apple.com › Membership) → `apps.yks.ids.appleTeamId`.
+15. Android paket adı (öneri `tr.com.takipplus.yks`) ve Play Console › App integrity › App signing › SHA-256 →
     `androidPackage`, `androidSha256`.
-14. Sosyal medya hesap linkleri → `site.social`.
+16. Sosyal medya hesap linkleri → `site.social`.
 
 **Hukuk**
 
-15. Bir hukukçuya teyit ettir: ileride duyuru/pazarlama e-postası gönderilecekse **İYS (İleti Yönetim Sistemi)** kaydı
+17. Bir hukukçuya teyit ettir: ileride duyuru/pazarlama e-postası gönderilecekse **İYS (İleti Yönetim Sistemi)** kaydı
     gerekip gerekmediği; kitlede 18 yaş altı kullanıcılar olduğu için rıza ve veli onayı koşulları. (Bunlar hukuki
     sonuç değil, sorulacak sorular.)
 

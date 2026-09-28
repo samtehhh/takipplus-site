@@ -44,6 +44,7 @@ jobs:
             --root-dir ${{ github.workspace }}/dist
             --fallback-extensions html
             --exclude '^https://(www\.)?takipplus\.com\.tr'
+            --exclude '/dist/api/'
             --exclude 'linkedin\.com'
             --accept '200..=299,403,429'
             --max-retries 2
