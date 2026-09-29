@@ -23,6 +23,12 @@ cpSync(join(web, 'apple-touch-icon.png'), pub('apple-touch-icon.png'));
 for (const f of ['favicon-16x16.png', 'favicon-32x32.png', 'favicon-48x48.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'mask-icon.svg']) {
   cpSync(join(web, f), pub(`icons/${f}`));
 }
+// Arama sonuçları için yüksek çözünürlüklü favicon: sekmedeki favicon.svg'nin kendisi, 192 px
+// (Google 48'in katı ister; yalnızca 48 px .ico bulunca büyütüp bulanık gösteriyor)
+writeFileSync(
+  pub('icons/favicon-192x192.png'),
+  new Resvg(readFileSync(join(web, 'favicon.svg')), { fitTo: { mode: 'width', value: 192 } }).render().asPng(),
+);
 
 // Basın kiti: indirme dosyaları public/brand/kit/ altında kitteki klasör yapısıyla
 rmSync(pub('brand'), { recursive: true, force: true });
