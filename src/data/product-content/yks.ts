@@ -1,8 +1,11 @@
 /**
  * Takip+ YKS sayfa içeriği. Her metin uygulamanın kaynak kodundaki
  * gerçek davranışla uyumlu olmalı (bkz. README → "Ürün gerçekleri").
+ * Son doğrulama: 1 Ekim 2026 (giriş yöntemleri, hesap silme, widget,
+ * rehber adım sayısı, Kontrol Zamanı, Premium kapsamı).
  */
 import { contactEmail } from '../../config/site';
+import type { ScreenName } from '../screens';
 
 export const seo = {
   title: 'Takip+ YKS (Takip Plus): YKS takip uygulaması',
@@ -11,139 +14,229 @@ export const seo = {
 };
 
 export const hero = {
-  label: 'Takip+ YKS',
-  title: 'YKS hazırlığını tek uygulamadan takip et.',
-  lead: 'Konu takibi, deneme netleri, hedef üniversite ve çalışma planın aynı yerde. Koçun sensin; Takip+ ilerlemeni her gün görünür kılar.',
-  note: 'Android ve iOS için geliştiriliyor. Giriş Google hesabınla yapılır.',
+  status: 'Android ve iOS için geliştiriliyor',
+  /** Satır satır (mağaza görseli 01 gibi). Son satır HEDEF rengiyle yazılır. */
+  title: ['Tüm YKS', 'hazırlığın', 'tek uygulamada.'],
+  lead: 'Konu, deneme, net ve hedef takibin tek yerde. Kendi koçluğunu yap, başarını kanıtla.',
+  visualLabel:
+    'Takip+ YKS ana sayfası: son 30 günün aktivite haritası ve Günün Odağı kartları. Bugün 6 saatin 4,2’si, 100 sorunun 80’i, 10 videonun 5’i ve 5 konunun 5’i tamam.',
 };
 
-export const today = {
-  label: 'Bugün',
-  title: 'Bütün günün, tek ekranda.',
-  text: 'Uygulamayı açtığında ilk gördüğün yer Günün Odağı. Bugün ne çalışacağını düşünmek yerine başlarsın.',
-  points: [
-    { t: 'Rutinlerin', d: 'Her gün tekrar eden çalışmaların hazır bekler.' },
-    { t: 'Tekrar zamanı gelen sorular', d: 'Yapamadıklarım’dan bugün tekrar etmen gerekenler.' },
-    { t: 'Çalıştığın konular', d: 'Üzerinde olduğun konular, ne çalıştığını unutma.' },
-    { t: 'Plan görevlerin', d: 'Elle eklediğin görevler de aynı listede.' },
-  ],
-  footnote: 'Saat, soru, video ve konu hedeflerindeki ilerlemen ekranın üstünde canlı olarak görünür.',
+export type TabIcon = 'bugun' | 'konular' | 'calisma' | 'denemeler' | 'hedef' | 'planlar' | 'sosyal';
+
+/** Uygulamanın gerçek alt menü sırası. */
+export const tour = {
+  title: 'Altı sekme, bir günün akışı.',
+  lead: 'Alt menüdeki sıra günün sırasını izler: bugünden başlar, konuya, çalışmaya, denemeye ve hedefe uzanır, plana döner.',
+  tabs: [
+    {
+      id: 'bugun',
+      name: 'Bugün',
+      icon: 'bugun',
+      screen: 'home-program',
+      text: 'Günün Odağı, rutinlerin, tekrar zamanı gelen soruların ve plan görevlerin tek listede. Uygulamayı açınca ne yapacağını düşünmezsin, başlarsın.',
+    },
+    {
+      id: 'konular',
+      name: 'Konular',
+      icon: 'konular',
+      screen: 'konular-tab',
+      text: 'TYT ve AYT’nin bütün konuları. Çalışılıyor, bitti ya da tekrar lazım diye işaretle; tekrarını Ebbinghaus, hafta sonu ya da kendi tarihinle planla.',
+    },
+    {
+      id: 'calisma',
+      name: 'Çalışma',
+      icon: 'calisma',
+      screen: 'optik-kurulum',
+      text: 'Pomodoro, kronometre ve geri sayım. Rutinler, doğru-yanlış girişi, haftalık ders programı ve Optik Çözüm de burada.',
+    },
+    {
+      id: 'denemeler',
+      name: 'Denemeler',
+      icon: 'denemeler',
+      screen: 'perf-tyt-net',
+      text: 'Genel ve branş denemelerini ders ders gir. Netlerin, hedefe kalan farkın ve gelişim grafiğin kendiliğinden çıkar.',
+    },
+    {
+      id: 'hedef-net',
+      name: 'Hedef&Net',
+      icon: 'hedef',
+      screen: 'hedefnet-tab',
+      text: 'Sınava kalan süre, hedef üniversiten ve bölümün. Net Sihirbazı hedefe ulaşmak için gereken netleri hesaplar.',
+    },
+    {
+      id: 'planlar',
+      name: 'Planlar',
+      icon: 'planlar',
+      screen: 'plan',
+      text: 'Günlük takvim, plan takvimi, rutinler ve ders programı. Saat, soru, video ve konu hedeflerini günlere yay.',
+    },
+  ] as { id: string; name: string; icon: TabIcon; screen: ScreenName; text: string }[],
 };
 
-/** Uygulamanın gerçek sekme sırası. */
-export const tabs = [
-  { name: 'Bugün', text: 'Rutinler, tekrar edilecek sorular, konular ve plan görevleri tek ekranda.', color: 'var(--violet-500)' },
-  { name: 'Konular', text: 'TYT ve AYT konularını çalışılıyor, bitti ya da tekrar olarak işaretle; konu takviminde gör.', color: 'var(--red-500)' },
-  { name: 'Çalışma', text: 'Pomodoro, kronometre ve geri sayım. Rutinler, doğru/yanlış girişi, haftalık ders programı ve Optik Çözüm.', color: 'var(--amber-500)' },
-  { name: 'Denemeler', text: 'Net girişi, deneme geçmişi, analiz panosu ve grafikler. Yanlışların için Yapamadıklarım.', color: 'var(--teal-400)' },
-  { name: 'Hedef&Net', text: 'Üniversite ve bölüm hedefini seç; netten puana, puandan sıralamaya hesapla.', color: 'var(--emerald-500)' },
-  { name: 'Planlar', text: 'Günlük takvim ve plan takvimiyle görevlerini haftalara yay.', color: 'var(--violet-400)' },
-];
+export type ChapterVisual = 'deneme' | 'optik' | 'hedef' | 'yapamadiklarim' | 'odak' | 'sosyal';
 
-export type MockKey = 'optik' | 'netchart' | 'repeat' | 'wizard' | 'timer';
-
-export const deepDives: {
+export const chapters: {
   id: string;
+  visual: ChapterVisual;
+  layout: 'split' | 'split-flip' | 'poster' | 'band';
+  /** Uygulamada hangi sekmede (görselin altındaki etiket) */
   tab: string;
+  tabIcon: TabIcon;
   title: string;
   text: string;
-  points: string[];
-  mock: MockKey;
+  points?: string[];
   note?: string;
+  /** Görselin ekran okuyucu açıklaması */
+  label: string;
 }[] = [
   {
-    id: 'optik-cozum',
-    tab: 'Çalışma',
-    title: 'Telefonun optik forma dönüşsün.',
-    text: 'Optik Çözüm’de soruları dijital bir optik form üzerinde işaretlersin. Her sorunun süresi ayrı ayrı ölçülür, bitirdiğinde analiz raporun hazırdır.',
-    points: ['Soru başına süre', 'Boş ve işaretli soruların dağılımı', 'Bitince analiz raporu ve puan hesabı'],
-    mock: 'optik',
-  },
-  {
     id: 'deneme-analizi',
-    tab: 'Denemeler',
-    title: 'Netlerinin nereye gittiğini gör.',
-    text: 'Her denemeden sonra netlerini gir. Analiz panosu ders ders ilerlemeni grafiklerle gösterir; deneme ve soru takvimi ne zaman ne çözdüğünü tutar.',
-    points: ['Net girişi ve deneme geçmişi', 'Analiz panosu ve grafikler', 'Deneme takvimi ve soru takvimi'],
-    mock: 'netchart',
+    visual: 'deneme',
+    layout: 'split',
+    tab: 'Denemeler sekmesinde',
+    tabIcon: 'denemeler',
+    title: 'Her deneme, yarının planı.',
+    text: 'Netlerini ders ders gir. En düşük, en yüksek ve son netin, hata türlerin ve en zayıf konuların kendiliğinden çıkar; yanlışların tekrar listene düşer.',
+    points: ['Genel ve branş denemeleri', 'Ders ders gelişim grafiği', 'Deneme ve soru takvimi'],
+    label:
+      'Performans Analizi ekranı. En düşük net 59, en son ve en yüksek net 93,25. Hata dağılımı: yüzde 37 dikkat, yüzde 33 bilgi, yüzde 29 strateji. En zayıf konular Ek Fiil, Kümeler ve İslam Tarihi.',
   },
   {
-    id: 'yapamadiklarim',
-    tab: 'Denemeler',
-    title: 'Yapamadığın soru, bir daha kaçmaz.',
-    text: 'Yanlış yaptığın ya da boş bıraktığın sorunun fotoğrafını ekle. Yapamadıklarım onu aralıklı tekrar takvimine koyar; zamanı gelince Bugün ekranında karşına çıkar.',
-    points: ['Soru fotoğrafı ve kısa not', 'Aralıklı tekrar takvimi', 'Tekrar zamanı gelenler Bugün’de'],
-    mock: 'repeat',
+    id: 'optik-cozum',
+    visual: 'optik',
+    layout: 'split-flip',
+    tab: 'Çalışma sekmesinde',
+    tabIcon: 'calisma',
+    title: 'Telefonun optik forma dönüşsün.',
+    text: 'Soruları ekrandaki optik formda işaretle. Her sorunun süresi ayrı ölçülür; doğru ama yavaş çözdüğün sorular raporda Kritik Sorular olarak karşına çıkar.',
+    points: ['Soru başına süre', 'Net ve puan hesabı', 'Ayrıntılı analiz raporu'],
+    note: 'Kâğıt optik formu taramaz; işaretlemeyi telefonda yaparsın.',
+    label:
+      'Optik Çözüm ekranı: 40 soruluk testin 31. sorusu, bu soruda 1 dakika 34 saniye. Kritik Sorular raporu: ideal süre 90 saniyeyken Sayı Problemleri 148, Fonksiyonlar 131, Olasılık 122 saniye. Sonuç 32 doğru, 7 yanlış, 30,25 net.',
   },
   {
     id: 'hedef-net',
-    tab: 'Hedef&Net',
-    title: 'Hedefinle arandaki mesafe, net olarak.',
-    text: 'Üniversite ve bölüm ara, hedefini seç. Net Sihirbazı netlerinden puanını ve tahmini sıralamanı hesaplar, hedefe ne kadar net kaldığını gösterir.',
-    points: ['Üniversite ve bölüm arama', 'Net → puan → sıralama hesabı', 'Net Sihirbazı ile hedefe kalan net'],
-    mock: 'wizard',
-    note: 'Sıralama ve taban verileri, uygulamaya gömülü YÖK Atlas kaynaklı veri setinden gelir. Sonuçlar her yılın kendine özgü ders ve branş çarpanlarıyla hesaplanır; %99 oranında tutarlı veridir. Görseldeki değerler örnektir.',
+    visual: 'hedef',
+    layout: 'poster',
+    tab: 'Hedef&Net sekmesinde',
+    tabIcon: 'hedef',
+    title: 'Hedefine kaç sıra kaldı?',
+    text: 'Hedef bölümünü seç. Puanın, sıralaman ve aradaki fark YÖK Atlas verisiyle hesaplanır; Net Sihirbazı hedefe ulaşmak için gereken netleri gösterir.',
+    note: 'Sıralama ve taban verileri uygulamaya gömülü, YÖK Atlas kaynaklı veri setinden gelir. Hesaplar senin netlerine göre yapılan tahminlerdir; görseldeki değerler örnektir.',
+    label:
+      'Bölüm ve üniversite seçimi. Hedef Boğaziçi Üniversitesi Endüstri Mühendisliği, başarı sırası 2.197. Netlerle hesaplanan tahmini sıralama 20.377; hedefe 18.180 sıra kaldı.',
+  },
+  {
+    id: 'yapamadiklarim',
+    visual: 'yapamadiklarim',
+    layout: 'band',
+    tab: 'Denemeler sekmesinde',
+    tabIcon: 'denemeler',
+    title: 'Her yanlışın bir dersi var.',
+    text: 'Yapamadığın sorunun fotoğrafını çek, hata sebebini seç. Tekrar günü geldiğinde soru Günün Odağı’nda karşına çıkar.',
+    label:
+      'Yapamadıklarım: TYT Matematik, İşçi Emek Problemleri sorusu. Hata sebebi Konu Eksiği, not: oranı ters kurdum. Tekrar planı Ebbinghaus: bugün, 3., 7. ve 30. gün.',
   },
   {
     id: 'calisma-sayaci',
-    tab: 'Çalışma',
-    title: 'Sayacı başlat, gerisini Takip+ tutsun.',
-    text: 'Pomodoro, kronometre ya da geri sayımla çalış. Rutinlerini kur, çözdüğün soruların doğru ve yanlışını gir, haftalık ders programını tek yerden yönet.',
-    points: ['Pomodoro, kronometre, geri sayım', 'Rutinler ve doğru/yanlış girişi', 'Haftalık ders programı'],
-    mock: 'timer',
+    visual: 'odak',
+    layout: 'split',
+    tab: 'Çalışma sekmesinde',
+    tabIcon: 'calisma',
+    title: 'Odaklan. Kaçamak yok.',
+    text: 'Pomodoro, kronometre ya da geri sayımla çalış; süren kendiliğinden kaydedilir. Pomodoro sırasında sürpriz bir kontrol gelir: 120 saniye içinde onaylamazsan o set sayılmaz.',
+    points: ['Pomodoro, kronometre, geri sayım', 'Rutinler ve doğru-yanlış girişi', 'Haftalık ders programı'],
+    label:
+      'Çalışma Asistanı: 25 dakikalık Pomodoro. Ekranda Kontrol Zamanı penceresi: devam etmek için 120 saniye içinde onayla.',
+  },
+  {
+    id: 'sosyal',
+    visual: 'sosyal',
+    layout: 'split-flip',
+    tab: 'Ana sayfadaki Sosyal’de',
+    tabIcon: 'sosyal',
+    title: 'Arkadaşına düello at.',
+    text: 'Pomodoro ve kopya kontrollü optik düellolarına katıl, klanınla birlikte çalış, haftalık sıralamada yerini gör. Kimin neyi göreceğini Gizlilik Ayarları’ndan sen seçersin.',
+    points: ['Pomodoro ve Optik düellosu', 'Klanlar ve Global Sohbet', 'Soru Paylaşımı'],
+    label:
+      'Sosyal merkez. 40 soruluk optik düellosunu 33 netle kazandın, rakibin 29,5 net. Haftalık bölüm sıralamasında 17 saat 5 dakikayla ikincisin.',
   },
 ];
 
-export const social = {
-  label: 'Sosyal',
-  title: 'Yalnız çalışma.',
-  text: 'Sosyal, ana ekrandan açılan ayrı bir merkez. Arkadaşlarınla yarışabilir, bir klana katılabilir, çözemediğin soruyu paylaşıp yardım alabilirsin.',
+/** Mağaza görselindeki "Saymakla bitmez" listesi; renk, artı işaretinin rengi. */
+export const modules = {
+  title: 'Saymakla bitmez.',
+  lead: 'Hepsi birbirine bağlı, hepsi tek uygulamada. Telefonda da tablette de.',
   items: [
-    { t: 'Düellolar', d: 'Pomodoro ve Optik düellosu. Arkadaşınla ya da herkese açık topluluk düellolarında.' },
-    { t: 'Klanlar', d: 'Birlikte hedefe koşan küçük gruplar ve klan sohbeti.' },
-    { t: 'Sıralamalar', d: 'Haftalık çalışma süresine göre genel, alan ve bölüm sıralaması.' },
-    { t: 'Soru Paylaşımı', d: 'Çözemediğin soruyu paylaş, topluluktan yardım al.' },
-    { t: 'Arkadaşlar ve sohbet', d: 'Birebir mesajlaşma ve Global Sohbet.' },
-    { t: 'Hikâyeler ve durum', d: '24 saatlik hikâyeler; arkadaşların ne çalıştığını anlık durumdan görür.' },
-  ],
-  privacy: 'Neyin kime görüneceğini Gizlilik Ayarları’ndan sen seçersin; istemediğin kişiyi engelleyebilirsin.',
+    ['Günün Odağı', 'violet'],
+    ['Konu Takibi', 'violet'],
+    ['Konu Takvimi', 'amber'],
+    ['Pomodoro', 'red'],
+    ['Kronometre', 'red'],
+    ['Geri Sayım', 'red'],
+    ['Optik Çözüm', 'amber'],
+    ['Kritik Sorular', 'amber'],
+    ['Analiz Raporu', 'teal'],
+    ['Deneme Takibi', 'teal'],
+    ['Hata Analizi', 'red'],
+    ['Yapamadıklarım', 'red'],
+    ['Soru Takvimi', 'red'],
+    ['Ebbinghaus Tekrarı', 'teal'],
+    ['Net Sihirbazı', 'violet'],
+    ['Hedef Bölüm', 'violet'],
+    ['YÖK Atlas Verisi', 'green'],
+    ['Günlük Takvim', 'blue'],
+    ['Plan Takvimi', 'blue'],
+    ['Rutinler', 'blue'],
+    ['Ders Programı', 'blue'],
+    ['Düellolar', 'teal'],
+    ['Klanlar', 'violet'],
+    ['Global Sohbet', 'violet'],
+    ['Soru Paylaşımı', 'violet'],
+    ['Sıralamalar', 'amber'],
+    ['55 Başarım', 'amber'],
+    ['171 Adımlık Rehber', 'slate'],
+    ['Gizlilik Ayarları', 'slate'],
+    ['Android Widget', 'slate'],
+  ] as [string, 'violet' | 'amber' | 'red' | 'teal' | 'green' | 'blue' | 'slate'][],
+  tabletLabel: 'Takip+ YKS tablette: aktivite haritası, sekmeler ve Günün Odağı geniş ekranda.',
 };
 
-export const extras: { t: string; d: string; visual: 'achievements' | 'guide' | 'widget'; note: string }[] = [
-  {
-    t: '55 başarım',
-    d: 'Bronzdan efsaneviye dört seviye. Deneme, düello, hedef, çalışma ve lig başarımları çalıştıkça açılır.',
-    visual: 'achievements',
-    note: 'Örnek görünüm. Başarımlar uygulamadaki listeden.',
-  },
-  {
-    t: '173 adımlık rehber',
-    d: '“Nasıl Kullanılır?” her bölümü önce kısaca, istersen adım adım anlatır. Kurulumdan sonra ilk durağın burası.',
-    visual: 'guide',
-    note: 'Örnek görünüm.',
-  },
-  {
-    t: 'Ana ekran widget’ı',
-    d: 'TYT, AYT ve YDT’ye kalan günü uygulamayı açmadan gör. Şu an yalnızca Android’de.',
-    visual: 'widget',
-    note: 'Gün sayısı bugünün tarihine göre hesaplanır; sınav tarihleri tahminidir.',
-  },
-];
-
 /**
- * Ücretsiz ve Premium karşılaştırması — uygulamadaki Premium ekranının
- * tablosuyla aynı satırlar. (Uygulamadaki "Kulüpler" ve "Optik Tarama"
- * ifadeleri burada doğru adlarıyla, "Klanlar" ve "Optik Çözüm" olarak yazıldı.)
+ * Ücretsiz ve Premium: uygulamadaki Premium ekranının tablosuyla aynı kapsam.
+ * (Uygulamadaki "Kulüpler" ve "Optik Tarama" ifadeleri burada doğru adlarıyla,
+ * "Klanlar" ve "Optik Çözüm" olarak yazıldı.)
  */
-export const plans = [
-  { label: 'Sosyal', detail: 'Arkadaşlar, Klanlar, Düellolar', free: true },
-  { label: 'Hedef Belirleme', detail: 'Üniversite/bölüm arama, sıralama hesaplama', free: true },
-  { label: 'Konu Takibi', detail: 'TYT/AYT konuları, konu takvimi', free: false },
-  { label: 'Deneme Takibi', detail: 'Net girişi, takvim, sıralama grafiği', free: false },
-  { label: 'Optik Çözüm', detail: 'Dijital optik form ve puan hesaplama', free: false },
-  { label: 'Çalışma Planlama', detail: 'Pomodoro, rutinler, ders programı', free: false },
-  { label: 'Yapamadıklarım', detail: 'Aralıklı tekrar takvimi', free: false },
-];
+export const plans = {
+  title: 'Ücretsiz başla, hazır olunca Premium’a geç.',
+  lead: 'Sosyal ve Hedef Belirleme ücretsiz. Takibin geri kalanı Premium ile açılır.',
+  free: [
+    { label: 'Sosyal', detail: 'Arkadaşlar, Klanlar, Düellolar' },
+    { label: 'Hedef Belirleme', detail: 'Üniversite ve bölüm arama, sıralama hesabı' },
+  ],
+  premium: [
+    { label: 'Konu Takibi', detail: 'TYT ve AYT konuları, konu takvimi' },
+    { label: 'Deneme Takibi', detail: 'Net girişi, analiz, takvim, sıralama grafiği' },
+    { label: 'Optik Çözüm', detail: 'Dijital optik form, puan hesabı, analiz raporu' },
+    { label: 'Çalışma Planlama', detail: 'Pomodoro, rutinler, ders programı' },
+    { label: 'Yapamadıklarım', detail: 'Soru fotoğrafı, aralıklı tekrar takvimi' },
+  ],
+  periods: [
+    { name: 'Haftalık', note: 'Kısa bir dönem için' },
+    { name: 'Aylık', note: 'İlk 3 gün ücretsiz' },
+    { name: 'Sınava Kadar', note: 'Aylığa göre yaklaşık %45 avantajlı' },
+  ],
+  foot: 'Fiyatlar uygulama mağazalarda yayına çıktığında netleşecek. Abonelikler Google Play ve App Store üzerinden yönetilir, dönem sonunda otomatik yenilenir ve istediğin zaman iptal edilebilir.',
+};
+
+/** Sınav geri sayımı: uygulamadaki tahmini TYT oturumu (lib/screens/ana_panel.dart). */
+export const exam = {
+  label: 'TYT',
+  iso: '2027-06-19T10:15:00+03:00',
+  dateText: '19 Haziran 2027',
+  note: 'Tahmini tarih. ÖSYM 2027 takvimini açıkladığında güncellenecek.',
+};
 
 export const faq = [
   {
@@ -176,7 +269,11 @@ export const faq = [
   },
   {
     q: 'Nasıl giriş yapılıyor?',
-    a: '<p>Şimdilik yalnızca Google hesabınla giriş yapabilirsin. Ayrı bir şifre oluşturman gerekmez.</p>',
+    a: '<p>Google hesabınla giriş yaparsın; iPhone ve iPad’de Apple ile Giriş de var. Ayrı bir şifre oluşturman gerekmez.</p>',
+  },
+  {
+    q: 'Tablette kullanabilir miyim?',
+    a: '<p>Evet. Takip+ YKS telefonun yanında tablette de çalışır; ekran büyüdükçe düzen genişler, grafikler ve listeler yan yana sığar.</p>',
   },
   {
     q: 'Profilimi ve çalışma süremi kimler görebilir?',
@@ -184,7 +281,7 @@ export const faq = [
   },
   {
     q: 'Widget iPhone’da da var mı?',
-    a: '<p>TYT, AYT ve YDT sayacı gösteren ana ekran widget’ı şu an yalnızca Android’de var.</p>',
+    a: '<p>TYT, AYT ve YDT’ye kalan günleri gösteren ana ekran widget’ı şu an yalnızca Android’de var.</p>',
   },
   {
     q: '18 yaşından küçüğüm. Kullanabilir miyim?',
@@ -192,6 +289,10 @@ export const faq = [
   },
   {
     q: 'Hesabımı nasıl silerim?',
-    a: `<p>Adımlar ve silinen verilerin listesi <a href="/hesap-silme">Hesap silme</a> sayfasında. Talebini <a href="mailto:${contactEmail}">${contactEmail}</a> adresine de iletebilirsin.</p>`,
+    a: `<p>Uygulamada Profil ekranındaki “Hesabımı Sil” ile hesabını ve verilerini kalıcı olarak silebilirsin. Silinen verilerin listesi <a href="/hesap-silme">Hesap silme</a> sayfasında; talebini <a href="mailto:${contactEmail}">${contactEmail}</a> adresine de iletebilirsin.</p>`,
+  },
+  {
+    q: 'Takip+ YKS resmî bir ÖSYM uygulaması mı?',
+    a: '<p>Hayır. Takip+ YKS, ÖSYM ya da YÖK ile bağlantılı resmî bir uygulama değildir. Sıralama hesaplarında YÖK Atlas kaynaklı veriler kullanılır.</p>',
   },
 ];

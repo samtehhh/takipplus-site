@@ -1,0 +1,156 @@
+---
+/**
+ * Yapamadıklarım tekrar takvimi. Aralıklar uygulamadakiyle aynı
+ * (QuestionService.ebbinghausIntervals: 1, 3, 7, 30 gün). Tarihler
+ * ziyaretçinin bugününe göre site.ts tarafından yazılır; JS yoksa yalnızca
+ * göreli etiketler görünür.
+ */
+const steps = [
+  { k: 'Bugün', d: 0, sub: 'Soruyu ekledin' },
+  { k: 'Yarın', d: 1 },
+  { k: '3 gün sonra', d: 3 },
+  { k: '1 hafta sonra', d: 7 },
+  { k: '1 ay sonra', d: 30 },
+];
+---
+
+<div class="rt" data-animate>
+  <p class="rt__title">Bugün eklediğin soru şu günlerde yeniden karşına çıkar:</p>
+  <ol class="rt__list">
+    {
+      steps.map((s, i) => (
+        <li class:list={['rt__step', { 'rt__step--start': i === 0 }]} style={`--i:${i}`}>
+          <span class="rt__dot" aria-hidden="true">
+            {i === 0 ? (
+              <svg viewBox="0 0 24 24" width="14" height="14">
+                <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+              </svg>
+            ) : (
+              i
+            )}
+          </span>
+          <span class="rt__k">{s.k}</span>
+          <span class="rt__d" data-rt-date={i === 0 ? undefined : s.d}>
+            {s.sub}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .rt {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .rt__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-md);
+    color: var(--text);
+  }
+
+  .rt__list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    list-style: none;
+  }
+
+  /* Hat: mor → pembe, düğüm merkezlerinden geçer */
+  .rt__list::before,
+  .rt__list::after {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 17px;
+    height: 3px;
+    border-radius: 3px;
+  }
+
+  .rt__list::before {
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  .rt__list::after {
+    background: linear-gradient(90deg, #8b5cf6, #a855f7 60%, #e056fd);
+    box-shadow: 0 0 14px rgb(168 85 247 / 0.6);
+    transform-origin: left;
+  }
+
+  .rt__step {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 0.375rem;
+    text-align: center;
+  }
+
+  .rt__dot {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 0.375rem;
+    border-radius: 50%;
+    background: #241a4d;
+    box-shadow:
+      0 0 0 2px #f59e0b inset,
+      0 0 18px rgb(245 158 11 / 0.45);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.9375rem;
+    color: #fff;
+  }
+
+  .rt__step--start .rt__dot {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    box-shadow:
+      0 0 0 2px rgb(255 255 255 / 0.25) inset,
+      0 0 18px rgb(139 92 246 / 0.6);
+  }
+
+  .rt__k {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.8125rem, 0.75rem + 0.4vw, 1rem);
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .rt__d {
+    font-size: var(--text-xs);
+    line-height: 1.3;
+    color: var(--text-2);
+  }
+
+  .rt__d:empty {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion) .rt[data-animate]:not(.is-in) .rt__list::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion) .rt[data-animate]:not(.is-in) .rt__dot {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    .rt .rt__list::after {
+      transition: transform 1600ms var(--ease-in-out) 150ms;
+    }
+
+    .rt .rt__dot {
+      transition:
+        opacity 300ms var(--ease-out),
+        transform 600ms var(--ease-spring);
+      transition-delay: calc(var(--i) * 330ms + 100ms);
+    }
+  }
+</style>

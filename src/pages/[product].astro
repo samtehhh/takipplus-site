@@ -2,28 +2,28 @@
 /**
  * Ürün sayfası şablonu. Her ürün için src/data/products.ts kaydı +
  * src/data/product-content/<slug>.ts içerik dosyası yeterli.
+ * Görsel dil: mağaza görselleri (gece moru gökyüzü, kareli defter noktaları,
+ * HEDEF çizgisi, gerçek ekranlar ve ekrandan taşan uygulama kartları).
  */
-import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
 import StoreButtons from '../components/StoreButtons.astro';
-import DeviceFrame from '../components/DeviceFrame.astro';
-import Carousel from '../components/Carousel.astro';
 import Faq from '../components/Faq.astro';
-import PlanTable from '../components/PlanTable.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
-import TodayMock from '../components/mockups/TodayMock.astro';
-import OptikMock from '../components/mockups/OptikMock.astro';
-import NetChart from '../components/mockups/NetChart.astro';
-import RepeatMock from '../components/mockups/RepeatMock.astro';
-import WizardMock from '../components/mockups/WizardMock.astro';
-import TimerMock from '../components/mockups/TimerMock.astro';
-import SocialMock from '../components/mockups/SocialMock.astro';
-import WidgetMock from '../components/mockups/WidgetMock.astro';
-import AchievementsMock from '../components/mockups/AchievementsMock.astro';
-import GuideMock from '../components/mockups/GuideMock.astro';
+import Device from '../components/app/Device.astro';
+import FocusQuad from '../components/app/FocusQuad.astro';
+import Trajectory from '../components/app/Trajectory.astro';
+import Tour from '../components/app/Tour.astro';
+import ChapterVisual from '../components/app/ChapterVisual.astro';
+import RepeatTimeline from '../components/app/RepeatTimeline.astro';
+import ModuleCloud from '../components/app/ModuleCloud.astro';
+import Plans from '../components/app/Plans.astro';
+import Countdown from '../components/app/Countdown.astro';
+import AppIcon from '../components/app/AppIcon.astro';
+import Logo from '../components/Logo.astro';
 import { products, type Product } from '../data/products';
-import { screens, type ScreenName } from '../data/screens';
 import { mobileAppLd, faqLd } from '../lib/jsonld';
+import { contactEmail } from '../config/site';
 
 export async function getStaticPaths() {
   const contents = import.meta.glob('../data/product-content/*.ts', { eager: true });
@@ -36,15 +36,6 @@ export async function getStaticPaths() {
 }
 
 const { product, content: c } = Astro.props as { product: Product; content: typeof import('../data/product-content/yks') };
-
-const extraVisuals = { achievements: AchievementsMock, guide: GuideMock, widget: WidgetMock };
-const mocks = { optik: OptikMock, netchart: NetChart, repeat: RepeatMock, wizard: WizardMock, timer: TimerMock };
-
-// Gerçek ekran görüntüleri: yalnızca var olanlar galeride gösterilir.
-const shots = import.meta.glob<ImageMetadata>('/assets/screens/*.png', { eager: true, import: 'default' });
-const available = (Object.keys(screens) as ScreenName[]).filter((s) => shots[`/assets/screens/${s}.png`]);
-const hasToday = available.includes('bugun');
-const gallery = available.filter((s) => s !== 'bugun');
 ---
 
 <Base
@@ -59,546 +50,574 @@ const gallery = available.filter((s) => s !== 'bugun');
   ctaHref="#erken-erisim"
   stickyCta
 >
-  <!-- 1. Hero -->
-  <section class="p-hero" data-hero>
-    <div class="glow" aria-hidden="true"></div>
-    <div class="container p-hero__grid">
-      <div class="p-hero__copy">
-        <p class="label">{c.hero.label}</p>
-        <h1 class="display p-hero__title">{c.hero.title}</h1>
-        <p class="lead">{c.hero.lead}</p>
-        <StoreButtons product={product} secondary={{ href: '#bugun', label: 'Nasıl çalıştığını gör' }} />
-        <p class="fine">{c.hero.note}</p>
-      </div>
-      <div class="p-hero__visual">
-        <TodayMock />
-        <p class="sample-note">Örnek veri</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. Bugün -->
-  <section class="section" id="bugun" aria-labelledby="bugun-title">
-    <div class:list={['container', { split: hasToday }]}>
-      <div class="today-sec">
-        <div class="split__copy" data-reveal>
-          <p class="label">{c.today.label}</p>
-          <h2 class="h2" id="bugun-title">{c.today.title}</h2>
-          <p class="lead">{c.today.text}</p>
+  <!-- 1. Hero: mağaza görseli 01'in canlı hâli -->
+  <section class="hero" data-hero aria-labelledby="hero-title">
+    <div class="hero__sky" aria-hidden="true"><span class="dotgrid"></span></div>
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="hero__status">
+          <Logo size={22} wordmark={false} />
+          {c.hero.status}
+        </p>
+        <h1 class="hero__title" id="hero-title">
+          {c.hero.title.slice(0, -1).map((line) => <span class="hero__line">{line} </span>)}
+          <span class="hero__goal">{c.hero.title.at(-1)}</span>
+        </h1>
+        <p class="lead hero__lead">{c.hero.lead}</p>
+        <div class="hero__actions">
+          {
+            product.released ? (
+              <StoreButtons product={product} />
+            ) : (
+              <Button href="#erken-erisim" size="lg" arrow track="cta_hero">
+                Erken erişime katıl
+              </Button>
+            )
+          }
+          <a class="hero__link" href="#uygulama">Uygulamayı gez</a>
         </div>
-        <ul class:list={['today-points', { 'today-points--wide': !hasToday }]} role="list">
-          {c.today.points.map((p) => <li><h3>{p.t}</h3><p>{p.d}</p></li>)}
-        </ul>
-        <p class="muted today-foot">{c.today.footnote}</p>
       </div>
-      {
-        hasToday && (
-          <div class="split__visual">
-            <DeviceFrame screen="bugun" width={300} />
+
+      <div class="hero__visual stage" role="img" aria-label={c.hero.visualLabel}>
+        <Trajectory variant="hero" animate="intro" class="hero__traj" />
+        <Device screens={['home-harita']} sizes="(min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hero__device">
+          <div class="co hero__quad" style="--x:-17.2%;--y:62.4%;--w:134.5cqw">
+            <FocusQuad animate="intro" />
           </div>
-        )
-      }
-    </div>
-  </section>
-
-  <!-- 3. Altı sekme -->
-  <section class="section" id="sekmeler" aria-labelledby="sekmeler-title">
-    <div class="container">
-      <div class="section-head" data-reveal>
-        <p class="label">Uygulamanın içinde</p>
-        <h2 class="h2" id="sekmeler-title">Altı sekme, sınava hazırlığın doğal sırası.</h2>
-        <p class="lead">Alt menüdeki sıra bir günün akışını izler: bugünden başlar, konuya, çalışmaya, denemeye ve hedefe uzanır, plana döner.</p>
-      </div>
-      <Carousel count={c.tabs.length} label="Uygulamanın altı sekmesi" columns={3}>
-        {
-          c.tabs.map((t, i) => (
-            <li class="tab-card" style={`--c:${t.color}`}>
-              <span class="tab-card__n num" aria-hidden="true">{i + 1}</span>
-              <h3 class="tab-card__name">{t.name}</h3>
-              <p class="tab-card__text">{t.text}</p>
-            </li>
-          ))
-        }
-      </Carousel>
-    </div>
-  </section>
-
-  <!-- 4. Derinlemesine -->
-  <div class="dives">
-    {
-      c.deepDives.map((d, i) => {
-        const Mock = mocks[d.mock];
-        return (
-          <section class="section dive" id={d.id} aria-labelledby={`${d.id}-t`}>
-            <div class:list={['container', 'split', { 'split--flip': i % 2 === 1 }]}>
-              <div class="split__copy" data-reveal>
-                <p class="label">{d.tab}</p>
-                <h2 class="h2" id={`${d.id}-t`}>{d.title}</h2>
-                <p class="lead">{d.text}</p>
-                <ul class="plus-list plus-list--compact" role="list">
-                  {d.points.map((p) => <li><span>{p}</span></li>)}
-                </ul>
-                {d.note && <p class="fine dive__note">{d.note}</p>}
-              </div>
-              <div class="split__visual">
-                <Mock />
-                {!d.note && <p class="sample-note">Örnek veri</p>}
-              </div>
-            </div>
-          </section>
-        );
-      })
-    }
-  </div>
-
-  <!-- 5. Sosyal -->
-  <section class="section" id="sosyal" aria-labelledby="sosyal-title">
-    <div class="container">
-      <div class="social-band">
-        <div class="split">
-          <div class="split__copy" data-reveal>
-            <p class="label">{c.social.label}</p>
-            <h2 class="h2" id="sosyal-title">{c.social.title}</h2>
-            <p class="lead">{c.social.text}</p>
-          </div>
-          <div class="split__visual">
-            <SocialMock />
-            <p class="sample-note">Örnek veri</p>
-          </div>
-        </div>
-        <ul class="feature-grid" role="list">
-          {c.social.items.map((it) => <li><h3>{it.t}</h3><p>{it.d}</p></li>)}
-        </ul>
-        <p class="social-band__privacy">{c.social.privacy}</p>
+        </Device>
       </div>
     </div>
+    <p class="container hero__fine">Görseller uygulamanın örnek veriyle çekilmiş ekranlarıdır.</p>
   </section>
 
-  <!-- 6. Başarımlar ve widget -->
-  <section class="section" id="dahasi" aria-labelledby="dahasi-title">
-    <div class="container">
-      <div class="section-head" data-reveal>
-        <h2 class="h2" id="dahasi-title">Küçük ama süreci keyiflendirecek ve işine yarayacak şeyler.</h2>
-      </div>
-      <ul class="extras" role="list">
-        {
-          c.extras.map((e) => {
-            const Visual = extraVisuals[e.visual];
-            return (
-              <li class="extra">
-                <div class="extra__copy">
-                  <h3 class="h3">{e.t}</h3>
-                  <p class="muted">{e.d}</p>
-                </div>
-                <div class="extra__visual">
-                  <Visual />
-                  <p class="sample-note">{e.note}</p>
-                </div>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </div>
-  </section>
+  <!-- 2. Tur: altı sekme -->
+  <Tour id="uygulama" title={c.tour.title} lead={c.tour.lead} tabs={c.tour.tabs} />
 
+  <!-- 3. Özellik bölümleri -->
   {
-    gallery.length >= 3 && (
-      <section class="section" id="ekranlar" aria-labelledby="ekranlar-title">
-        <div class="container">
-          <div class="section-head">
-            <h2 class="h2" id="ekranlar-title">Uygulamadan ekranlar</h2>
+    c.chapters.map((ch) => (
+      <section class:list={['chap', 'defer', `chap--${ch.layout}`]} id={ch.id} aria-labelledby={`${ch.id}-t`}>
+        <div class="container chap__grid">
+          <div class="chap__copy" data-reveal>
+            <h2 class="h2" id={`${ch.id}-t`}>
+              {ch.title}
+            </h2>
+            <p class="chap__text">{ch.text}</p>
+            {ch.points && (
+              <ul class="chap__points" role="list">
+                {ch.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            )}
+            {ch.note && <p class="chap__note">{ch.note}</p>}
           </div>
-          <Carousel count={gallery.length} label="Uygulama ekran görüntüleri" columns={4}>
-            {gallery.map((s) => (
-              <li class="shot">
-                <DeviceFrame screen={s} width={240} />
-                <p class="shot__cap">{screens[s].label}</p>
-              </li>
-            ))}
-          </Carousel>
+          <div class="chap__visual">
+            <ChapterVisual kind={ch.visual} label={ch.label} tab={ch.tab} tabIcon={ch.tabIcon} />
+          </div>
+          {ch.layout === 'band' && (
+            <div class="chap__band">
+              <RepeatTimeline />
+            </div>
+          )}
         </div>
       </section>
-    )
+    ))
   }
 
-  <!-- 7. Ücretsiz ve Premium -->
-  <section class="section" id="premium" aria-labelledby="premium-title">
-    <div class="container container-narrow">
-      <div class="section-head">
-        <p class="label">Planlar</p>
-        <h2 class="h2" id="premium-title">Ücretsiz başla, hazır olduğunda Premium’a geç.</h2>
-        <p class="lead">Sosyal ve Hedef Belirleme ücretsiz. Takibin geri kalanı Premium ile açılır. Aylık planı 3 gün ücretsiz deneyebilirsin.</p>
-      </div>
-      <PlanTable rows={c.plans} />
-      <p class="fine plans-foot">Fiyatlar uygulama mağazalarda yayına çıktığında netleşecek. Abonelikler Google Play ve App Store üzerinden yönetilir.</p>
-    </div>
-  </section>
+  <!-- 4. Saymakla bitmez -->
+  <ModuleCloud id="moduller" title={c.modules.title} lead={c.modules.lead} items={c.modules.items} tabletLabel={c.modules.tabletLabel} />
 
-  <!-- 8. SSS -->
-  <section class="section" id="sss" aria-labelledby="sss-title">
-    <div class="container container-narrow">
-      <div class="section-head">
+  <!-- 5. Ücretsiz ve Premium -->
+  <Plans
+    id="premium"
+    title={c.plans.title}
+    lead={c.plans.lead}
+    free={c.plans.free}
+    premium={c.plans.premium}
+    periods={c.plans.periods}
+    foot={c.plans.foot}
+  />
+
+  <!-- 6. SSS -->
+  <section class="section faq-sec defer" id="sss" aria-labelledby="sss-title">
+    <div class="container faq-sec__grid">
+      <div class="faq-sec__head">
         <h2 class="h2" id="sss-title">Sık sorulanlar</h2>
+        <p class="muted">
+          Cevabını bulamadığın bir şey varsa yaz, birkaç gün içinde dönelim.
+        </p>
+        <a class="faq-sec__mail" href={`mailto:${contactEmail}`}>
+          <AppIcon name="mail" size={18} />
+          {contactEmail}
+        </a>
       </div>
       <Faq items={c.faq} />
     </div>
   </section>
 
-  <!-- 9. Bekleme listesi -->
-  <section class="section">
-    <div class="container">
-      <WaitlistForm product={product.slug} />
+  <!-- 7. Final: sayaç, hedefe varan çizgi ve bekleme listesi -->
+  <section class="finale" aria-labelledby="finale-title">
+    <div class="container finale__inner">
+      <h2 class="finale__title" id="finale-title">Sayaç çalışıyor.</h2>
+      <Countdown iso={c.exam.iso} label={c.exam.label} dateText={c.exam.dateText} note={c.exam.note} />
+    </div>
+    <div class="finale__band" aria-hidden="true">
+      <span class="dotgrid"></span>
+      <Trajectory variant="finale" class="finale__traj" />
+    </div>
+    <div class="container finale__form">
+      <WaitlistForm
+        product={product.slug}
+        text="Takip+ YKS mağazalara çıktığında ilk sen haberdar ol. Tek ihtiyacımız e-posta adresin; yalnızca yayın ve erken erişim hakkında yazarız."
+      />
     </div>
   </section>
 </Base>
 
 <style>
-  .p-hero {
+  /* ---------- Hero ---------- */
+  .hero {
     position: relative;
     isolation: isolate;
-    padding-block: var(--space-7) var(--section-y);
+    overflow-x: clip;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: calc(var(--header-h) + var(--space-5));
   }
 
-  .p-hero__grid {
-    display: grid;
-    gap: var(--space-7);
-    align-items: center;
+  .hero__sky {
+    position: absolute;
+    inset: 0 0 -12rem;
+    z-index: -1;
+    background:
+      radial-gradient(70% 45% at 50% 62%, rgb(139 92 246 / 0.5), transparent 70%),
+      radial-gradient(40% 30% at 80% 40%, rgb(224 86 253 / 0.22), transparent 70%),
+      var(--grad-sky);
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
+    mask-image: linear-gradient(180deg, #000 72%, transparent);
   }
 
-  .p-hero__copy {
-    display: grid;
-    gap: var(--space-5);
-    justify-items: start;
+  .hero__sky .dotgrid {
+    -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 85%);
+    mask-image: linear-gradient(180deg, #000 40%, transparent 85%);
   }
 
-  .p-hero__title {
-    max-width: 14ch;
-  }
-
-  .p-hero__visual {
-    display: grid;
-    gap: var(--space-3);
-    justify-items: end;
-    width: 100%;
-    max-width: 30rem;
-  }
-
-  .p-hero__visual :global(.today) {
-    width: 100%;
-    rotate: -1.5deg;
-  }
-
-  .split {
-    display: grid;
-    gap: var(--space-7);
-    align-items: center;
-  }
-
-  .split__copy {
-    display: grid;
-    gap: var(--space-4);
-    justify-items: start;
-  }
-
-  .split__visual {
-    display: grid;
-    gap: var(--space-3);
-    justify-items: center;
-    width: 100%;
-    max-width: 28rem;
-    margin-inline: auto;
-  }
-
-  .split__visual > :global(.mock) {
-    width: 100%;
-  }
-
-  .today-sec {
+  .hero__grid {
     display: grid;
     gap: var(--space-6);
   }
 
-  .today-points {
-    display: grid;
-    gap: var(--space-3);
-    list-style: none;
-  }
-
-  .today-points li {
-    display: grid;
-    gap: var(--space-1);
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
-    background: var(--grad-card);
-    border: 1px solid var(--line);
-  }
-
-  .today-points h3 {
-    font-size: var(--text-md);
-  }
-
-  .today-points p {
-    color: var(--text-2);
-  }
-
-  .today-foot {
-    max-width: none;
-  }
-
-  .plus-list {
-    display: grid;
-    gap: var(--space-4);
-    margin-block: var(--space-2);
-    list-style: none;
-  }
-
-  .plus-list li {
-    position: relative;
-    display: grid;
-    gap: 0.125rem;
-    padding-left: 1.75rem;
-  }
-
-  .plus-list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.45em;
-    width: 12px;
-    height: 12px;
-    background:
-      linear-gradient(var(--accent-text), var(--accent-text)) center / 100% 2px no-repeat,
-      linear-gradient(var(--accent-text), var(--accent-text)) center / 2px 100% no-repeat;
-  }
-
-  .plus-list span {
-    color: var(--text-2);
-  }
-
-  .plus-list--compact {
-    gap: var(--space-2);
-  }
-
-  .plus-list--compact span {
-    color: var(--text);
-  }
-
-  .dive__note {
-    max-width: 34rem;
-    padding: var(--space-3) var(--space-4);
-    border-left: 2px solid var(--emerald-500);
-    background: rgb(16 185 129 / 0.06);
-    border-radius: 0 10px 10px 0;
-    color: var(--text-2);
-  }
-
-  /* Sekme kartları */
-  .tab-card {
-    display: grid;
-    align-content: start;
-    gap: var(--space-2);
-    height: 100%;
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
-    background: var(--grad-card);
-    border: 1px solid var(--line);
-    border-top: 2px solid var(--c);
-  }
-
-  .tab-card__n {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    margin-bottom: var(--space-2);
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--c) 18%, transparent);
-    color: color-mix(in srgb, var(--c) 65%, white);
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  .tab-card__name {
-    font-size: var(--text-lg);
-  }
-
-  .tab-card__text {
-    color: var(--text-2);
-  }
-
-  /* Sosyal */
-  .social-band {
-    display: grid;
-    gap: var(--space-7);
-    padding: var(--space-7) var(--space-5);
-    border-radius: var(--radius-xl);
-    background:
-      radial-gradient(50rem 24rem at 100% 0%, rgb(45 212 191 / 0.12), transparent 70%),
-      radial-gradient(40rem 20rem at 0% 100%, rgb(139 92 246 / 0.14), transparent 70%),
-      var(--surface);
-    border: 1px solid var(--line);
-  }
-
-  .feature-grid {
-    display: grid;
-    gap: var(--space-5) var(--space-6);
-    list-style: none;
-  }
-
-  .feature-grid li {
-    display: grid;
-    gap: var(--space-1);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
-  }
-
-  .feature-grid h3 {
-    font-size: var(--text-md);
-  }
-
-  .feature-grid p {
-    color: var(--text-2);
-  }
-
-  .social-band__privacy {
-    color: var(--text-2);
-    font-size: var(--text-sm);
-  }
-
-  /* Ekstralar */
-  .extras {
-    display: grid;
-    gap: var(--space-3);
-    list-style: none;
-  }
-
-  .extra {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
-    background: var(--grad-card);
-    border: 1px solid var(--line);
-  }
-
-  .extra__copy {
-    display: grid;
-    gap: var(--space-2);
-  }
-
-  .extra__visual {
-    display: grid;
-    gap: var(--space-3);
-    width: 100%;
-    max-width: 28rem;
-    margin-top: auto;
-  }
-
-  .shot {
+  .hero__copy {
     display: grid;
     justify-items: center;
-    gap: var(--space-3);
+    gap: var(--space-4);
+    text-align: center;
   }
 
-  .shot__cap {
-    color: var(--text-2);
-    font-size: var(--text-sm);
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.875rem 0.3rem 0.35rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.08);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.16) inset;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: rgb(248 250 252 / 0.9);
   }
 
-  .plans-foot {
-    margin-top: var(--space-4);
+  .hero__status :global(.logo__mark) {
+    border-radius: 6px;
+  }
+
+  /* "tek uygulamada." hiçbir genişlikte bölünmez; boyut ekrana göre ölçeklenir */
+  .hero__title {
+    font-size: min(10.6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .hero__line,
+  .hero__goal {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hero__goal {
+    color: var(--teal-400);
+  }
+
+  .hero__lead {
+    max-width: 30rem;
+    color: rgb(248 250 252 / 0.82);
+    font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.3125rem);
+  }
+
+  .hero__actions {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: rgb(196 181 253 / 0.55);
+    text-underline-offset: 0.3em;
+  }
+
+  .hero__visual {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+  }
+
+  .hero__visual :global(.hero__device) {
+    --pw: min(60vw, 290px);
+    width: var(--pw);
+  }
+
+  .hero__fine {
+    margin-top: var(--space-6);
+    font-size: var(--text-xs);
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  @media (hover: hover) {
+    .hero__link:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  /* Sayfa açılışı: başlık ve telefon tek bir sıralı giriş (yalnızca CSS) */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__copy > * {
+      animation: hero-rise 900ms var(--ease-out) both;
+    }
+
+    .hero__copy > :nth-child(2) {
+      animation-delay: 60ms;
+    }
+
+    .hero__copy > :nth-child(3) {
+      animation-delay: 140ms;
+    }
+
+    .hero__copy > :nth-child(4) {
+      animation-delay: 220ms;
+    }
+
+    .hero__visual :global(.hero__device) {
+      animation: hero-rise 1100ms var(--ease-out) 120ms both;
+    }
+  }
+
+  /* Yalnızca konum: metin ve telefon ilk boyamada görünür (LCP gecikmez) */
+  @keyframes hero-rise {
+    from {
+      transform: translateY(18px);
+    }
   }
 
   @media (min-width: 48rem) {
-    .today-points {
-      grid-template-columns: repeat(2, 1fr);
+    .hero__visual :global(.hero__device) {
+      --pw: 290px;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .hero {
+      padding-top: calc(var(--header-h) + var(--space-7));
     }
 
-    .feature-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .social-band {
-      padding: var(--space-8);
-    }
-
-    /* Tablet ve dar dizüstü: iki kart yan yana, widget altta yatay */
-    .extras {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .extra:last-child {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
       align-items: center;
       gap: var(--space-7);
-      padding: var(--space-6);
     }
 
-    .extra:last-child .extra__visual {
-      margin-top: 0;
+    .hero__copy {
+      justify-items: start;
+      text-align: left;
+      gap: var(--space-5);
+    }
+
+    /* Sol sütun ≈ (100vw − 88px) × 0,55; "tek uygulamada." ≈ 8,3 em */
+    .hero__title {
+      font-size: min(5.25rem, calc(6.5vw - 6px));
+    }
+
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+    }
+
+    .hero__visual {
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+
+    .hero__visual :global(.hero__traj) {
+      left: -30%;
+      right: calc((100vw - 100%) / -2);
+    }
+
+    .hero__visual :global(.hero__traj > svg),
+    .hero__visual :global(.hero__traj .traj__goal) {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%);
+      mask-image: linear-gradient(90deg, transparent, #000 22%);
+    }
+
+    .hero__visual :global(.hero__traj .traj__goal-label) {
+      left: auto;
+      right: 1.25rem;
+    }
+
+    .hero__visual :global(.hero__device) {
+      --pw: 300px;
+    }
+
+    .hero__fine {
+      text-align: right;
+    }
+  }
+
+  /* ---------- Özellik bölümleri ---------- */
+  .chap {
+    position: relative;
+    overflow-x: clip;
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  }
+
+  .chap__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .chap__copy {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    max-width: 34rem;
+  }
+
+  .chap__text {
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .chap__points {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    list-style: none;
+  }
+
+  .chap__points li {
+    position: relative;
+    padding-left: 1.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .chap__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.42em;
+    width: 12px;
+    height: 12px;
+    background:
+      linear-gradient(var(--violet-400), var(--violet-400)) center / 100% 2.5px no-repeat,
+      linear-gradient(var(--violet-400), var(--violet-400)) center / 2.5px 100% no-repeat;
+  }
+
+  .chap__note {
+    max-width: 32rem;
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--teal-400);
+    border-radius: 0 12px 12px 0;
+    background: rgb(45 212 191 / 0.06);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .chap__visual {
+    position: relative;
+    display: grid;
+    justify-items: center;
+  }
+
+  /* Poster: ortalanmış başlık, altında sahne */
+  .chap--poster .chap__copy {
+    justify-items: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .chap--poster .chap__note {
+    border-left: 0;
+    border-radius: 12px;
+    text-align: left;
+  }
+
+  .chap--poster {
+    overflow-x: clip;
+  }
+
+  .chap__band {
+    width: 100%;
+  }
+
+  @media (min-width: 48rem) {
+    .chap--split .chap__grid,
+    .chap--split-flip .chap__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+
+    .chap--split-flip .chap__copy {
+      order: 2;
+    }
+  }
+
+  /* Bant: kart telefonun dışına taştığı için iki sütun ancak geniş ekranda */
+  @media (min-width: 64rem) {
+    .chap--band .chap__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'copy copy'
+        'visual band';
+      column-gap: var(--space-7);
+      row-gap: var(--space-7);
+    }
+
+    .chap--band .chap__copy {
+      grid-area: copy;
+    }
+
+    .chap--band .chap__visual {
+      grid-area: visual;
+    }
+
+    .chap--band .chap__band {
+      grid-area: band;
     }
   }
 
   @media (min-width: 64rem) {
-    .p-hero {
-      padding-top: var(--space-9);
+    .chap--split .chap__grid,
+    .chap--split-flip .chap__grid {
+      gap: var(--space-9);
     }
 
-    .p-hero__grid {
-      grid-template-columns: 1.15fr 1fr;
-    }
-
-    .p-hero__title {
-      max-width: 16ch;
-      font-size: var(--text-3xl);
-    }
-
-    .today-points--wide {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .split {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-    }
-
-    .split--flip .split__copy {
-      order: 2;
-    }
-
-    .feature-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .dive + .dive {
-      padding-top: 0;
+    .chap--band .chap__copy {
+      max-width: 40rem;
     }
   }
 
-  /* Geniş ekran: üç dikey kart yan yana */
-  @media (min-width: 80rem) {
-    .extras {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+  /* ---------- SSS ---------- */
+  .faq-sec__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
 
-    .extra:last-child {
-      grid-column: auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-5);
-      padding: var(--space-5);
-    }
+  .faq-sec__head {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+    justify-items: start;
+  }
 
-    .extra:last-child .extra__visual {
-      margin-top: auto;
-    }
+  .faq-sec__mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
 
-    .split {
+  .faq-sec__mail :global(svg) {
+    flex: none;
+    color: var(--violet-400);
+  }
+
+  @media (min-width: 60rem) {
+    .faq-sec__grid {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
       gap: var(--space-9);
     }
+
+    .faq-sec__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-6));
+    }
+  }
+
+  /* ---------- Final ---------- */
+  .finale {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding-block: var(--section-y);
+  }
+
+  .finale::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 30%;
+    z-index: -1;
+    background:
+      radial-gradient(60% 45% at 50% 40%, rgb(139 92 246 / 0.3), transparent 70%),
+      radial-gradient(35% 30% at 76% 62%, rgb(45 212 191 / 0.1), transparent 70%);
+  }
+
+  .finale__inner {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-6);
+    text-align: center;
+  }
+
+  .finale__title {
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  /* Hedefe varan çizgi: kendi şeridinde, metnin üstüne binmez */
+  .finale__band {
+    position: relative;
+    height: clamp(150px, 22vw, 260px);
+    margin-block: var(--space-5) var(--space-6);
+  }
+
+  .finale__band :global(.dotgrid) {
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  }
+
+  .finale__form {
+    position: relative;
   }
 </style>

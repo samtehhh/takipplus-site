@@ -1,0 +1,118 @@
+---
+/**
+ * Beş gerçek ekran, yelpaze gibi açılır: görünür olunca arkadaki telefonlar
+ * ortadakinin arkasından iki yana açılır ("bütün uygulama tek yerde").
+ * Mobilde dıştaki iki telefon gizlenir.
+ */
+import Device from './Device.astro';
+import type { ScreenName } from '../../data/screens';
+
+interface Props {
+  screens: [ScreenName, ScreenName, ScreenName, ScreenName, ScreenName];
+  label: string;
+}
+
+const { screens, label } = Astro.props;
+// sıra: dış sol, iç sol, orta, iç sağ, dış sağ
+const slots = ['far-l', 'near-l', 'center', 'near-r', 'far-r'];
+---
+
+<div class="fan" data-animate role="img" aria-label={label}>
+  {
+    screens.map((s, i) => (
+      <div class:list={['fan__item', `fan__item--${slots[i]}`]}>
+        <Device screens={[s]} sizes="(min-width: 64rem) 260px, (min-width: 48rem) 30vw, 46vw" decorative />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .fan {
+    --w: min(44vw, 250px);
+    position: relative;
+    height: calc(var(--w) * 2.2);
+    margin-inline: auto;
+  }
+
+  .fan__item {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: var(--w);
+    translate: -50% 0;
+    transition:
+      transform 1000ms var(--ease-spring),
+      opacity 500ms var(--ease-out);
+  }
+
+  .fan__item--center {
+    z-index: 3;
+  }
+
+  .fan__item--near-l,
+  .fan__item--near-r {
+    z-index: 2;
+  }
+
+  .fan__item--far-l,
+  .fan__item--far-r {
+    z-index: 1;
+    display: none;
+  }
+
+  .fan__item--near-l {
+    transform: translate(-50%, 5%) rotate(-7deg) scale(0.86);
+  }
+
+  .fan__item--near-r {
+    transform: translate(50%, 5%) rotate(7deg) scale(0.86);
+  }
+
+  @media (min-width: 48rem) {
+    .fan__item--near-l {
+      transform: translate(-58%, 5%) rotate(-7deg) scale(0.86);
+    }
+
+    .fan__item--near-r {
+      transform: translate(58%, 5%) rotate(7deg) scale(0.86);
+    }
+  }
+
+  .fan__item--far-l {
+    transform: translate(-112%, 11%) rotate(-13deg) scale(0.74);
+  }
+
+  .fan__item--far-r {
+    transform: translate(112%, 11%) rotate(13deg) scale(0.74);
+  }
+
+  /* Kapalı yelpaze: hepsi ortadakinin arkasında */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion) .fan[data-animate]:not(.is-in) .fan__item:not(.fan__item--center) {
+      transform: translate(0, 4%) rotate(0deg) scale(0.9);
+    }
+
+    .fan__item--near-l,
+    .fan__item--near-r {
+      transition-delay: 120ms;
+    }
+
+    .fan__item--far-l,
+    .fan__item--far-r {
+      transition-delay: 220ms;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .fan {
+      --w: min(30vw, 260px);
+      height: calc(var(--w) * 2.35);
+    }
+
+    .fan__item--far-l,
+    .fan__item--far-r {
+      display: block;
+    }
+  }
+</style>

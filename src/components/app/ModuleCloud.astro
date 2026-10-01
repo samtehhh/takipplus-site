@@ -1,0 +1,177 @@
+---
+/**
+ * "Saymakla bitmez": uygulamadaki modüller, mağaza görselindeki artılı haplar.
+ * Artının rengi modülün ailesini taşır (uygulamadaki renk dili).
+ */
+import Device from './Device.astro';
+import AppIcon from './AppIcon.astro';
+
+type Tone = 'violet' | 'amber' | 'red' | 'teal' | 'green' | 'blue' | 'slate';
+
+interface Props {
+  id: string;
+  title: string;
+  lead: string;
+  items: [string, Tone][];
+  tabletLabel: string;
+}
+
+const { id, title, lead, items, tabletLabel } = Astro.props;
+const tones: Record<Tone, string> = {
+  violet: '#a78bfa',
+  amber: '#fbbf24',
+  red: '#f87171',
+  teal: '#2dd4bf',
+  green: '#34d399',
+  blue: '#60a5fa',
+  slate: '#94a3b8',
+};
+---
+
+<section class="section mc defer" id={id} aria-labelledby={`${id}-title`}>
+  <div class="container mc__grid">
+    <div class="mc__copy">
+      <div class="mc__head" data-reveal>
+        <h2 class="h2" id={`${id}-title`}>{title}</h2>
+        <p class="lead">{lead}</p>
+      </div>
+      <ul class="mc__cloud" role="list" data-animate>
+        {
+          items.map(([name, tone], i) => (
+            <li style={`--t:${tones[tone]};--i:${i}`}>
+              <span class="mc__plus" aria-hidden="true">+</span>
+              {name}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <figure class="mc__tablet">
+      <Device screens={['tablet-home']} kind="tablet" sizes="(min-width: 64rem) 440px, (min-width: 48rem) 40vw, 78vw" />
+      <figcaption>
+        <AppIcon name="tablet" size={16} />
+        {tabletLabel}
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .mc {
+    overflow-x: clip;
+  }
+
+  .mc__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .mc__copy {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .mc__head {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .mc__cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .mc__cloud li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 36px;
+    padding: 0.375rem 0.875rem 0.375rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(20 14 54 / 0.92);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.14) inset,
+      0 10px 24px -8px rgb(5 2 25 / 0.6);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .mc__plus {
+    font-weight: 800;
+    font-size: 1.125rem;
+    line-height: 1;
+    color: var(--t);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--t) 60%, transparent);
+  }
+
+  .mc__tablet {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .mc__tablet::before {
+    content: '';
+    position: absolute;
+    inset: -10% -6% 10%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(139 92 246 / 0.38), rgb(224 86 253 / 0.08) 65%, transparent);
+  }
+
+  .mc__tablet :global(.device) {
+    width: min(78vw, 420px);
+    rotate: -3deg;
+  }
+
+  .mc__tablet figcaption {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 28rem;
+    font-size: var(--text-xs);
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  .mc__tablet figcaption :global(svg) {
+    flex: none;
+    color: var(--violet-400);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion) .mc__cloud[data-animate]:not(.is-in) li {
+      opacity: 0;
+      transform: translateY(10px) scale(0.92);
+    }
+
+    .mc__cloud[data-animate] li {
+      transition:
+        opacity 400ms var(--ease-out),
+        transform 600ms var(--ease-spring);
+      transition-delay: calc(var(--i) * 28ms);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .mc__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-8);
+    }
+
+    .mc__tablet :global(.device) {
+      width: min(40vw, 440px);
+    }
+  }
+</style>

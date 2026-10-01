@@ -1,0 +1,156 @@
+---
+/**
+ * Telefon ya da tablet çerçevesinde gerçek uygulama ekranı.
+ * Çerçeve ölçüleri mağaza görsellerinden (magaza-final/kaynak-html) oranlanmıştır;
+ * hepsi çerçevenin kendi genişliğine göre (cqw) ölçeklenir.
+ * Birden çok ekran verilirse üst üste dizilir; görünen `is-active` olandır (Tur).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { screens, PHONE, TABLET, type ScreenName } from '../../data/screens';
+
+interface Props {
+  screens: ScreenName[];
+  kind?: 'phone' | 'tablet';
+  /** <img sizes>: çerçevenin sayfadaki yaklaşık genişliği */
+  sizes: string;
+  eager?: boolean;
+  class?: string;
+  /** Ekran görüntüsü süs mü (yanında aynı bilgiyi veren metin varsa) */
+  decorative?: boolean;
+}
+
+const { screens: list, kind = 'phone', sizes, eager = false, class: cls, decorative = false } = Astro.props;
+const files = import.meta.glob<ImageMetadata>('/src/assets/app/*.webp', { eager: true, import: 'default' });
+const dims = kind === 'phone' ? PHONE : TABLET;
+const widths = kind === 'phone' ? [280, 440, 600, 800, 1080] : [480, 720, 1000, 1400, 2064];
+const shots = list.map((name) => {
+  const img = files[`/src/assets/app/${name}.webp`];
+  if (!img) throw new Error(`Ekran bulunamadı: src/assets/app/${name}.webp`);
+  return { name, img, alt: screens[name].alt };
+});
+---
+
+<figure class:list={['device', `device--${kind}`, cls]} data-device>
+  <div class="device__body">
+    <div class="device__screen">
+      {
+        shots.map((s, i) => (
+          <div class:list={['device__shot', { 'is-active': i === 0 }]} data-shot={s.name} aria-hidden={i === 0 && !decorative ? undefined : 'true'}>
+            <Picture
+              src={s.img}
+              alt={decorative ? '' : s.alt}
+              widths={widths}
+              sizes={sizes}
+              formats={['avif', 'webp']}
+              fallbackFormat="webp"
+              width={dims.w}
+              height={dims.h}
+              loading={eager && i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchpriority={eager && i === 0 ? 'high' : undefined}
+            />
+          </div>
+        ))
+      }
+    </div>
+    <span class="device__cam" aria-hidden="true"></span>
+  </div>
+  <slot />
+</figure>
+
+<style is:global>
+  .device {
+    position: relative;
+    margin: 0;
+    container-type: inline-size;
+  }
+
+  .device__body {
+    position: relative;
+    background: #0a0912;
+    box-shadow:
+      0 0 0 1.5px #4b4663,
+      0 0 0 5px rgb(139 92 246 / 0.16),
+      0 40px 80px rgb(5 2 25 / 0.62),
+      -16px 0 60px rgb(139 92 246 / 0.28);
+  }
+
+  .device__screen {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink-900);
+    isolation: isolate;
+  }
+
+  .device__shot {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms var(--ease-out);
+  }
+
+  .device__shot.is-active {
+    opacity: 1;
+  }
+
+  .device__shot picture,
+  .device__shot img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .device__shot img {
+    object-fit: cover;
+  }
+
+  /* Telefon: 290 px'lik mağaza çerçevesi → 9 px kenar, 50/41 köşe, 76×22 ada */
+  .device--phone .device__body {
+    padding: 3.1cqw;
+    border-radius: 17.2cqw;
+  }
+
+  .device--phone .device__screen {
+    aspect-ratio: 1080 / 2400;
+    border-radius: 14.1cqw;
+  }
+
+  .device--phone .device__cam {
+    position: absolute;
+    top: calc(3.1cqw + 3.4cqw);
+    left: 50%;
+    width: 26.2cqw;
+    height: 7.6cqw;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: #000;
+  }
+
+  /* Tablet: ince eşit kenar, küçük ön kamera */
+  .device--tablet .device__body {
+    padding: 2.4cqw;
+    border-radius: 5.2cqw;
+  }
+
+  .device--tablet .device__screen {
+    aspect-ratio: 2064 / 2752;
+    border-radius: 3cqw;
+  }
+
+  .device--tablet .device__cam {
+    position: absolute;
+    top: 1cqw;
+    left: 50%;
+    width: 0.9cqw;
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: #1d1a2b;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .device__shot {
+      transition: none;
+    }
+  }
+</style>

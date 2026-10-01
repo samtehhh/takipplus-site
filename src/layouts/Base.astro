@@ -3,7 +3,6 @@ import '../styles/fonts.css';
 import '../styles/global.css';
 import outfitLatin from '../assets/fonts/outfit-latin.woff2?url';
 import outfitTr from '../assets/fonts/outfit-tr.woff2?url';
-import interLatin from '../assets/fonts/inter-latin.woff2?url';
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -79,7 +78,7 @@ const accentStyle = accent
 
     <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={outfitTr} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <!-- Inter ilk ekranda kullanılmıyor (başlık, giriş ve butonlar Outfit); ön yüklemesi LCP görseliyle yarışıyordu -->
 
     <meta name="theme-color" content={site.themeColor} />
     <meta name="color-scheme" content="dark" />

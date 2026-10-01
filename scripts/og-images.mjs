@@ -14,7 +14,7 @@ mkdirSync(outDir, { recursive: true });
 const pages = {
   default: { kicker: 'Takip+', title: 'Kendi ilerlemeni sen yönet.', sub: 'Sınava hazırlanan öğrenciler için sade ve güçlü çalışma araçları.' },
   home: { kicker: 'Takip+', title: 'Kendi ilerlemeni sen yönet.', sub: 'Sınava hazırlanan öğrenciler için sade ve güçlü çalışma araçları.' },
-  yks: { kicker: 'Takip+ YKS', title: 'YKS hazırlığın tek ekranda.', sub: 'Konu, deneme, net ve hedef takibi. Erken erişim listesi açık.', metrics: true },
+  yks: { kicker: 'Takip+ YKS', title: 'Tüm YKS hazırlığın tek uygulamada.', sub: 'Kendi koçluğunu yap, başarını kanıtla. Erken erişim listesi açık.', metrics: true },
   hakkimizda: { kicker: 'Hakkımızda', title: 'Öğrencinin kendi koçu olabileceğine inanıyoruz.', sub: 'Takip+ nasıl başladı, neyi neden yapıyoruz.' },
   marka: { kicker: 'Marka kiti', title: 'Logolar, renkler ve yazı tipleri.', sub: 'Takip+ markasını doğru kullanmak için her şey burada.' },
   iletisim: { kicker: 'İletişim', title: 'Sorun, fikrin ya da önerin mi var?', sub: 'Takip+ ekibine ulaşmanın yolları.' },
@@ -30,11 +30,12 @@ const markData = `data:image/png;base64,${new Resvg(readFileSync(logoPath), { fi
 
 const h = (type, style, children) => ({ type, props: { style, children } });
 
+// Günün Odağı dörtlüsü: mağaza görseli 01 ve sitedeki hero ile aynı değerler
 const METRICS = [
-  ['#8B5CF6', 'SAAT', '4.5/6'],
+  ['#8B5CF6', 'SAAT', '4.2/6'],
   ['#2DD4BF', 'SORU', '80/100'],
-  ['#F59E0B', 'VİDEO', '6/10'],
-  ['#EF4444', 'KONU', '3/5'],
+  ['#F59E0B', 'VİDEO', '5/10'],
+  ['#EF4444', 'KONU', '5/5'],
 ];
 
 function heat() {
@@ -71,9 +72,10 @@ async function render(slug, p) {
       flexDirection: 'column',
       justifyContent: 'space-between',
       padding: '64px 72px',
-      background: '#0F172A',
+      // Mağaza görsellerinin gökyüzü: ultraviyole → gece, mor ve pembe ışık
+      background: '#12083F',
       backgroundImage:
-        'radial-gradient(circle at 12% -10%, rgba(139,92,246,0.42), rgba(139,92,246,0) 55%), radial-gradient(circle at 105% 20%, rgba(45,212,191,0.20), rgba(45,212,191,0) 45%), radial-gradient(circle at 70% 120%, rgba(245,158,11,0.12), rgba(245,158,11,0) 45%)',
+        'radial-gradient(circle at 78% 70%, rgba(139,92,246,0.55), rgba(139,92,246,0) 45%), radial-gradient(circle at 95% 10%, rgba(224,86,253,0.22), rgba(224,86,253,0) 40%), linear-gradient(180deg, #2A0E8F 0%, #1E0B6B 50%, #12083F 100%)',
       color: '#F8FAFC',
       fontFamily: 'Inter, Inter Ext',
     },
@@ -83,13 +85,13 @@ async function render(slug, p) {
           { type: 'img', props: { src: markData, width: 64, height: 64 } },
           h('div', { fontFamily: 'Outfit, Outfit Ext', fontWeight: 800, fontSize: 38, letterSpacing: -0.5 }, 'Takip+'),
         ]),
-        h('div', { fontSize: 22, color: '#94A3B8' }, canonicalHost),
+        h('div', { fontSize: 22, color: '#C9C3E6' }, canonicalHost),
       ]),
       h('div', { display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 40 }, [
         h('div', { display: 'flex', flexDirection: 'column', maxWidth: p.metrics ? 560 : 720 }, [
-          h('div', { fontFamily: 'Outfit, Outfit Ext', fontWeight: 600, fontSize: 26, color: '#A78BFA', marginBottom: 18 }, p.kicker),
+          h('div', { fontFamily: 'Outfit, Outfit Ext', fontWeight: 600, fontSize: 26, color: '#C4B5FD', marginBottom: 18 }, p.kicker),
           h('div', { fontFamily: 'Outfit, Outfit Ext', fontWeight: 800, fontSize: p.title.length > 34 ? 60 : 72, lineHeight: 1.04, letterSpacing: -2 }, p.title),
-          h('div', { fontSize: 26, lineHeight: 1.4, color: '#94A3B8', marginTop: 22 }, p.sub),
+          h('div', { fontSize: 26, lineHeight: 1.4, color: '#D6D2EC', marginTop: 22 }, p.sub),
         ]),
         p.metrics ? h('div', { display: 'flex', flexDirection: 'column', gap: 14, width: 314 }, [metrics().props.children.slice(0, 2), metrics().props.children.slice(2)].map((row) => h('div', { display: 'flex', gap: 14 }, row))) : heat(),
       ]),

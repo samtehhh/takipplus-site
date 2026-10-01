@@ -56,13 +56,18 @@ const { items, name = 'sss' } = Astro.props;
     outline-offset: 2px;
   }
 
+  /* Logodaki artı: açılınca 45° dönüp çarpıya dönüşür */
   .faq__icon {
     position: relative;
     flex: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    background: rgb(148 163 184 / 0.08);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgb(139 92 246 / 0.14);
+    box-shadow: 0 0 0 1px rgb(167 139 250 / 0.25) inset;
+    transition:
+      rotate var(--dur-3) var(--ease-spring),
+      background-color var(--dur-2) var(--ease-out);
   }
 
   .faq__icon::before,
@@ -71,26 +76,26 @@ const { items, name = 'sss' } = Astro.props;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 12px;
-    height: 2px;
+    width: 13px;
+    height: 2.5px;
     border-radius: 2px;
     background: var(--text);
     translate: -50% -50%;
-    transition: rotate var(--dur-3) var(--ease-out);
   }
 
   .faq__icon::after {
     rotate: 90deg;
   }
 
-  .faq__item[open] .faq__icon::after {
-    rotate: 0deg;
+  .faq__item[open] .faq__icon {
+    rotate: 45deg;
+    background: linear-gradient(135deg, var(--violet-600), var(--uv-700));
   }
 
   .faq__a {
-    padding-bottom: var(--space-5);
+    padding: 0 3.25rem var(--space-5) 0;
     color: var(--text-2);
-    max-width: var(--measure);
+    max-width: 44rem;
   }
 
   .faq__a p + p {
@@ -117,7 +122,13 @@ const { items, name = 'sss' } = Astro.props;
 
   @media (hover: hover) {
     .faq__q:hover .faq__icon {
-      background: rgb(148 163 184 / 0.16);
+      background: rgb(139 92 246 / 0.24);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq__icon {
+      transition: none;
     }
   }
 </style>

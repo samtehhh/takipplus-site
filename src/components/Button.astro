@@ -5,22 +5,33 @@ interface Props {
   size?: 'md' | 'lg';
   type?: 'button' | 'submit';
   track?: string;
+  /** Sağda yuvarlak içinde ok: sayfa içi ya da sayfa dışı ilerleme */
+  arrow?: boolean;
   class?: string;
   [key: string]: unknown;
 }
 
-const { href, variant = 'primary', size = 'md', type = 'button', track, class: cls, ...rest } = Astro.props;
+const { href, variant = 'primary', size = 'md', type = 'button', track, arrow = false, class: cls, ...rest } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
 
 <Tag
-  class:list={['btn', `btn--${variant}`, `btn--${size}`, cls]}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, { 'btn--arrow': arrow }, cls]}
   href={href}
   type={href ? undefined : type}
   data-track={track}
   {...rest}
 >
-  <slot />
+  <span class="btn__label"><slot /></span>
+  {
+    arrow && (
+      <span class="btn__icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="16" height="16">
+          <path d="M5 10h9.5M10.5 5.5 15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+    )
+  }
 </Tag>
 
 <style is:global>
@@ -30,15 +41,15 @@ const Tag = href ? 'a' : 'button';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     min-height: var(--btn-h);
     padding: 0 1.375rem;
     border: 0;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-pill);
     font-family: var(--font-display);
     font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0;
+    letter-spacing: -0.005em;
     line-height: 1.1;
     text-decoration: none;
     white-space: nowrap;
@@ -46,9 +57,10 @@ const Tag = href ? 'a' : 'button';
       transform var(--dur-1) var(--ease-out),
       background-color var(--dur-2) var(--ease-out),
       box-shadow var(--dur-2) var(--ease-out),
-      border-color var(--dur-2) var(--ease-out);
+      color var(--dur-2) var(--ease-out);
     -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation;
   }
 
   .btn--lg {
@@ -57,22 +69,46 @@ const Tag = href ? 'a' : 'button';
     font-size: 1.0625rem;
   }
 
+  .btn--arrow {
+    padding-right: 0.4375rem;
+  }
+
+  .btn__icon {
+    display: inline-grid;
+    place-items: center;
+    width: calc(var(--btn-h) - 14px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    flex: none;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
   .btn:active {
     transform: scale(0.97);
   }
 
+  /* Birincil: gece moru zeminde beyaz hap; mor üstüne mor buton kaybolurdu */
   .btn--primary {
-    color: #fff;
-    background: var(--grad-primary);
+    color: var(--uv-800);
+    background: var(--white);
     box-shadow:
-      0 1px 0 rgb(255 255 255 / 0.18) inset,
-      var(--glow-accent);
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 14px 34px -14px rgb(196 181 253 / 0.55);
+  }
+
+  .btn--primary .btn__icon {
+    color: var(--white);
+    background: linear-gradient(135deg, var(--violet-600), var(--uv-700));
   }
 
   .btn--secondary {
     color: var(--text);
-    background: rgb(148 163 184 / 0.08);
-    box-shadow: 0 0 0 1px var(--line-strong) inset;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.2) inset;
+  }
+
+  .btn--secondary .btn__icon {
+    background: rgb(255 255 255 / 0.1);
   }
 
   .btn--ghost {
@@ -83,23 +119,28 @@ const Tag = href ? 'a' : 'button';
 
   @media (hover: hover) {
     .btn--primary:hover {
+      background: #ffffff;
       box-shadow:
-        0 1px 0 rgb(255 255 255 / 0.22) inset,
-        0 16px 44px -12px color-mix(in srgb, var(--accent) 75%, transparent);
+        0 1px 0 rgb(255 255 255 / 0.7) inset,
+        0 18px 44px -14px rgb(196 181 253 / 0.75);
     }
 
     .btn--secondary:hover {
-      background: rgb(148 163 184 / 0.14);
+      background: rgb(255 255 255 / 0.11);
     }
 
     .btn--ghost:hover {
-      background: rgb(148 163 184 / 0.08);
+      background: rgb(255 255 255 / 0.06);
+    }
+
+    .btn:hover .btn__icon {
+      transform: translateX(2px);
     }
   }
 
   .btn[disabled],
   .btn[aria-disabled='true'] {
-    opacity: 0.6;
+    opacity: 0.55;
     pointer-events: none;
   }
 </style>

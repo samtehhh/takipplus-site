@@ -1,0 +1,1146 @@
+---
+/**
+ * Özellik bölümlerinin görselleri: gerçek ekran + ekrandan dışarı taşan
+ * uygulama kartları. Kart konumları mağaza görsellerinden (430×932 poster,
+ * telefon 290×660 @ 70,300) telefon kutusuna oranlandı:
+ *   x = (sol − 70) / 290, y = (üst − 300) / 660, genişlik = w / 290 (cqw)
+ * Kart içerikleri uygulamanın gerçek metinleri ve örnek veriyle.
+ */
+import Device from './Device.astro';
+import AppIcon from './AppIcon.astro';
+import type { ScreenName } from '../../data/screens';
+import type { ChapterVisual } from '../../data/product-content/yks';
+
+interface Props {
+  kind: ChapterVisual;
+  label: string;
+  /** Görselin altındaki "uygulamada nerede" etiketi */
+  tab: string;
+  tabIcon: string;
+}
+
+const { kind, label, tab, tabIcon } = Astro.props;
+
+const screenOf: Record<ChapterVisual, ScreenName> = {
+  deneme: 'perf-tyt',
+  optik: 'optik',
+  hedef: 'hedef-arama-2',
+  yapamadiklarim: 'yap-detay',
+  odak: 'pomodoro',
+  sosyal: 'sosyal',
+};
+const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
+---
+
+<div class:list={['stage', 'cv', `cv--${kind}`]} data-animate role="img" aria-label={label}>
+  <span class="dotgrid cv__grid" aria-hidden="true"></span>
+  {
+    kind === 'hedef' && (
+      <span class="cv__goal" aria-hidden="true">
+        <span>HEDEF</span>
+      </span>
+    )
+  }
+  <Device screens={[screenOf[kind]]} sizes={sizes} decorative>
+    {
+      kind === 'deneme' && (
+        <Fragment>
+          <div class="co nets" aria-hidden="true" style="--x:-16.5%;--y:29.4%;--w:133cqw;--d:120ms">
+            <div class="net net--min"><span class="net__k">En Düşük</span><span class="net__v cnt" style="--vi:59;--vf:0"></span><span class="net__u">NET</span></div>
+            <div class="net net--last"><span class="net__k">En Son</span><span class="net__v cnt" style="--vi:93;--vf:25"></span><span class="net__u">NET</span></div>
+            <div class="net net--max"><span class="net__k">En Yüksek</span><span class="net__v cnt" style="--vi:93;--vf:25"></span><span class="net__u">NET</span></div>
+          </div>
+          <div class="co co-panel errs" aria-hidden="true" style="--x:-16.5%;--y:45.5%;--w:133cqw;--d:280ms">
+            <div class="co-row co-row--between">
+              <span class="co-title">Hata Dağılımın</span>
+              <span class="co-chip">TYT · Tümü</span>
+            </div>
+            <div class="errs__row">
+              <div class="err" style="--tone:#f87171;--bar:#ef4444;--p:.37">
+                <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
+                <span class="err__v">%37</span><span class="err__k">Dikkat</span><span class="err__bar"><i></i></span>
+              </div>
+              <div class="err" style="--tone:#a78bfa;--bar:#8b5cf6;--p:.33">
+                <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21.5h4M12 2.5a6.8 6.8 0 0 0-4 12.3V17h8v-2.2a6.8 6.8 0 0 0-4-12.3z" /></svg>
+                <span class="err__v">%33</span><span class="err__k">Bilgi</span><span class="err__bar"><i></i></span>
+              </div>
+              <div class="err" style="--tone:#2dd4bf;--bar:#2dd4bf;--p:.29">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
+                <span class="err__v">%29</span><span class="err__k">Strateji</span><span class="err__bar"><i></i></span>
+              </div>
+            </div>
+            <div class="co-row errs__head">
+              <svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8" /><path d="M15 8h5v5" /></svg>
+              <span>En Zayıf Konular</span>
+            </div>
+            <div class="co-item"><span class="co-badge" style="--tone:#f87171">1</span><span class="co-grow"><span class="co-name">Ek Fiil</span><span class="co-sub">TYT Türkçe</span></span><span class="co-strong weak">4 hata</span></div>
+            <div class="co-item"><span class="co-badge">2</span><span class="co-grow"><span class="co-name">Kümeler</span><span class="co-sub">TYT Matematik</span></span><span class="co-strong weak">4 hata</span></div>
+            <div class="co-item"><span class="co-badge">3</span><span class="co-grow"><span class="co-name">İslam Tarihi ve Uygarlığı</span><span class="co-sub">TYT Sosyal</span></span><span class="co-strong weak">3 hata</span></div>
+          </div>
+        </Fragment>
+      )
+    }
+
+    {
+      kind === 'optik' && (
+        <Fragment>
+          <div class="co timer" aria-hidden="true" style="--x:64%;--y:5.2%;--d:420ms;--fy:-5cqw">
+            <span class="timer__ic">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5" /><path d="M12 9.5v4l2.6 1.8M9.5 2.5h5" /></svg>
+            </span>
+            <span class="timer__t">
+              <span class="timer__v" data-tick="94">01:34</span>
+              <span class="timer__k">bu soruda</span>
+            </span>
+          </div>
+          <div class="co co-panel crit" aria-hidden="true" style="--x:-16.2%;--y:39.4%;--w:132.4cqw;--d:200ms">
+            <div class="co-row co-row--between">
+              <span class="co-row">
+                <span class="crit__ic">
+                  <svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z" /><path d="M12 10v4.5M12 17.2v.3" /></svg>
+                </span>
+                <span class="co-grow">
+                  <span class="co-title">Kritik Sorular</span>
+                  <span class="co-sub">Doğru ama yavaş cevaplandı</span>
+                </span>
+              </span>
+              <span class="co-chip" style="--tone:#fbbf24">İdeal 90 sn</span>
+            </div>
+            {[
+              ['7', 'Sayı Problemleri', '+58', '148'],
+              ['21', 'Fonksiyonlar', '+41', '131'],
+              ['33', 'Olasılık', '+32', '122'],
+            ].map(([n, name, plus, sec]) => (
+              <div class="co-item">
+                <span class="co-badge" style="--tone:#fbbf24">{n}</span>
+                <span class="co-grow">
+                  <span class="co-name">{name}</span>
+                  <span class="co-sub">Doğru · ideal süre {plus} sn</span>
+                </span>
+                <span class="co-strong crit__sec">{sec} sn</span>
+              </div>
+            ))}
+            <div class="crit__sum">
+              <span style="--tone:#34d399"><b>32</b> Doğru</span>
+              <span style="--tone:#f87171"><b>7</b> Yanlış</span>
+              <span style="--tone:#a78bfa"><b>30.25</b> Net</span>
+            </div>
+          </div>
+        </Fragment>
+      )
+    }
+
+    {
+      kind === 'hedef' && (
+        <Fragment>
+          <div class="co unis" aria-hidden="true" style="--x:-18.6%;--y:48.8%;--w:137.2cqw;--d:120ms">
+            {[
+              ['O', 'ODTÜ', '531.787'],
+              ['İ', 'İTÜ', '533.676'],
+              ['B', 'Bilkent', '533.063'],
+            ].map(([l, n, p]) => (
+              <span class="uni">
+                <span class="uni__l">{l}</span>
+                <span class="co-grow">
+                  <span class="uni__n">{n}</span>
+                  <span class="co-sub">Bilgisayar · {p}</span>
+                </span>
+              </span>
+            ))}
+          </div>
+          <div class="co target" aria-hidden="true" style="--x:-17.9%;--y:60%;--w:135.9cqw;--d:280ms">
+            <span class="target__l">B</span>
+            <span class="co-grow">
+              <span class="target__n">Boğaziçi Üniversitesi (İstanbul)</span>
+              <span class="co-sub">Endüstri Mühendisliği (İngilizce)</span>
+              <span class="target__chips">
+                <span>SAY</span>
+                <span>534.828</span>
+                <span>#2.197</span>
+              </span>
+            </span>
+            <span class="target__nets">
+              <span><b>109.04</b> TYT</span>
+              <span><b>77.83</b> AYT</span>
+            </span>
+          </div>
+          <div class="co rank" aria-hidden="true" style="--x:-13.8%;--y:77.3%;--w:127.6cqw;--d:440ms">
+            <div class="rank__row">
+              <span class="rank__in"><small>TYT</small>91.5</span>
+              <span class="rank__in"><small>AYT</small>67.5</span>
+              <span class="rank__in"><small>OBP</small>92</span>
+              <span class="rank__arrow">
+                <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" /></svg>
+              </span>
+              <span class="rank__out"><b>20.377</b><small>SIRALAMA</small></span>
+            </div>
+            <div class="rank__goal">
+              <svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+              <span>Hedefe <b>18.180</b> sıra kaldı</span>
+            </div>
+          </div>
+        </Fragment>
+      )
+    }
+
+    {
+      kind === 'yapamadiklarim' && (
+        <div class="co co-panel yap" aria-hidden="true" style="--x:-17.2%;--y:22%;--w:134.5cqw;--d:150ms">
+          <div class="co-row co-row--between">
+            <span class="co-row">
+              <span class="yap__ic">?</span>
+              <span class="co-grow">
+                <span class="co-title">İşçi Emek Problemleri</span>
+                <span class="co-sub">TYT Matematik · 29.09</span>
+              </span>
+            </span>
+            <span class="yap__chips">
+              <span class="co-chip" style="--tone:#a78bfa">Konu Eksiği</span>
+              <span class="co-chip" style="--tone:#fbbf24">Tekrarla</span>
+            </span>
+          </div>
+          <div class="paper">
+            <p>
+              <b>7.</b> Bir havuzu A musluğu tek başına 6 saatte, B musluğu tek başına 9 saatte dolduruyor. İki musluk birlikte
+              açılırsa havuz kaç saatte dolar?
+            </p>
+            <p class="paper__opts">
+              <span>A) 3</span>
+              <span>B) 3,6</span>
+              <span>C) 4</span>
+              <span class="paper__mark">D) 4,5</span>
+              <span>E) 5</span>
+            </p>
+          </div>
+          <p class="yap__note">
+            <svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>
+            Havuz problemi, oranı ters kurdum.
+          </p>
+          <div class="co-row co-row--between">
+            <span class="yap__k">Tekrar İlerlemesi <b>0/4</b></span>
+            <span class="co-chip">Ebbinghaus 1-3-7-30</span>
+          </div>
+          <div class="yap__steps">
+            {['Bugün', '3. gün', '7. gün', '30. gün'].map((d, i) => (
+              <span class:list={['yap__step', { 'is-now': i === 0 }]}>
+                <i>{i + 1}</i>
+                {d}
+              </span>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      kind === 'odak' && (
+        <Fragment>
+          <div class="co co-panel kz" aria-hidden="true" style="--x:-13.8%;--y:58.2%;--w:127.6cqw;--d:220ms">
+            <div class="co-row">
+              <span class="kz__ic">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.5" /><path d="M12 9.5V13l2.4 1.6M5 4 2.5 6.5M19 4l2.5 2.5" /></svg>
+              </span>
+              <span class="kz__t">Kontrol Zamanı!</span>
+            </div>
+            <p class="kz__p">Hâlâ odaklanmış durumda mısın? Devam etmek için 120 saniye içinde onayla.</p>
+            <span class="kz__btn">BURADAYIM, ÇALIŞIYORUM</span>
+          </div>
+          <div class="co caught" aria-hidden="true" style="--x:55%;--y:84%;--d:700ms">
+            <b>Yakalandın!</b>
+            <span>Onaylamazsan set iptal.</span>
+          </div>
+        </Fragment>
+      )
+    }
+
+    {
+      kind === 'sosyal' && (
+        <Fragment>
+          <div class="co co-panel duel" aria-hidden="true" style="--x:-17.2%;--y:39.7%;--w:134.5cqw;--d:160ms">
+            <div class="co-row co-row--between">
+              <span class="duel__k">OPTİK DÜELLO · 40 SORU</span>
+              <span class="co-chip" style="--tone:#34d399">Kazandın!</span>
+            </div>
+            <div class="duel__vs">
+              <span class="duel__p">
+                <span class="duel__a" style="--tone:#8b5cf6">D</span>
+                <span class="co-sub">Sen</span>
+                <b class="cnt" style="--vi:33;--vf:0"></b>
+                <span class="duel__m">34 D · 4 Y · 52:10</span>
+              </span>
+              <span class="duel__x">VS</span>
+              <span class="duel__p">
+                <span class="duel__a" style="--tone:#14b8a6">E</span>
+                <span class="co-sub">Ece</span>
+                <b class="cnt" style="--vi:29;--vf:50"></b>
+                <span class="duel__m">31 D · 6 Y · 55:40</span>
+              </span>
+            </div>
+          </div>
+          <div class="co co-panel wk" aria-hidden="true" style="--x:13.1%;--y:70.3%;--w:104.1cqw;--d:340ms">
+            <div class="co-row co-row--between">
+              <span class="co-title">Haftalık Sıralama</span>
+              <span class="co-sub">Bölüm · TOP 10</span>
+            </div>
+            {[
+              ['1', 'Mert', '18 sa 40 dk', '#fbbf24'],
+              ['2', 'Deniz (Sen)', '17 sa 05 dk', '#cbd5e1'],
+              ['3', 'Zeynep', '15 sa 50 dk', '#f59e0b'],
+            ].map(([n, name, t, tone]) => (
+              <div class:list={['co-item', { 'is-me': n === '2' }]}>
+                <span class="co-badge" style={`--tone:${tone}`}>{n}</span>
+                <span class="co-name co-grow">{name}</span>
+                <span class="co-strong wk__t">{t}</span>
+              </div>
+            ))}
+          </div>
+        </Fragment>
+      )
+    }
+  </Device>
+  <p class="cv__tab">
+    <AppIcon name={tabIcon} size={16} />
+    {tab}
+  </p>
+</div>
+
+<style>
+  .cv {
+    --pw: min(60vw, 300px);
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-5);
+    padding-inline: calc(var(--pw) * 0.2);
+  }
+
+  /* Mağaza görsellerindeki gibi: telefonun arkasında mor ışık havuzu ve kareli defter */
+  .cv::before {
+    content: '';
+    position: absolute;
+    inset: 2% -8% 14%;
+    z-index: -2;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(139 92 246 / 0.42), rgb(224 86 253 / 0.1) 62%, transparent);
+  }
+
+  .cv__grid {
+    inset: -6% -14% 8%;
+    z-index: -1;
+  }
+
+  .cv :global(.device) {
+    width: var(--pw);
+  }
+
+  @media (min-width: 48rem) {
+    .cv {
+      --pw: min(34vw, 300px);
+    }
+
+    .cv--hedef {
+      --pw: min(40vw, 330px);
+    }
+  }
+
+  .cv__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem 0.375rem 0.625rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: 0 0 0 1px var(--line) inset;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  .cv__tab :global(svg) {
+    color: var(--violet-400);
+  }
+
+  .co :global(svg),
+  .co svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---------- Deneme ---------- */
+  .nets {
+    display: flex;
+    gap: 3.1cqw;
+  }
+
+  .net {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.7cqw;
+    padding: 4.1cqw 2.8cqw 3.8cqw;
+    border-radius: 6.2cqw;
+    background: linear-gradient(180deg, var(--c1) 0%, #181420 100%);
+    box-shadow:
+      0 0 0 1.5px var(--edge) inset,
+      0 20px 40px rgb(5 2 25 / 0.6),
+      0 0 26px var(--halo);
+  }
+
+  .net--min {
+    --c1: #2a1520;
+    --edge: rgb(239 68 68 / 0.75);
+    --halo: rgb(239 68 68 / 0.35);
+    --tone: #f87171;
+  }
+
+  .net--last {
+    --c1: #2a2012;
+    --edge: rgb(245 158 11 / 0.75);
+    --halo: rgb(245 158 11 / 0.35);
+    --tone: #fbbf24;
+  }
+
+  .net--max {
+    --c1: #102a24;
+    --edge: rgb(45 212 191 / 0.75);
+    --halo: rgb(45 212 191 / 0.35);
+    --tone: #2dd4bf;
+  }
+
+  .net__k {
+    font-family: var(--font-body);
+    font-size: max(9px, 3.4cqw);
+    font-weight: 600;
+    color: rgb(248 250 252 / 0.7);
+    white-space: nowrap;
+  }
+
+  .net__v {
+    font-size: max(14px, 8.6cqw);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--tone);
+  }
+
+  .net__u {
+    padding: 0.7cqw 2.8cqw;
+    border-radius: 2cqw;
+    background: color-mix(in srgb, var(--tone) 18%, transparent);
+    font-size: max(8px, 2.9cqw);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--tone);
+  }
+
+  .errs__row {
+    display: flex;
+    gap: 2.8cqw;
+  }
+
+  .err {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1cqw;
+    padding: 3.1cqw 2cqw 2.8cqw;
+    border-radius: 4.8cqw;
+    background: color-mix(in srgb, var(--tone) 10%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tone) 45%, transparent) inset;
+    color: var(--tone);
+  }
+
+  .err svg {
+    width: 5.2cqw;
+    height: 5.2cqw;
+  }
+
+  .err__v {
+    font-size: max(12px, 7.2cqw);
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .err__k {
+    font-size: max(8px, 3.3cqw);
+    font-weight: 700;
+  }
+
+  .err__bar {
+    width: 19.3cqw;
+    height: 1cqw;
+    min-height: 2px;
+    border-radius: 9px;
+    background: rgb(255 255 255 / 0.1);
+    overflow: hidden;
+  }
+
+  .err__bar i {
+    display: block;
+    height: 100%;
+    background: var(--bar);
+    transform-origin: left;
+    transform: scaleX(var(--p));
+  }
+
+  .errs__head {
+    gap: 2cqw;
+    margin-top: 0.7cqw;
+    font-size: max(10px, 4.5cqw);
+    font-weight: 700;
+  }
+
+  .errs__head svg {
+    width: 4.8cqw;
+    height: 4.8cqw;
+    color: #f87171;
+  }
+
+  .weak {
+    font-size: max(10px, 4.1cqw);
+    color: #f87171;
+  }
+
+  /* ---------- Optik ---------- */
+  .timer {
+    display: flex;
+    align-items: center;
+    gap: 2cqw;
+    padding: 1.7cqw 3.8cqw 1.7cqw 1.7cqw;
+    border-radius: 99px;
+    background: rgb(26 19 8 / 0.95);
+    box-shadow:
+      0 0 0 1.5px rgb(245 158 11 / 0.75) inset,
+      0 14px 30px rgb(5 2 25 / 0.55),
+      0 0 22px rgb(245 158 11 / 0.35);
+  }
+
+  .timer__ic {
+    display: grid;
+    place-items: center;
+    width: 8.3cqw;
+    height: 8.3cqw;
+    border-radius: 50%;
+    background: rgb(245 158 11 / 0.2);
+    color: #fbbf24;
+  }
+
+  .timer__ic svg {
+    width: 5cqw;
+    height: 5cqw;
+  }
+
+  .timer__t {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timer__v {
+    font-size: max(12px, 6.2cqw);
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timer__k {
+    font-size: max(8px, 2.9cqw);
+    font-weight: 700;
+    color: #fbbf24;
+  }
+
+  .crit__ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 9cqw;
+    height: 9cqw;
+    border-radius: 3.1cqw;
+    background: rgb(245 158 11 / 0.18);
+    color: #fbbf24;
+  }
+
+  .crit__ic svg {
+    width: 5.2cqw;
+    height: 5.2cqw;
+  }
+
+  .crit__sec {
+    font-size: max(10px, 4.5cqw);
+    color: #fbbf24;
+  }
+
+  .crit__sum {
+    display: flex;
+    gap: 2.4cqw;
+  }
+
+  .crit__sum span {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 1.4cqw;
+    padding: 2.4cqw 1cqw;
+    border-radius: 4.1cqw;
+    background: color-mix(in srgb, var(--tone) 10%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tone) 40%, transparent) inset;
+    font-size: max(8px, 3.1cqw);
+    font-weight: 700;
+    color: var(--tone);
+  }
+
+  .crit__sum b {
+    font-size: max(11px, 5.2cqw);
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* ---------- Hedef ---------- */
+  /* HEDEF çizgisi hedef bölüm kartının ortasından geçer, telefonun arkasında kalır.
+     Telefon yüksekliği = 2.146 × genişlik; kart ortası yüksekliğin ~%65,5'i. */
+  .cv__goal {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--pw) * 2.146 * 0.655);
+    width: 100vw;
+    height: 1.5px;
+    translate: -50% 0;
+    background: repeating-linear-gradient(90deg, rgb(45 212 191 / 0.55) 0 7px, transparent 7px 13px);
+    pointer-events: none;
+  }
+
+  .cv__goal span {
+    position: absolute;
+    top: 50%;
+    left: max(1rem, calc(50% - 36rem));
+    translate: 0 -50%;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgb(20 14 54 / 0.95);
+    box-shadow: 0 0 0 1px rgb(45 212 191 / 0.55) inset;
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    color: var(--teal-400);
+  }
+
+  .unis {
+    display: flex;
+    gap: 2.4cqw;
+  }
+
+  .uni {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 2cqw;
+    padding: 2cqw 2.8cqw 2cqw 2cqw;
+    border-radius: 99px;
+    background: linear-gradient(180deg, #27304d, #1a2036);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.12) inset,
+      0 16px 32px rgb(5 2 25 / 0.55);
+  }
+
+  .uni__l {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 7.6cqw;
+    height: 7.6cqw;
+    border-radius: 50%;
+    background: rgb(139 92 246 / 0.25);
+    color: #c4b5fd;
+    font-size: max(9px, 3.8cqw);
+    font-weight: 800;
+  }
+
+  .uni__n {
+    font-size: max(10px, 3.8cqw);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .uni .co-sub {
+    font-size: max(8px, 2.6cqw);
+    white-space: nowrap;
+  }
+
+  .target {
+    display: flex;
+    align-items: center;
+    gap: 3.1cqw;
+    padding: 3.8cqw;
+    border-radius: 7cqw;
+    background: linear-gradient(160deg, #134e4a 0%, #0f2a33 100%);
+    box-shadow:
+      0 0 0 1.5px rgb(45 212 191 / 0.65) inset,
+      0 26px 50px rgb(5 2 25 / 0.6),
+      0 0 30px rgb(45 212 191 / 0.3);
+  }
+
+  .target__l {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 10cqw;
+    height: 10cqw;
+    border-radius: 3.4cqw;
+    background: rgb(45 212 191 / 0.22);
+    color: #5eead4;
+    font-size: max(11px, 5.2cqw);
+    font-weight: 800;
+  }
+
+  .target__n {
+    font-size: max(10px, 4.1cqw);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .target__chips {
+    display: flex;
+    gap: 1.4cqw;
+    margin-top: 1cqw;
+  }
+
+  .target__chips span {
+    padding: 0.5cqw 1.7cqw;
+    border-radius: 1.7cqw;
+    background: rgb(255 255 255 / 0.08);
+    font-size: max(8px, 2.8cqw);
+    font-weight: 700;
+    color: rgb(248 250 252 / 0.85);
+  }
+
+  .target__nets {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4cqw;
+    flex: none;
+  }
+
+  .target__nets span {
+    display: flex;
+    align-items: baseline;
+    gap: 1cqw;
+    padding: 1cqw 2.4cqw;
+    border-radius: 2.4cqw;
+    background: rgb(5 2 25 / 0.35);
+    font-size: max(8px, 2.6cqw);
+    font-weight: 700;
+    color: #5eead4;
+  }
+
+  .target__nets b {
+    font-size: max(10px, 4.1cqw);
+    color: #fff;
+  }
+
+  .rank {
+    display: flex;
+    flex-direction: column;
+    gap: 2.8cqw;
+  }
+
+  .rank__row {
+    display: flex;
+    align-items: stretch;
+    gap: 2cqw;
+    padding: 2.8cqw;
+    border-radius: 6.2cqw;
+    background: linear-gradient(180deg, #2b2160, #1c1645);
+    box-shadow:
+      0 0 0 1.5px rgb(139 92 246 / 0.6) inset,
+      0 22px 44px rgb(5 2 25 / 0.6),
+      0 0 30px rgb(139 92 246 / 0.3);
+  }
+
+  .rank__in {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7cqw;
+    border-radius: 3.4cqw;
+    background: rgb(255 255 255 / 0.06);
+    font-size: max(11px, 5.2cqw);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank__in small,
+  .rank__out small {
+    font-size: max(7px, 2.4cqw);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgb(248 250 252 / 0.6);
+  }
+
+  .rank__arrow {
+    display: grid;
+    place-items: center;
+    color: #a78bfa;
+  }
+
+  .rank__arrow svg {
+    width: 5.2cqw;
+    height: 5.2cqw;
+  }
+
+  .rank__out {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7cqw;
+    padding: 2cqw 1cqw;
+    border-radius: 3.4cqw;
+    background: linear-gradient(135deg, #7c3aed, #4c1d95);
+    box-shadow: 0 0 20px rgb(139 92 246 / 0.5);
+  }
+
+  .rank__out b {
+    font-size: max(12px, 6.6cqw);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .rank__goal {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 2cqw;
+    padding: 2.4cqw 4.1cqw 2.4cqw 2.4cqw;
+    border-radius: 99px;
+    background: rgb(59 20 38 / 0.95);
+    box-shadow:
+      0 0 0 1.5px rgb(244 63 94 / 0.55) inset,
+      0 16px 34px rgb(5 2 25 / 0.6);
+    font-size: max(11px, 4.5cqw);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .rank__goal svg {
+    width: 6.2cqw;
+    height: 6.2cqw;
+    padding: 1cqw;
+    border-radius: 50%;
+    background: rgb(244 63 94 / 0.22);
+    color: #fb7185;
+  }
+
+  .rank__goal b {
+    font-weight: 800;
+  }
+
+  /* ---------- Yapamadıklarım ---------- */
+  .yap {
+    gap: 3.1cqw;
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.13) inset,
+      0 30px 60px rgb(5 2 25 / 0.6),
+      0 0 44px rgb(139 92 246 / 0.28);
+  }
+
+  .yap__ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 9cqw;
+    height: 9cqw;
+    border-radius: 50%;
+    background: rgb(139 92 246 / 0.22);
+    color: #c4b5fd;
+    font-size: max(10px, 4.8cqw);
+    font-weight: 800;
+  }
+
+  .yap__chips {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.2cqw;
+  }
+
+  .paper {
+    display: grid;
+    gap: 2cqw;
+    padding: 3.4cqw 3.8cqw;
+    border-radius: 3.1cqw;
+    background: #f8f7f2;
+    color: #1e1b2e;
+    font-family: var(--font-body);
+    font-size: max(9px, 3.4cqw);
+    line-height: 1.45;
+    rotate: -1.2deg;
+    box-shadow: 0 10px 24px rgb(5 2 25 / 0.45);
+  }
+
+  .paper__opts {
+    display: flex;
+    justify-content: space-between;
+    gap: 1cqw;
+    font-weight: 600;
+  }
+
+  .paper__mark {
+    position: relative;
+  }
+
+  .paper__mark::after {
+    content: '';
+    position: absolute;
+    inset: -1.4cqw -2cqw;
+    border: 0.55cqw solid #dc2626;
+    border-radius: 50%;
+    rotate: -6deg;
+  }
+
+  .yap__note {
+    display: flex;
+    align-items: center;
+    gap: 2cqw;
+    font-family: var(--font-body);
+    font-size: max(9px, 3.4cqw);
+    font-style: italic;
+    color: rgb(248 250 252 / 0.75);
+  }
+
+  .yap__note svg {
+    flex: none;
+    width: 4.5cqw;
+    height: 4.5cqw;
+    color: #a78bfa;
+  }
+
+  .yap__k {
+    font-size: max(9px, 3.8cqw);
+    font-weight: 700;
+  }
+
+  .yap__k b {
+    color: rgb(248 250 252 / 0.6);
+  }
+
+  .yap__steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .yap__steps::before {
+    content: '';
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    top: 4.1cqw;
+    height: 0.5cqw;
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .yap__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1cqw;
+    font-size: max(8px, 2.8cqw);
+    font-weight: 600;
+    color: rgb(248 250 252 / 0.55);
+  }
+
+  .yap__step i {
+    display: grid;
+    place-items: center;
+    width: 8.3cqw;
+    height: 8.3cqw;
+    border-radius: 50%;
+    background: #1f2640;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset;
+    font-style: normal;
+    font-size: max(9px, 3.6cqw);
+    font-weight: 800;
+    color: rgb(248 250 252 / 0.75);
+  }
+
+  .yap__step.is-now {
+    color: #fbbf24;
+  }
+
+  .yap__step.is-now i {
+    background: rgb(245 158 11 / 0.22);
+    box-shadow:
+      0 0 0 1.5px #f59e0b inset,
+      0 0 16px rgb(245 158 11 / 0.55);
+    color: #fff;
+  }
+
+  /* ---------- Odak ---------- */
+  .kz {
+    gap: 3.4cqw;
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.14) inset,
+      0 30px 60px rgb(5 2 25 / 0.65),
+      0 0 44px rgb(245 158 11 / 0.22);
+  }
+
+  .kz__ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 10.3cqw;
+    height: 10.3cqw;
+    border-radius: 3.4cqw;
+    background: rgb(245 158 11 / 0.2);
+    color: #fbbf24;
+  }
+
+  .kz__ic svg {
+    width: 6cqw;
+    height: 6cqw;
+  }
+
+  .kz__t {
+    font-size: max(12px, 6.2cqw);
+    font-weight: 800;
+  }
+
+  .kz__p {
+    font-family: var(--font-body);
+    font-size: max(9px, 3.8cqw);
+    line-height: 1.45;
+    color: rgb(248 250 252 / 0.72);
+  }
+
+  .kz__btn {
+    display: block;
+    padding: 3.4cqw;
+    border-radius: 4.1cqw;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    box-shadow: 0 10px 24px rgb(109 40 217 / 0.45);
+    text-align: center;
+    font-size: max(9px, 3.8cqw);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .caught {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4cqw;
+    padding: 2.4cqw 3.8cqw;
+    border-radius: 4.1cqw;
+    background: linear-gradient(135deg, #ef4444, #be123c);
+    box-shadow:
+      0 14px 30px rgb(127 29 29 / 0.55),
+      0 0 26px rgb(239 68 68 / 0.45);
+    rotate: -7deg;
+    white-space: nowrap;
+  }
+
+  .caught b {
+    font-size: max(11px, 5.2cqw);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .caught span {
+    font-size: max(8px, 2.8cqw);
+    font-weight: 600;
+    color: rgb(255 255 255 / 0.88);
+  }
+
+  /* ---------- Sosyal ---------- */
+  .duel {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.13) inset,
+      0 30px 60px rgb(5 2 25 / 0.6),
+      0 0 44px rgb(45 212 191 / 0.2);
+  }
+
+  .duel__k {
+    font-size: max(8px, 3.1cqw);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #2dd4bf;
+    white-space: nowrap;
+  }
+
+  .duel__vs {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  .duel__p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1cqw;
+  }
+
+  .duel__a {
+    display: grid;
+    place-items: center;
+    width: 12.4cqw;
+    height: 12.4cqw;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tone) 70%, white), var(--tone));
+    box-shadow:
+      0 0 0 1.5cqw color-mix(in srgb, var(--tone) 22%, transparent),
+      0 0 20px color-mix(in srgb, var(--tone) 55%, transparent);
+    font-size: max(12px, 5.5cqw);
+    font-weight: 800;
+  }
+
+  .duel__p b {
+    font-size: max(14px, 8.3cqw);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .duel__m {
+    font-family: var(--font-body);
+    font-size: max(8px, 2.8cqw);
+    color: rgb(248 250 252 / 0.5);
+    white-space: nowrap;
+  }
+
+  .duel__x {
+    font-size: max(10px, 4.1cqw);
+    font-weight: 800;
+    color: rgb(248 250 252 / 0.4);
+  }
+
+  .wk {
+    gap: 2.4cqw;
+    padding: 4.1cqw;
+  }
+
+  .wk .co-item {
+    padding: 2cqw 3cqw;
+  }
+
+  .wk .is-me {
+    background: rgb(139 92 246 / 0.18);
+    box-shadow: 0 0 0 1px rgb(139 92 246 / 0.55) inset;
+  }
+
+  .wk__t {
+    font-size: max(9px, 3.6cqw);
+    color: rgb(248 250 252 / 0.85);
+  }
+</style>

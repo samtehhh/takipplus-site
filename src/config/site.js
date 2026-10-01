@@ -27,7 +27,7 @@ export const site = {
   lang: 'tr',
   founder: 'Samet Öndeş',
   foundingYear: 2026,
-  themeColor: '#0F172A',
+  themeColor: '#0E0828',
 
   contact: {
     /** Şu an kullanılan adres. */

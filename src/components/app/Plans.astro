@@ -1,0 +1,219 @@
+---
+/**
+ * Ücretsiz ve Premium: iki sütun. Premium, logo gradyanlı kenarla vurgulanır
+ * (üç kule fiyat tablosu değil; fiyatlar yayında netleşecek).
+ */
+import AppIcon from './AppIcon.astro';
+
+interface Item {
+  label: string;
+  detail: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  lead: string;
+  free: Item[];
+  premium: Item[];
+  periods: { name: string; note: string }[];
+  foot: string;
+}
+
+const { id, title, lead, free, premium, periods, foot } = Astro.props;
+---
+
+<section class="section plans defer" id={id} aria-labelledby={`${id}-title`}>
+  <div class="container">
+    <div class="plans__head" data-reveal>
+      <h2 class="h2" id={`${id}-title`}>{title}</h2>
+      <p class="lead">{lead}</p>
+    </div>
+
+    <div class="plans__grid">
+      <article class="plan plan--free" aria-labelledby={`${id}-free`}>
+        <header class="plan__top">
+          <h3 class="plan__name" id={`${id}-free`}>Ücretsiz</h3>
+          <p class="plan__sub">Hesabını aç, hemen kullan.</p>
+        </header>
+        <ul class="plan__list" role="list">
+          {
+            free.map((f) => (
+              <li>
+                <AppIcon name="check" size={18} />
+                <span>
+                  <strong>{f.label}</strong>
+                  <span>{f.detail}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+
+      <article class="plan plan--premium" aria-labelledby={`${id}-premium`}>
+        <header class="plan__top">
+          <h3 class="plan__name" id={`${id}-premium`}>Premium</h3>
+          <p class="plan__sub">Ücretsizdeki her şey, artı takibin tamamı.</p>
+        </header>
+        <ul class="plan__list" role="list">
+          {
+            premium.map((f) => (
+              <li>
+                <AppIcon name="check" size={18} />
+                <span>
+                  <strong>{f.label}</strong>
+                  <span>{f.detail}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="plan__periods" role="list" aria-label="Premium planları">
+          {
+            periods.map((p) => (
+              <li>
+                <strong>{p.name}</strong>
+                <span>{p.note}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
+
+    <p class="fine plans__foot">{foot}</p>
+  </div>
+</section>
+
+<style>
+  .plans__head {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 42rem;
+    margin-bottom: var(--space-7);
+  }
+
+  .plans__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .plan {
+    display: grid;
+    align-content: start;
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius-xl);
+  }
+
+  .plan--free {
+    background: rgb(255 255 255 / 0.03);
+    box-shadow: 0 0 0 1px var(--line) inset;
+  }
+
+  /* Premium: gece zemin, logo gradyanlı kenar */
+  .plan--premium {
+    border: 1.5px solid transparent;
+    background:
+      radial-gradient(30rem 16rem at 100% 0%, rgb(224 86 253 / 0.16), transparent 70%) padding-box,
+      linear-gradient(180deg, var(--night-800), var(--night-850)) padding-box,
+      linear-gradient(140deg, #8b5cf6, #b04cf8 55%, #e056fd) border-box;
+    box-shadow: 0 30px 70px -30px rgb(139 92 246 / 0.55);
+  }
+
+  .plan__top {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .plan__name {
+    font-size: var(--text-xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .plan__sub {
+    color: var(--text-2);
+  }
+
+  .plan__list {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .plan__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .plan__list :global(svg) {
+    margin-top: 0.15rem;
+    color: var(--teal-400);
+  }
+
+  .plan--free .plan__list :global(svg) {
+    color: var(--violet-300);
+  }
+
+  .plan__list strong {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-md);
+  }
+
+  .plan__list li > span > span {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .plan__periods {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .plan__periods li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgb(255 255 255 / 0.04);
+  }
+
+  .plan__periods strong {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .plan__periods span {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    text-align: right;
+  }
+
+  .plans__foot {
+    max-width: 48rem;
+    margin-top: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .plans__grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-5);
+      align-items: start;
+    }
+
+    .plan {
+      padding: var(--space-7) var(--space-6);
+    }
+  }
+</style>

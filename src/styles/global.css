@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import '../components/app/callout.css';
 
 /* ---------- Reset ---------- */
 *,
@@ -41,9 +42,8 @@ html:has(dialog[open]) {
 }
 
 /* ---------- Kaydırma çubuğu ----------
- * Tarayıcının kendi çubuğu, marka renkleriyle: koyu ray, mor→turkuaz
- * gradyanlı ince tutamaç. Davranış ve erişilebilirlik tarayıcıda kalır.
- * Dokunmatik cihazlarda sistemin kendi (üstte beliren) çubuğu kullanılır.
+ * Tarayıcının kendi çubuğu, logo gradyanıyla: gece rengi ray, mor→pembe
+ * tutamaç. Dokunmatik cihazlarda sistemin kendi çubuğu kullanılır.
  */
 @media (hover: hover) and (pointer: fine) {
   ::-webkit-scrollbar {
@@ -53,24 +53,20 @@ html:has(dialog[open]) {
 
   ::-webkit-scrollbar-track {
     background: var(--bg);
-    box-shadow: inset 1px 0 0 rgb(148 163 184 / 0.08);
+    box-shadow: inset 1px 0 0 rgb(196 181 253 / 0.08);
   }
 
   ::-webkit-scrollbar-thumb {
     min-height: 56px;
     border: 4px solid transparent;
     border-radius: 999px;
-    background: linear-gradient(180deg, var(--violet-400), var(--violet-600) 55%, var(--teal-400)) padding-box;
+    background: linear-gradient(180deg, var(--violet-400), var(--violet-600) 55%, var(--flare-400)) padding-box;
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25);
   }
 
   ::-webkit-scrollbar-thumb:hover {
     border-width: 3px;
-    background: linear-gradient(180deg, var(--violet-300), var(--violet-500) 55%, #5eead4) padding-box;
-  }
-
-  ::-webkit-scrollbar-thumb:active {
-    background: linear-gradient(180deg, var(--violet-300), var(--violet-400) 55%, #99f6e4) padding-box;
+    background: linear-gradient(180deg, var(--violet-300), var(--violet-500) 55%, #ea80fc) padding-box;
   }
 
   ::-webkit-scrollbar-corner,
@@ -79,7 +75,6 @@ html:has(dialog[open]) {
     background: transparent;
   }
 
-  /* Sayfa içi küçük kaydırma alanları (tablolar, içindekiler) daha ince */
   .table-wrap::-webkit-scrollbar,
   .toc::-webkit-scrollbar {
     width: 10px;
@@ -95,12 +90,11 @@ html:has(dialog[open]) {
   .table-wrap::-webkit-scrollbar-thumb,
   .toc::-webkit-scrollbar-thumb {
     border-width: 3px;
-    background: rgb(148 163 184 / 0.35) padding-box;
+    background: rgb(196 181 253 / 0.3) padding-box;
     box-shadow: none;
   }
 }
 
-/* Firefox ::-webkit-scrollbar desteklemez; standart özelliklerle aynı renkler */
 @supports not selector(::-webkit-scrollbar) {
   html {
     scrollbar-color: var(--violet-500) var(--bg);
@@ -126,7 +120,7 @@ h4 {
   font-family: var(--font-display);
   font-weight: 700;
   line-height: var(--leading-snug);
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -162,6 +156,7 @@ textarea {
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 :focus-visible {
@@ -171,7 +166,7 @@ button {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--violet-500) 45%, transparent);
+  background: color-mix(in srgb, var(--violet-500) 55%, transparent);
   color: var(--white);
 }
 
@@ -196,7 +191,7 @@ button {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
   background: var(--white);
-  color: var(--ink-900);
+  color: var(--uv-900);
   font-weight: 600;
   transform: translateY(-200%);
   transition: transform var(--dur-2) var(--ease-out);
@@ -240,8 +235,8 @@ button {
 
 .h2 {
   font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: 1.1;
+  font-weight: 800;
+  line-height: 1.04;
 }
 
 .h3 {
@@ -250,8 +245,12 @@ button {
   letter-spacing: -0.01em;
 }
 
+/* Başlık altı cümle: markanın sesi Outfit */
 .lead {
+  font-family: var(--font-display);
   font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--text-2);
   max-width: var(--measure);
 }
@@ -272,6 +271,10 @@ button {
   letter-spacing: -0.01em;
 }
 
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
 .section-head {
   display: grid;
   gap: var(--space-4);
@@ -285,7 +288,7 @@ button {
   justify-items: center;
 }
 
-/* Bölüm etiketi: artı işaretiyle, büyük harf yok */
+/* Bölüm etiketi (iç sayfalar): artı işaretiyle, büyük harf yok */
 .label {
   display: inline-flex;
   align-items: center;
@@ -333,7 +336,20 @@ button {
   background: var(--text-3);
 }
 
-/* ---------- Glow arka plan (uygulamanın imza görünümü, ölçülü) ---------- */
+/* ---------- Kareli defter: mağaza görsellerindeki nokta ızgarası ---------- */
+.dotgrid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
+}
+
+/* ---------- Glow arka plan (iç sayfalar, ölçülü) ---------- */
 .glow {
   position: absolute;
   inset: 0;
@@ -355,7 +371,7 @@ button {
   top: -28rem;
   left: 50%;
   translate: -62% 0;
-  background: radial-gradient(closest-side, rgb(139 92 246 / 0.26), rgb(139 92 246 / 0));
+  background: radial-gradient(closest-side, rgb(139 92 246 / 0.3), rgb(139 92 246 / 0));
 }
 
 .glow::after {
@@ -363,7 +379,7 @@ button {
   aspect-ratio: 1;
   top: -10rem;
   right: -16rem;
-  background: radial-gradient(closest-side, rgb(45 212 191 / 0.14), rgb(45 212 191 / 0));
+  background: radial-gradient(closest-side, rgb(224 86 253 / 0.14), rgb(224 86 253 / 0));
 }
 
 /* ---------- Görünme animasyonu ----------
@@ -371,16 +387,26 @@ button {
  * kullanıcı hareketi azaltmayı istememişse devreye girer.
  */
 @media (prefers-reduced-motion: no-preference) {
-  .motion [data-reveal]:not(.is-in) {
+  .motion [data-reveal].is-pending {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px);
   }
 
-  .motion [data-reveal] {
+  .motion [data-reveal].is-in {
     transition:
-      opacity 700ms var(--ease-out),
-      transform 700ms var(--ease-out);
+      opacity 800ms var(--ease-out),
+      transform 800ms var(--ease-out);
   }
+}
+
+/* ---------- Ekran dışı bölümler ----------
+ * Uzun sayfalarda ilk ekranın dışındaki bölümlerin stil/düzen/boyama işi,
+ * bölüm yaklaşınca yapılır (ilk açılışta ana iş parçacığı boşa yorulmaz).
+ * "auto" yükseklik bir kez çizilince hatırlanır; kaydırma çubuğu zıplamaz.
+ */
+.defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
 }
 
 /* ---------- Dokunma hedefleri ---------- */

@@ -23,7 +23,7 @@ ortaktır.
 **Ses tonu:** Samimi, motive edici, abartısız. Öğrenciyle "sen" diye konuşur. Kısa cümleler, etken çatı.
 
 - Yapmadığımız şeyi vaat etmeyiz ("net artışı garanti" yok).
-- Tahmine tahmin, örneğe örnek deriz; her mockup "Örnek veri" notu taşır.
+- Tahmine tahmin, örneğe örnek deriz; ekran görselleri örnek veriyle çekilir ve sayfada bunu söyleyen bir not bulunur.
 - Tanıtım dili ve ünlem yığını yok. Emoji çok az ve yalnızca uygulama içi bağlamda.
 - Terimler uygulamayla birebir: **Klan** (kulüp değil), **Optik Çözüm** (optik tarama değil), **Hedef&Net**,
   **Yapamadıklarım**, **Günün Odağı**, **Net Sihirbazı**, **Bize Bildir**.
@@ -81,6 +81,20 @@ kontur eklenmez. Uygulama ikonu ikinci bir çerçevenin içine konmaz. Yazım he
 | `--slate-400` | `#94A3B8` | İkincil metin |
 | `--ink-950` | `#0B0B10` | Uygulama ikonu ve açılış ekranı zemini (kit v1.0; eskiden `#0A0A1A`) |
 
+**Site zemini (tasarım v2, Ekim 2026):** mağaza görselleriyle aynı dünya. Lacivert zemin yerini mor tonlu geceye
+bıraktı; eski `--ink-*` adları bu aileye bağlı, iç sayfalar da aynı zemini kullanır.
+
+| Token | Hex | Rol |
+|---|---|---|
+| `--uv-700 → --uv-900` | `#2A0E8F → #1E0B6B → #12083F` | Ultraviyole gökyüzü (hero; logo T'sinin başlangıcı) |
+| `--night-900` | `#0E0828` | Sayfa zemini |
+| `--night-850 / -800` | `#150D38 / #1C1248` | Yüzeyler |
+| `--flare-400` | `#E056FD` | Logo T'sinin ucu; yalnızca çizgi uçları ve ışık |
+| `--slate-400` | `#ACA6CC` | İkincil metin (mor tonlu gri, gece zemininde 8:1) |
+
+Ekrandan taşan uygulama kartları uygulamanın kendi lacivert yüzeyini korur (`#27304D → #1A2036`): kart, uygulamanın
+bir parçası olduğu için zeminle değil ekranla aynı renktedir.
+
 **Günün Odağı dörtlüsü:** Saat = violet, Soru = turkuaz, Video = amber, Konu = kırmızı. Uygulamadaki hedef
 kartlarıyla aynı; sitedeki mockup'lar ve OG görselleri bu dörtlüyü markanın veri dili olarak kullanır.
 
@@ -88,7 +102,9 @@ kartlarıyla aynı; sitedeki mockup'lar ve OG görselleri bu dörtlüyü markan�
 KPSS: `#8A2100 → #F25C05 → #FFA51F`. Değerler kitteki `renkler.css` / `renkler.json` dosyalarında.
 
 **Turkuaz neden veri rengi:** `#2DD4BF`, Takip+ LGS'nin mavi-camgöbeği tonuna çok yakın. Ana marka rengi gibi
-kullanılırsa ürün rengiyle karışır; bu yüzden yalnızca grafik ve göstergelerde kalır.
+kullanılırsa ürün rengiyle karışır; bu yüzden grafik ve göstergelerde kalır. Tek istisna **HEDEF** anlamıdır: kesik
+HEDEF çizgisi, "hedefe ulaşıldı" durumu ve (mağaza görsellerindeki gibi) hero başlığının son satırı. Başka başlıkta
+renkli vurgu kullanılmaz.
 
 **Ürün vurgusu:** Her ürün `src/data/products.ts` içinde `accent` / `accentDeep` tanımlar. Ürün sayfası
 `--accent` değişkenini bu renkle ezer.
@@ -109,9 +125,12 @@ büyük yüzeyde, düşük opaklıkla kullanılır (`.glow`).
 
 | Rol | Font | Ağırlık |
 |---|---|---|
-| Başlık, logo | Outfit | 600–800 |
-| Gövde, arayüz | Inter | 400–600 |
-| Rakam, süre, kod | JetBrains Mono | 400–600 |
+| Başlık, logo, giriş cümleleri, butonlar, etiketler | Outfit | 500–800 |
+| Uzun gövde metni (paragraf, SSS cevabı, yasal metin) | Inter | 400–600 |
+| Rakam (sayaç, net, süre) | Outfit, tablo rakamları (`tnum`) | 700–800 |
+| Kod, hex değeri (yalnızca marka sayfası) | JetBrains Mono | 400–600 |
+
+Sitenin sesi Outfit'tir; Inter yalnızca okunması uzun metinde. İlk ekranda Inter kullanılmadığı için ön yüklenmez.
 
 Hepsi SIL OFL. Site fontları kendi sunucusundan, yalnızca Latin + Türkçe harflerle (ğ Ğ ı İ ş Ş) ve kullanılan
 ağırlık aralığıyla sunar (`scripts/subset-fonts.py`, toplam ≈ 81 KB). Ölçek `clamp()` ile akışkan; gövde
@@ -133,14 +152,18 @@ Uygulamadaki Material ikonlarla aynı çizgi karakterini taşır. Emoji ikon yer
 
 ## 7. İmza detaylar
 
-1. **Günün Odağı dörtlüsü:** dört renkli hedef kartı; ilerleme çubukları görünür olunca dolar.
-2. **Aktivite haritası:** 30 günlük ısı haritası (Yok/Az/Orta/Çok); ana sayfada hücreler sırayla yanar.
-3. **Artı işareti:** logodaki "+" bölüm etiketlerinde ve liste işaretlerinde yapısal bir öğe olarak.
+1. **HEDEF çizgisi:** mor→pembe parlayan ilerleme eğrisi, beyaz veri noktaları ve turkuaz kesik HEDEF çizgisi
+   (mağaza görsellerinin hepsinde). Sitede hero'da yükselir, header'ın alt kenarında sayfa boyunca HEDEF'e ilerler
+   (sona varınca uç turkuaza döner), finalde hedefi keser ve kesişimde logodaki artı belirir.
+2. **Günün Odağı dörtlüsü:** dört renkli hedef kartı; rakamlar sıfırdan sayılır, çubuklar dolar.
+3. **Kareli defter:** 22 px aralıklı nokta ızgarası; telefonların arkasında, kenarlara doğru söner.
+4. **Ekrandan taşan kartlar:** gerçek ekranın üstünde, uygulamanın kendi bileşenlerinden kopyalanmış kartlar.
+5. **Artı işareti:** liste işaretleri, modül hapları ve SSS'te açılınca çarpıya dönen düğme.
 
 ## 8. Görsel içerik kuralları
 
-- Uydurma ekran tasarlanmaz. Gerçek ekran görüntüleri gelene kadar yalnızca uygulamadaki yapıyı izleyen küçük
-  mockup kartları kullanılır ve hepsi "Örnek veri" notu taşır.
+- Uydurma ekran tasarlanmaz. Sitede uygulamanın örnek veriyle çekilmiş gerçek ekranları kullanılır; ekrandan taşan
+  kartlar yalnızca uygulamada gerçekten olan bileşenleri ve metinleri kopyalar.
 - Üniversite logosu, stok fotoğraf, gerçek kişi adı (ör. premium plan adlarındaki kişi) ve başarım adlarındaki
   film isimleri/görselleri kullanılmaz.
 - Sıralama/puan rakamları her zaman "örnek" ya da "tahmin" olarak etiketlenir; kaynak: uygulamaya gömülü,

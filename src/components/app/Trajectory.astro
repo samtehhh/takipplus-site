@@ -1,0 +1,260 @@
+---
+/**
+ * Markanın imza çizgisi: mor→pembe parlayan ilerleme eğrisi, üzerinde veri
+ * noktaları ve turkuaz kesik HEDEF çizgisi (mağaza görsellerinin hepsinde var).
+ *  - hero: yolculuk başlıyor, eğri hedefin altında yükseliyor
+ *  - finale: eğri hedef çizgisini kesiyor; kesişimde logodaki artı
+ * SVG kutuya esnetilir (preserveAspectRatio="none"); çizgi kalınlığı sabit
+ * kalır. Noktalar HTML; konumları eğrinin üstünden derlemede hesaplanır.
+ */
+interface Props {
+  variant?: 'hero' | 'finale';
+  /** HEDEF çizgisinin yüksekliği (kutunun yüzdesi). Varsayılan varyanttan gelir. */
+  goal?: number;
+  /** intro: sayfa açılışında çizilir (ilk ekran). scroll: görünür olunca çizilir. */
+  animate?: 'intro' | 'scroll';
+  class?: string;
+}
+
+type Pt = [number, number];
+type Seg = [Pt, Pt, Pt]; // c1, c2, bitiş
+
+const shapes: Record<string, { start: Pt; segs: Seg[]; goal: number; nodes: number[]; plus: boolean }> = {
+  hero: {
+    start: [0, 94],
+    segs: [
+      [[250, 92], [420, 97], [600, 90]],
+      [[780, 83], [880, 80], [1000, 73]],
+    ],
+    goal: 60,
+    nodes: [7, 55, 94],
+    plus: false,
+  },
+  finale: {
+    start: [0, 97],
+    segs: [
+      [[220, 96], [420, 91], [580, 76]],
+      [[700, 64], [800, 30], [1000, 10]],
+    ],
+    goal: 42,
+    nodes: [8, 42],
+    plus: true,
+  },
+};
+
+const { variant = 'hero', goal: goalProp, animate = 'scroll', class: cls } = Astro.props;
+const s = shapes[variant];
+const goal = goalProp ?? s.goal;
+
+const bez = (p0: number, p1: number, p2: number, p3: number, t: number) =>
+  (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3;
+
+const pieces = s.segs.map((seg, i) => ({ p0: i === 0 ? s.start : s.segs[i - 1][2], seg }));
+const at = (pick: (x: number, y: number) => number): Pt | null => {
+  // pick(x,y) işaret değiştirdiği yerde ikili arama
+  for (const { p0, seg } of pieces) {
+    const f = (t: number): Pt => [bez(p0[0], seg[0][0], seg[1][0], seg[2][0], t), bez(p0[1], seg[0][1], seg[1][1], seg[2][1], t)];
+    let lo = 0;
+    let hi = 1;
+    const sLo = Math.sign(pick(...f(lo)));
+    if (sLo === Math.sign(pick(...f(hi))) && sLo !== 0) continue;
+    for (let k = 0; k < 40; k++) {
+      const mid = (lo + hi) / 2;
+      if (Math.sign(pick(...f(mid))) === sLo) lo = mid;
+      else hi = mid;
+    }
+    return f((lo + hi) / 2);
+  }
+  return null;
+};
+
+const d = `M${s.start.join(' ')} ` + s.segs.map((g) => `C ${g.map((p) => p.join(' ')).join(', ')}`).join(' ');
+const nodes = s.nodes.map((xPct) => at((x) => x - xPct * 10)).filter(Boolean) as Pt[];
+const plus = s.plus ? at((_x, y) => y - goal) : null;
+const pct = (n: number) => Math.round(n * 100) / 100;
+---
+
+<div
+  class:list={['traj', `traj--${variant}`, { 'traj--intro': animate === 'intro' }, cls]}
+  aria-hidden="true"
+  style={`--goal:${goal}%`}
+  data-animate={animate === 'scroll' ? '' : undefined}
+>
+  <span class="traj__goal"></span>
+  <span class="traj__goal-label">HEDEF</span>
+  <svg class="traj__glow" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <path d={d} vector-effect="non-scaling-stroke"></path>
+  </svg>
+  <svg class="traj__line" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id={`traj-g-${variant}`} x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#8B5CF6"></stop>
+        <stop offset="0.7" stop-color="#A855F7"></stop>
+        <stop offset="1" stop-color="#E056FD"></stop>
+      </linearGradient>
+    </defs>
+    <path d={d} stroke={`url(#traj-g-${variant})`} vector-effect="non-scaling-stroke"></path>
+  </svg>
+  {nodes.map(([x, y], i) => <span class="traj__node" style={`--x:${pct(x / 10)}%;--y:${pct(y)}%;--i:${i}`}></span>)}
+  {
+    plus && (
+      <span class="traj__plus" style={`--x:${pct(plus[0] / 10)}%;--y:${pct(plus[1])}%`}>
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </span>
+    )
+  }
+</div>
+
+<style is:global>
+  .traj {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .traj > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+  }
+
+  .traj__line path {
+    stroke-width: 3.5px;
+    stroke-linecap: round;
+  }
+
+  .traj__glow {
+    filter: blur(7px);
+    opacity: 0.7;
+  }
+
+  .traj__glow path {
+    stroke: #9a5bf7;
+    stroke-width: 12px;
+  }
+
+  /* Kesik HEDEF çizgisi: 7 px çizgi, 6 px boşluk (mağaza görselleriyle aynı) */
+  .traj__goal {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--goal);
+    height: 1.5px;
+    background: repeating-linear-gradient(90deg, rgb(45 212 191 / 0.6) 0 7px, transparent 7px 13px);
+  }
+
+  .traj__goal-label {
+    position: absolute;
+    top: var(--goal);
+    left: 0.625rem;
+    translate: 0 -50%;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgb(20 14 54 / 0.9);
+    box-shadow: 0 0 0 1px rgb(45 212 191 / 0.55) inset;
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    color: var(--teal-400);
+  }
+
+  .traj__node {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 11px;
+    height: 11px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 2.5px #8b5cf6,
+      0 0 14px 2px rgb(139 92 246 / 0.7);
+  }
+
+  .traj__plus {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    color: #fff;
+    background: radial-gradient(circle, rgb(255 255 255 / 0.22), rgb(224 86 253 / 0.18) 55%, transparent 72%);
+    filter: drop-shadow(0 0 12px rgb(224 86 253 / 0.9)) drop-shadow(0 0 26px rgb(45 212 191 / 0.45));
+  }
+
+  /*
+   * Çizim animasyonu
+   *  - intro (hero): saf CSS, ilk boyamada başlar; JS beklenmez, yanıp sönme olmaz
+   *  - data-animate (sayfa altı): site.ts görünür olunca .is-in ekler
+   * Hareket azaltılmışsa çizgi baştan çizili durur.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .motion .traj[data-animate]:not(.is-in) > svg {
+      clip-path: inset(-40% 100% -40% -2%);
+    }
+
+    .motion .traj[data-animate]:not(.is-in) :is(.traj__node, .traj__plus, .traj__goal-label, .traj__goal) {
+      opacity: 0;
+    }
+
+    .traj--intro > svg,
+    .traj.is-in > svg {
+      animation: traj-draw 1500ms var(--ease-in-out) 200ms both;
+    }
+
+    .traj--intro .traj__goal,
+    .traj.is-in .traj__goal {
+      animation: traj-fade 700ms var(--ease-out) both;
+    }
+
+    .traj--intro .traj__goal-label,
+    .traj.is-in .traj__goal-label {
+      animation: traj-pop 500ms var(--ease-spring) 300ms both;
+    }
+
+    .traj--intro .traj__node,
+    .traj.is-in .traj__node {
+      animation: traj-pop 500ms var(--ease-spring) both;
+      animation-delay: calc(450ms + var(--i, 0) * 420ms);
+    }
+
+    .traj--intro .traj__plus,
+    .traj.is-in .traj__plus {
+      animation: traj-pop 700ms var(--ease-spring) 1350ms both;
+    }
+  }
+
+  /* Negatif kenarlar: parlama kutunun dışına taşabilsin */
+  @keyframes traj-draw {
+    from {
+      clip-path: inset(-40% 100% -40% -2%);
+    }
+    to {
+      clip-path: inset(-40% -2% -40% -2%);
+    }
+  }
+
+  @keyframes traj-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes traj-pop {
+    from {
+      opacity: 0;
+      scale: 0.3;
+    }
+  }
+</style>

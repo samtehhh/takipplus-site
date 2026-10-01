@@ -211,7 +211,9 @@ Sitemap, canonical, OG/Twitter etiketleri, breadcrumb şeması ve `lastmod` otom
 3. `src/data/product-content/<slug>.ts`: `yks.ts`'i örnek al. `seo.title` içinde ürün adı ve arama ifadesi, marka
    varyantı ("Takip Plus") geçsin; SSS yazarsan FAQPage şeması otomatik oluşur.
 4. `scripts/og-images.mjs` → `pages` içine `<slug>` satırı.
-5. Ürüne özel mockup gerekiyorsa `src/components/mockups/` altına ekleyip `[product].astro` içindeki eşlemeye bağla.
+5. Ekran görüntülerini `src/assets/app/` altına WebP olarak koy ve `src/data/screens.ts`'e alt metniyle ekle. Bölüm
+   görselleri (ekrandan taşan uygulama kartları) `src/components/app/ChapterVisual.astro` içinde, `chapters[].visual`
+   anahtarıyla seçilir.
 
 `status: 'planned'` olan ürünler hiçbir yerde görünmez.
 
@@ -461,15 +463,18 @@ yazıp çıktıyı **sıfır JS'li düz HTML** olarak üretiyor. Sitede tek bir 
 
 ```
 assets/brand/kit/           marka kiti v1.0 dosyaları (kaynak; değiştirilmez)
-assets/screens/             uygulama ekran görüntüleri (site sahibi ekleyecek, bkz. README orada)
 api/waitlist.js             Vercel fonksiyonu: bekleme listesi → Brevo
 api/csp-report.js           Vercel fonksiyonu: CSP ihlal raporlarını loglar
 src/config/site.js          TEK yapılandırma dosyası (alan adı, yayın bayrakları, kimlikler, iletişim)
 src/data/products.ts        ürünlerin görünen bilgileri
 src/data/product-content/   her ürünün sayfa metinleri (yks.ts)
-src/data/screens.ts         beklenen ekran görüntüleri ve alt metinleri
+src/data/screens.ts         sitede kullanılan uygulama ekranları ve alt metinleri
+src/assets/app/             uygulama ekranları (WebP; kaynak: Claude outputs/takipplus/magaza-final/ham-ekranlar)
 src/styles/tokens.css       tüm tasarım token'ları (tek kaynak)
-src/components/             Header, Footer, Button, WaitlistForm, Faq, DeviceFrame, StoreButtons, PlanTable, Carousel, mockups/
+src/components/             Header, Footer, Button, WaitlistForm, Faq, StoreButtons, Logo
+src/components/app/         ürün sayfası parçaları: Device (telefon/tablet çerçevesi), Trajectory (HEDEF çizgisi),
+                            FocusQuad, ChapterVisual, Tour, RepeatTimeline, ModuleCloud, Plans, Countdown, PhoneFan,
+                            AppIcon, callout.css (ekrandan taşan uygulama kartları)
 src/layouts/                Base (SEO, OG, JSON-LD), Legal (yasal metin şablonu)
 src/lib/jsonld.ts           Organization, WebSite, BreadcrumbList, FAQPage, MobileApplication, Article şemaları
 src/pages/                  sayfalar; [product].astro ürün şablonu; rehber/ yazı şablonu; .well-known/
@@ -488,8 +493,12 @@ verilmeli.
 
 ### Ekran görüntüleri
 
-`assets/screens/<ad>.png` (1290×2796, koyu tema). Liste ve çekim notları `assets/screens/README.md`'de. Dosya
-eklenince `DeviceFrame` AVIF + WebP, 1x/2x/3x `srcset` üretir; olmayan ekranlar yayında gösterilmez.
+Sitedeki bütün telefon ve tablet ekranları uygulamanın örnek veriyle çekilmiş gerçek ekranlarıdır
+(`src/assets/app/*.webp`, kaynak: mağaza görselleri çalışmasındaki `ham-ekranlar`). `Device` bileşeni bunları
+çerçeveye koyar ve derlemede AVIF + WebP, beş genişlikte `srcset` üretir. Ekrandan taşan kartlar (net kartları,
+Kritik Sorular, sıralama, Kontrol Zamanı, düello…) uygulamadaki gerçek bileşenlerin HTML kopyalarıdır; konumları
+mağaza görsellerinden oranlanmıştır. Gerçek kullanıcı adı ya da profil fotoğrafı görünen ekran eklenmez
+(örneğin sıralama ekranı bu yüzden kullanılmadı).
 
 ### Fontlar
 
@@ -508,7 +517,7 @@ doğrulamasını test eder. `qa:visual` yukarıda.
 | # | Ne | Nereye |
 |---|---|---|
 | 1 | **Premium/ücretsiz kapsamının teyidi.** Ücretsizde yalnızca Sosyal ve Hedef Belirleme. | `src/data/product-content/yks.ts` |
-| 2 | 15 ekran görüntüsü, 1290×2796, koyu tema, PNG | `assets/screens/` |
+| 2 | ~~Ekran görüntüleri~~ (1 Ekim 2026: mağaza çalışmasındaki ham ekranlar eklendi) | `src/assets/app/` |
 | 3 | KVKK veri sorumlusu posta adresi | `site.contact.postalAddress` |
 | 4 | **Hukuki inceleme:** Gizlilik, KVKK Aydınlatma, Kullanım Şartları, Hesap silme taslak. İnceleme bitince `Legal` bileşenine `draft={false}`. | `src/pages/*.astro` |
 | 5 | Hesap silme sürelerinin onayı ve silinen içeriğin backend'de gerçekten anonimleştirilmesi | `src/pages/hesap-silme.astro` |
@@ -530,6 +539,12 @@ doğrulamasını test eder. `qa:visual` yukarıda.
 ### Tasarım yönü
 
 - **Marka özü:** "Kendi ilerlemeni sen yönet." Değerler: netlik, disiplin, topluluk, sahiplik.
-- **Palet ve tipografi:** uygulamanın token'ları birebir; yalnızca kontrast için iki ton rafine edildi.
-- **İmza detaylar:** Günün Odağı dörtlüsü, 30 günlük aktivite haritası, logodaki "+" işaretinin yapısal kullanımı.
+- **Görsel dil (Ekim 2026, tasarım v2):** mağaza görselleriyle aynı dünya. Gece moru zemin, ultraviyole gökyüzü,
+  kareli defter noktaları, gerçek ekranlar ve ekrandan taşan uygulama kartları. Ayrıntılar [BRAND.md](BRAND.md).
+- **İmza öğe: HEDEF çizgisi.** Hero'da yükselen ilerleme eğrisi ve turkuaz kesik HEDEF çizgisi; header'ın alt
+  kenarında sayfa boyunca HEDEF'e ilerleyen çizgi (sona varınca turkuaza döner); finalde eğri hedefi keser.
+- **Hareket:** tek bir açılış sahnesi (hero), görünür olunca telefondan çıkan kartlar, tur, sınav sayacı.
+  Hepsi `prefers-reduced-motion`'a uyar; kaydırmaya bağlı çizgi önce CSS scroll-timeline, yoksa JS yedeği.
+- **Performans:** ekran dışı bölümler `content-visibility: auto` (`.defer`), turun diğer ekranları tur görünür
+  olunca iner, Inter ön yüklenmez (ilk ekranda yalnızca Outfit). Lighthouse eşikleri `lighthouserc.json`'da.
 - **Açık tema** yapılmadı; token yapısı hazır.

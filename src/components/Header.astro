@@ -56,12 +56,17 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       </button>
     </div>
   </div>
+  <div class="goalbar" aria-hidden="true" data-goalbar>
+    <span class="goalbar__track"><span class="goalbar__fill"></span></span>
+    <span class="goalbar__run"><span class="goalbar__tip"></span></span>
+    <span class="goalbar__goal"></span>
+  </div>
 </header>
 
 <dialog id="site-menu" class="menu" aria-label="Menü" data-menu>
   <div class="menu__inner">
     <div class="menu__top">
-      <a class="tap" href="/" aria-label="Takip+ ana sayfa"><Logo size={32} /></a>
+      <a class="tap" href="/" aria-label="Takip+ ana sayfa"><Logo size={32} eager /></a>
       <button class="menu__close" type="button" data-menu-close>
         <span class="sr-only">Menüyü kapat</span>
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
@@ -98,23 +103,142 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     top: 0;
     z-index: var(--z-header);
     padding-top: env(safe-area-inset-top);
-    background: rgb(15 23 42 / 0.82);
-    border-bottom: 1px solid transparent;
-    transition:
-      border-color var(--dur-2) var(--ease-out),
-      background-color var(--dur-2) var(--ease-out);
+    background: transparent;
+    transition: background-color var(--dur-3) var(--ease-out);
+  }
+
+  /* Sayfa başında şeffaf (hero gökyüzü altta görünür); kaydırınca gece camı */
+  :global(.is-scrolled) .site-header {
+    background: rgb(14 8 40 / 0.86);
   }
 
   @supports (backdrop-filter: blur(1px)) {
-    .site-header {
-      background: rgb(15 23 42 / 0.86);
-      backdrop-filter: saturate(1.4) blur(14px);
-      -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    :global(.is-scrolled) .site-header {
+      background: rgb(14 8 40 / 0.66);
+      backdrop-filter: saturate(1.5) blur(16px);
+      -webkit-backdrop-filter: saturate(1.5) blur(16px);
     }
   }
 
-  :global(.is-scrolled) .site-header {
-    border-bottom-color: var(--line);
+  /* ---------- Hedef çizgisi: kaydırdıkça HEDEF'e ilerler ----------
+   * Destekleyen tarayıcılarda CSS scroll-timeline; diğerlerinde site.ts --p yazar.
+   */
+  .goalbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-3) var(--ease-out);
+  }
+
+  :global(.is-scrolled) .goalbar {
+    opacity: 1;
+  }
+
+  .goalbar__track {
+    position: absolute;
+    inset: 0 16px 0 0;
+    overflow: hidden;
+  }
+
+  .goalbar__fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(139 92 246 / 0.15), #8b5cf6 35%, #a855f7 75%, #e056fd);
+    transform: translateX(calc((var(--p, 0) - 1) * 100%));
+  }
+
+  /* Uç noktası: tam genişlikteki "koşucu" kutunun sağ kenarında; kutu kayar */
+  .goalbar__run {
+    position: absolute;
+    inset: 0 16px 0 0;
+    transform: translateX(calc((var(--p, 0) - 1) * 100%));
+  }
+
+  .goalbar__tip {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    translate: 50% -50%;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 2px #e056fd,
+      0 0 12px 2px rgb(224 86 253 / 0.8);
+  }
+
+  /* HEDEF: sağ uçta turkuaz kesik işaret */
+  .goalbar__goal {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    width: 12px;
+    height: 2px;
+    translate: 0 -50%;
+    background: repeating-linear-gradient(90deg, #2dd4bf 0 3px, transparent 3px 5px);
+  }
+
+  :global(.is-goal) .goalbar__tip {
+    background: #2dd4bf;
+    box-shadow:
+      0 0 0 2px #5eead4,
+      0 0 14px 3px rgb(45 212 191 / 0.8);
+  }
+
+  /* Uzun yazımlar ve zaman çizelgesi ayrı kuralda: küçültücü bunları
+     "animation" kısaltmasına birleştirince Chrome bildirimi geçersiz sayıyor. */
+  @supports (animation-timeline: scroll()) {
+    .goalbar__fill,
+    .goalbar__run {
+      animation-name: goalbar-run;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+
+    .goalbar__tip {
+      animation-name: goalbar-tip;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+
+    .goalbar .goalbar__fill,
+    .goalbar .goalbar__run,
+    .goalbar .goalbar__tip {
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  @keyframes goalbar-run {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Sona varınca uç turkuaza döner: HEDEF'e ulaşıldı */
+  @keyframes goalbar-tip {
+    0%,
+    96% {
+      background: #fff;
+      box-shadow:
+        0 0 0 2px #e056fd,
+        0 0 12px 2px rgb(224 86 253 / 0.8);
+    }
+    100% {
+      background: #2dd4bf;
+      box-shadow:
+        0 0 0 2px #5eead4,
+        0 0 14px 3px rgb(45 212 191 / 0.8);
+    }
   }
 
   .site-header__row {
@@ -168,7 +292,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     .site-header__actions :global(.site-header__cta) {
       display: inline-flex;
       --btn-h: 44px;
-      padding-inline: 1rem;
+      padding-inline: 1.125rem;
       font-size: 0.9375rem;
     }
   }
@@ -189,20 +313,25 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
 
     .site-header__nav a {
+      position: relative;
       display: inline-flex;
       align-items: center;
       min-height: 44px;
       padding: 0 0.875rem;
-      border-radius: 12px;
-      color: var(--text-2);
+      border-radius: 999px;
+      color: rgb(248 250 252 / 0.72);
+      font-family: var(--font-display);
       font-size: var(--text-sm);
-      font-weight: 500;
+      font-weight: 600;
       text-decoration: none;
-      transition: color var(--dur-2) var(--ease-out);
+      transition:
+        color var(--dur-2) var(--ease-out),
+        background-color var(--dur-2) var(--ease-out);
     }
 
     .site-header__nav a[aria-current='page'] {
       color: var(--text);
+      background: rgb(255 255 255 / 0.08);
     }
 
     .menu-toggle {
@@ -240,7 +369,8 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     min-height: 100%;
     padding: env(safe-area-inset-top) var(--gutter) calc(var(--space-5) + env(safe-area-inset-bottom));
     background:
-      radial-gradient(60rem 30rem at 10% -10%, rgb(139 92 246 / 0.18), transparent 60%),
+      radial-gradient(60rem 30rem at 10% -10%, rgb(139 92 246 / 0.32), transparent 60%),
+      radial-gradient(30rem 20rem at 100% 100%, rgb(224 86 253 / 0.12), transparent 70%),
       var(--bg);
   }
 
