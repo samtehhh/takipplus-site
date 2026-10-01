@@ -111,15 +111,15 @@ const { product, content: c } = Astro.props as { product: Product; content: type
               </ul>
             )}
             {ch.note && <p class="chap__note">{ch.note}</p>}
+            {ch.layout === 'band' && (
+              <div class="chap__timeline">
+                <RepeatTimeline />
+              </div>
+            )}
           </div>
           <div class="chap__visual">
             <ChapterVisual kind={ch.visual} label={ch.label} tab={ch.tab} tabIcon={ch.tabIcon} />
           </div>
-          {ch.layout === 'band' && (
-            <div class="chap__band">
-              <RepeatTimeline />
-            </div>
-          )}
         </div>
       </section>
     ))
@@ -502,62 +502,58 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     overflow-x: clip;
   }
 
-  .chap__band {
-    width: 100%;
+  .chap__timeline {
+    justify-self: stretch;
+    margin-top: var(--space-4);
   }
 
-  /* Yan yana: tablette sütun arası dar (sahne sütuna sığsın, kartlar kenarda kesilmesin) */
+  /* Yan yana (tablet ve üstü): yazı bir yanda, görsel öbür yanda. Bölümler sırayla bir
+     sola bir sağa geçer. Çift telefonlu bölümde görsel sütunu daha geniş. Tablette sütun
+     arası dar: sahne (telefon + iki yandan taşan kartlar) sütuna sığsın, kenarda kesilmesin. */
   @media (min-width: 48rem) {
     .chap--split .chap__grid,
-    .chap--split-flip .chap__grid {
+    .chap--split-flip .chap__grid,
+    .chap--band .chap__grid {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: var(--space-6);
     }
 
-    .chap--split-flip .chap__copy {
+    .chap--pair .chap__grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-6);
+    }
+
+    .chap--split-flip .chap__copy,
+    .chap--band .chap__copy {
       order: 2;
     }
-  }
 
-  /* Bant: kart telefonun dışına taştığı için iki sütun ancak geniş ekranda */
-  @media (min-width: 64rem) {
-    .chap--band .chap__grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas:
-        'copy copy'
-        'visual band';
-      column-gap: var(--space-7);
-      row-gap: var(--space-7);
+    .chap--pair .chap__copy {
+      justify-items: start;
+      margin-inline: 0;
+      text-align: left;
     }
 
-    .chap--band .chap__copy {
-      grid-area: copy;
-    }
-
-    .chap--band .chap__visual {
-      grid-area: visual;
-    }
-
-    .chap--band .chap__band {
-      grid-area: band;
+    .chap--pair .chap__points {
+      justify-items: start;
     }
   }
 
   @media (min-width: 60rem) {
     .chap--split .chap__grid,
-    .chap--split-flip .chap__grid {
+    .chap--split-flip .chap__grid,
+    .chap--band .chap__grid,
+    .chap--pair .chap__grid {
       gap: var(--space-8);
     }
   }
 
   @media (min-width: 64rem) {
     .chap--split .chap__grid,
-    .chap--split-flip .chap__grid {
+    .chap--split-flip .chap__grid,
+    .chap--band .chap__grid,
+    .chap--pair .chap__grid {
       gap: var(--space-9);
-    }
-
-    .chap--band .chap__copy {
-      max-width: 40rem;
     }
   }
 

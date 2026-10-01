@@ -231,12 +231,12 @@ yorum veya kullanıcı sayısı girilmez.
 | Başlık | Değer |
 |---|---|
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
-| `Content-Security-Policy` | `default-src 'self'`, `script-src 'self'`, `style-src 'self'`, `img-src 'self' data:`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`, `upgrade-insecure-requests`, `report-uri /api/csp-report` |
+| `Content-Security-Policy` | `default-src 'self'`, `script-src 'self'`, `style-src 'self'`, `img-src 'self' data:`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'self'`, `upgrade-insecure-requests`, `report-uri /api/csp-report` |
 | `X-Content-Type-Options` | `nosniff` |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | kamera, mikrofon, konum, ödeme, USB, sensörler, ekran yakalama, Topics kapalı |
 | `Cross-Origin-Opener-Policy` | `same-origin` |
-| `X-Frame-Options` | `DENY` (eski tarayıcılar için) |
+| `X-Frame-Options` | `SAMEORIGIN` (eski tarayıcılar için) |
 | `X-Robots-Tag: noindex` | `*.vercel.app` adresleri ve `/erken-erisim/*` |
 
 **CSP'de `unsafe-inline` yok.** Bunu mümkün kılan iki şey:
@@ -527,6 +527,13 @@ ffmpeg -ss 0.6 -i "hedef belirleme.mp4" -an -vf "scale=720:1600:flags=lanczos,fo
 
 Klibin başında telefonun kendi durum çubuğu ya da yükleme ekranı görünüyorsa `-ss` ile kırp (hedef belirleme 0,6 sn,
 plan takvimi 1,4 sn). Video yalnızca tur görünürken iner ve oynar; kapak karesi `prepare-screens` ile üretilir.
+
+### Görünüm önizlemesi (`/onizleme`)
+
+Sitenin sayfalarını iPhone 15 (393×852) ve iPad (820×1180, yatay çevrilebilir) ölçülerinde gösteren test sayfası;
+"Bilgisayar" siteyi normal açar. İndekslenmez, menüde ve sitemap'te yok. Çerçeve (iframe) kullandığı için site
+yalnızca kendi içinde çerçeveye alınabilir: `frame-ancestors 'self'` ve `X-Frame-Options: SAMEORIGIN` (başka siteler
+yine çerçeveye alamaz).
 
 ### Web araçları
 

@@ -5,7 +5,7 @@ import { site } from './src/config/site.js';
 import styleAttrs from './scripts/lib/style-attrs.mjs';
 
 // Sitemap'e girmeyecek yollar (onay sayfaları, 404 vb.)
-const noIndex = ['/404', '/erken-erisim/onaylandi', '/erken-erisim/tesekkurler'];
+const noIndex = ['/404', '/erken-erisim/onaylandi', '/erken-erisim/tesekkurler', '/onizleme'];
 
 // scripts/lastmod.mjs (prebuild) her sayfanın kaynağının son commit tarihini yazar.
 const lastmodFile = new URL('./src/data/generated/lastmod.json', import.meta.url);

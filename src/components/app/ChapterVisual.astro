@@ -32,7 +32,7 @@ const screenOf: Record<ChapterVisual, ScreenName[]> = {
   planlar: ['p-plan-takvimi', 'p-gunluk-takvim'],
 };
 const pair = screenOf[kind].length === 2;
-const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' : '(min-width: 80rem) 350px, (min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
+const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-width: 48rem) 28vw, 42vw' : '(min-width: 80rem) 350px, (min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 ---
 
 <div class:list={['stage', 'cv', `cv--${kind}`]} data-animate role="img" aria-label={label}>
@@ -221,7 +221,7 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
               <span><b>77.83</b> AYT</span>
             </span>
           </div>
-          <div class="co rank" aria-hidden="true" style="--x:-13.8%;--y:67%;--w:127.6cqw;--d:440ms">
+          <div class="co rank" aria-hidden="true" style="--x:-13.8%;--y:51.6%;--w:127.6cqw;--d:440ms">
             <div class="rank__row">
               <span class="rank__in"><small>TYT</small>91.5</span>
               <span class="rank__in"><small>AYT</small>67.5</span>
@@ -413,17 +413,8 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     .cv--hedef {
       --pw: min(40vw, 330px);
     }
-
-    .cv--yapamadiklarim {
-      --pw: min(40vw, 320px);
-    }
   }
 
-  @media (min-width: 64rem) {
-    .cv--yapamadiklarim {
-      --pw: min(31vw, 300px);
-    }
-  }
 
   /* Geniş ekranda telefonlar büyür: küçük çerçevede 720 px'lik ekranın yazıları minicik kalıyordu */
   @media (min-width: 80rem) {
@@ -433,10 +424,6 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
 
     .cv--hedef {
       --pw: 370px;
-    }
-
-    .cv--yapamadiklarim {
-      --pw: 330px;
     }
 
     .cv--konular,
@@ -598,10 +585,11 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     color: #c4b5fd;
   }
 
+  /* Yan yana: çift (1,92 × telefon) görsel sütununa sığar */
   @media (min-width: 48rem) {
     .cv--konular,
     .cv--planlar {
-      --pw: min(24vw, 235px);
+      --pw: min(28vw, 235px);
     }
   }
 

@@ -1,0 +1,248 @@
+---
+/**
+ * Görünüm önizlemesi: sitenin sayfalarını iPhone 15 (393×852) ve iPad (820×1180) ölçülerinde
+ * gösterir; "Bilgisayar" siteyi normal açar. Ekip için test aracı: indekslenmez, menüde yok.
+ * Çerçeve (iframe) için vercel.json'da frame-ancestors 'self' ve X-Frame-Options SAMEORIGIN:
+ * site yalnızca kendi içinde çerçeveye alınabilir.
+ */
+import Base from '../layouts/Base.astro';
+
+const devices = [
+  { id: 'phone', label: 'Telefon', note: 'iPhone 15 · 393×852', w: 393, h: 852 },
+  { id: 'tablet', label: 'Tablet', note: 'iPad · 820×1180', w: 820, h: 1180 },
+];
+const pages = [
+  { path: '/', label: 'Ana sayfa' },
+  { path: '/yks', label: 'Takip+ YKS' },
+  { path: '/yks-sayaci', label: 'YKS Sayacı' },
+  { path: '/net-hesaplama', label: 'Net Hesaplama' },
+  { path: '/hakkimizda', label: 'Hakkımızda' },
+  { path: '/iletisim', label: 'İletişim' },
+];
+---
+
+<Base title="Görünüm önizlemesi" description="Takip+ sitesini telefon, tablet ve bilgisayar görünümünde inceleme aracı." path="/onizleme" noindex>
+  <section class="pv" data-preview aria-labelledby="pv-title">
+    <h1 class="sr-only" id="pv-title">Görünüm önizlemesi</h1>
+    <div class="container pv__bar">
+      <div class="pv__group" role="group" aria-label="Cihaz">
+        {
+          devices.map((d, i) => (
+            <button type="button" class="pv__btn" data-device={d.id} data-w={d.w} data-h={d.h} aria-pressed={i === 0 ? 'true' : 'false'}>
+              <span class="pv__btn-t">{d.label}</span>
+              <span class="pv__btn-n">{d.note}</span>
+            </button>
+          ))
+        }
+        <a class="pv__btn pv__btn--link" href="/" data-desktop>
+          <span class="pv__btn-t">Bilgisayar</span>
+          <span class="pv__btn-n">siteyi normal aç</span>
+        </a>
+      </div>
+
+      <div class="pv__tools">
+        <label class="pv__select">
+          <span>Sayfa</span>
+          <select data-page>
+            {pages.map((p) => <option value={p.path}>{p.label}</option>)}
+          </select>
+        </label>
+        <button type="button" class="pv__rotate" data-rotate aria-pressed="false">Yatay çevir</button>
+      </div>
+    </div>
+
+    <div class="pv__stage" data-stage>
+      <div class="pv__device" data-frame>
+        <iframe src="/" title="Sitenin önizlemesi" data-iframe></iframe>
+      </div>
+    </div>
+    <p class="container fine pv__note" data-size></p>
+    <noscript><p class="container pv__note">Önizleme için JavaScript gerekli.</p></noscript>
+  </section>
+</Base>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-preview]');
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-device]')];
+    const frame = root.querySelector<HTMLElement>('[data-frame]')!;
+    const iframe = root.querySelector<HTMLIFrameElement>('[data-iframe]')!;
+    const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+    const select = root.querySelector<HTMLSelectElement>('[data-page]')!;
+    const rotate = root.querySelector<HTMLButtonElement>('[data-rotate]')!;
+    const desktop = root.querySelector<HTMLAnchorElement>('[data-desktop]')!;
+    const size = root.querySelector<HTMLElement>('[data-size]')!;
+    let current = buttons[0];
+    let landscape = false;
+
+    const layout = () => {
+      let w = Number(current.dataset.w);
+      let h = Number(current.dataset.h);
+      if (landscape) [w, h] = [h, w];
+      iframe.style.width = `${w}px`;
+      iframe.style.height = `${h}px`;
+      // Çerçeve (kenar 14 px) ekrana sığacak kadar küçültülür; sayfanın kendisi gerçek ölçüde çizilir
+      const bezel = 28;
+      // stage'in kendi iç boşluğu (gutter) düşülür; yoksa dar ekranda kasa sağa taşıyordu
+      const cs = getComputedStyle(stage);
+      const availW = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const top = stage.getBoundingClientRect().top + window.scrollY;
+      const availH = window.innerHeight - Math.min(top, 240) - 32;
+      const k = Math.min(1, availW / (w + bezel), Math.max(0.3, availH) / (h + bezel));
+      frame.style.setProperty('--k', String(k));
+      frame.style.width = `${(w + bezel) * k}px`;
+      frame.style.height = `${(h + bezel) * k}px`;
+      frame.classList.toggle('is-tablet', current.dataset.device === 'tablet');
+      size.textContent = `${w}×${h} CSS piksel${k < 1 ? `, ekrana sığsın diye %${Math.round(k * 100)} boyutunda gösteriliyor` : ''}`;
+    };
+
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        current = b;
+        buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        layout();
+      }),
+    );
+    rotate.addEventListener('click', () => {
+      landscape = !landscape;
+      rotate.setAttribute('aria-pressed', String(landscape));
+      layout();
+    });
+    select.addEventListener('change', () => {
+      iframe.src = select.value;
+      desktop.href = select.value;
+    });
+    window.addEventListener('resize', layout);
+    layout();
+  }
+</script>
+
+<style>
+  .pv {
+    padding-block: var(--space-5) var(--space-7);
+  }
+
+  .pv__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .pv__group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .pv__btn {
+    display: grid;
+    gap: 0.125rem;
+    min-height: 48px;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: 0 0 0 1px var(--line) inset;
+    color: var(--text);
+    font-family: var(--font-display);
+    text-align: left;
+    text-decoration: none;
+  }
+
+  .pv__btn[aria-pressed='true'] {
+    background: linear-gradient(135deg, var(--violet-500), var(--violet-700));
+    box-shadow: 0 6px 18px rgb(139 92 246 / 0.4);
+  }
+
+  .pv__btn-t {
+    font-weight: 700;
+  }
+
+  .pv__btn-n {
+    font-size: var(--text-xs);
+    color: var(--text-2);
+  }
+
+  .pv__btn[aria-pressed='true'] .pv__btn-n {
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .pv__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .pv__select {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .pv__select select {
+    min-height: 44px;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--night-800);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+  }
+
+  .pv__rotate {
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .pv__rotate[aria-pressed='true'] {
+    background: rgb(139 92 246 / 0.3);
+  }
+
+  .pv__stage {
+    display: grid;
+    justify-items: center;
+    padding-inline: var(--gutter);
+    overflow-x: clip;
+  }
+
+  /* Cihaz kasası: içteki iframe gerçek ölçüde, kasa ile birlikte --k oranında küçülür */
+  .pv__device {
+    position: relative;
+  }
+
+  .pv__device iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 14px solid #0b0a10;
+    border-radius: 54px;
+    background: var(--bg);
+    box-shadow:
+      0 0 0 1.5px #2a2733,
+      0 40px 90px -30px rgb(5 2 25 / 0.9),
+      0 0 80px -20px rgb(139 92 246 / 0.35);
+    transform: scale(var(--k, 1));
+    transform-origin: top left;
+    box-sizing: content-box;
+  }
+
+  .pv__device.is-tablet iframe {
+    border-radius: 36px;
+  }
+
+  .pv__note {
+    margin-top: var(--space-4);
+    text-align: center;
+  }
+</style>

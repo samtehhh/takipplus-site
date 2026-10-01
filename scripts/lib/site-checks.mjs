@@ -51,13 +51,14 @@ export async function checkSite({ get, apex, live = false, preview = false }) {
   const hsts = h['strict-transport-security'] || '';
   ok(/max-age=(\d+)/.test(hsts) && Number(hsts.match(/max-age=(\d+)/)[1]) >= 31536000 && /includeSubDomains/i.test(hsts) && /preload/i.test(hsts), `HSTS: "${hsts}"`);
   const csp = h['content-security-policy'] || '';
-  for (const d of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'none'"]) {
+  for (const d of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'self'"]) {
     ok(csp.includes(d), `CSP "${d}" içermeli`);
   }
   const scriptSrc = csp.match(/script-src([^;]*)/)?.[1] ?? '';
   ok(!/'unsafe-inline'|'unsafe-eval'/.test(scriptSrc), `CSP script-src 'unsafe-*' içermemeli: "${scriptSrc.trim()}"`);
   ok(!/'unsafe-inline'/.test(csp), `CSP hiçbir yerde 'unsafe-inline' içermemeli`);
   ok(h['x-content-type-options'] === 'nosniff', 'X-Content-Type-Options: nosniff');
+  ok(h['x-frame-options'] === 'SAMEORIGIN', `X-Frame-Options: ${h['x-frame-options']}`);
   ok(h['referrer-policy'] === 'strict-origin-when-cross-origin', `Referrer-Policy: ${h['referrer-policy']}`);
   ok(/camera=\(\)/.test(h['permissions-policy'] || ''), 'Permissions-Policy kamera kapalı');
   ok(h['cross-origin-opener-policy'] === 'same-origin', 'Cross-Origin-Opener-Policy: same-origin');
