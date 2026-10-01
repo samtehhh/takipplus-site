@@ -500,7 +500,9 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     width: 100%;
   }
 
-  @media (min-width: 48rem) {
+  /* Yan yana yalnız geniş ekranda: kartlar telefonun iki yanından ~%20 taşar; tablette
+     (768–959 px) sütun buna yetmiyor, kartlar sayfa kenarında kesiliyordu */
+  @media (min-width: 60rem) {
     .chap--split .chap__grid,
     .chap--split-flip .chap__grid {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

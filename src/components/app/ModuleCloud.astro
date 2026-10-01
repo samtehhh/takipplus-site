@@ -144,7 +144,7 @@ const tones: Record<Tone, string> = {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    max-width: 28rem;
+    max-width: min(28rem, 100%);
     font-size: var(--text-xs);
     color: var(--text-3);
     text-align: center;
@@ -169,14 +169,21 @@ const tones: Record<Tone, string> = {
     }
   }
 
+  /* Tablette alt alta (ikili geniş görünür); yan yana yalnız geniş ekranda, sütuna sığarak */
   @media (min-width: 48rem) {
+    .mc__tablet :global(.mc__duo) {
+      width: min(76vw, 560px);
+    }
+  }
+
+  @media (min-width: 60rem) {
     .mc__grid {
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
       gap: var(--space-8);
     }
 
     .mc__tablet :global(.mc__duo) {
-      width: min(44vw, 500px);
+      width: min(100%, 500px);
     }
   }
 </style>

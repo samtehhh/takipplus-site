@@ -403,9 +403,16 @@ const sizes = pair ? '(min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' :
     width: var(--pw);
   }
 
+  /* Tablette bölüm tek sütun: telefon biraz büyür; geniş ekranda yan sütuna sığacak kadar */
   @media (min-width: 48rem) {
     .cv {
-      --pw: min(34vw, 300px);
+      --pw: min(40vw, 320px);
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .cv {
+      --pw: min(30vw, 300px);
     }
 
     .cv--hedef {

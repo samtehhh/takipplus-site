@@ -270,8 +270,9 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
 
   /* Alt boşluk hap için: hap tabletin altında, telefonun solunda durur, ekranların
      üstüne binmez */
+  /* %100: kenar boşluklarının içinde kalır (92vw dar ekranda sağa taşıp ortadan kayıyordu) */
   .hh__visual :global(.hh__duo) {
-    width: min(92vw, 440px);
+    width: min(100%, 440px);
     padding-bottom: 17cqw;
   }
 
