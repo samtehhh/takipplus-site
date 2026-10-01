@@ -16,7 +16,7 @@ const { title, h1 = title, description, path, ogImage, updated, toc, draft = tru
 const updatedLabel = new Date(updated).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
-<Base title={title} description={description} path={path} ogImage={ogImage} breadcrumbs={[{ name: h1, path }]}>
+<Base title={title} description={description} path={path} ogImage={ogImage} breadcrumbs={[{ name: h1, path }]} preloadInter>
   <article class="legal">
     <div class="container legal__grid">
       <header class="legal__head">

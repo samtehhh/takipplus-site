@@ -3,6 +3,8 @@ import '../styles/fonts.css';
 import '../styles/global.css';
 import outfitLatin from '../assets/fonts/outfit-latin.woff2?url';
 import outfitTr from '../assets/fonts/outfit-tr.woff2?url';
+import interLatin from '../assets/fonts/inter-latin.woff2?url';
+import interTr from '../assets/fonts/inter-tr.woff2?url';
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -33,6 +35,9 @@ interface Props {
   ctaHref?: string;
   /** Mobil sabit CTA çubuğunu göster. */
   stickyCta?: boolean;
+  /** İlk ekranı Inter metniyle dolu sayfalar (yasal metinler): Inter'i de ön yükle. Yoksa
+   *  yedek fonttan Inter'e geçişte metin yeniden dizilir; Linux'ta (yedek DejaVu) CLS 0,19. */
+  preloadInter?: boolean;
 }
 
 const {
@@ -47,6 +52,7 @@ const {
   accent,
   ctaHref = '/#erken-erisim',
   stickyCta = false,
+  preloadInter = false,
 } = Astro.props;
 
 const canonical = new URL(path, site.url).href.replace(/\/$/, path === '/' ? '/' : '');
@@ -78,7 +84,9 @@ const accentStyle = accent
 
     <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={outfitTr} as="font" type="font/woff2" crossorigin />
-    <!-- Inter ilk ekranda kullanılmıyor (başlık, giriş ve butonlar Outfit); ön yüklemesi LCP görseliyle yarışıyordu -->
+    <!-- Inter yalnız ilk ekranı Inter metniyle dolu sayfalarda (yasal); diğerlerinde ilk ekran Outfit ve ön yükleme LCP görseliyle yarışıyordu -->
+    {preloadInter && <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />}
+    {preloadInter && <link rel="preload" href={interTr} as="font" type="font/woff2" crossorigin />}
 
     <meta name="theme-color" content={site.themeColor} />
     <meta name="color-scheme" content="dark" />
