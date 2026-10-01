@@ -1,11 +1,11 @@
 ---
 /**
- * Uygulama turu: altı sekme, gerçek ekranlar. Sekmeler uygulamanın alt
- * menüsündeki gibi; seçili sekme uygulamadaki mor→turkuaz gradyanla dolar.
- * JS: site.ts → initTour (ARIA sekme deseni, ok tuşları, otomatik ilerleme).
- * Otomatik ilerleme yalnızca bölüm görünürken ve hareket azaltılmamışsa;
- * üzerine gelince, odaklanınca ya da bir sekmeye dokununca durur.
- * JS yoksa: ilk sekmenin ekranı ve bütün sekme açıklamaları liste olarak görünür.
+ * Uygulama turu: altı sekme, her sekmede uygulamadan kısa bir klip (public/videos).
+ * Sekmeler uygulamanın alt menüsündeki gibi; seçili sekme mor→turkuaz gradyanla dolar,
+ * altındaki çubuk klibin ilerlemesini gösterir. JS: site.ts (ARIA sekme deseni, ok
+ * tuşları, video oynatma ve sıradaki sekmeye geçiş). Klipler yalnızca bölüm görünürken
+ * ve hareket azaltılmamışsa kendiliğinden oynar; "Turu durdur" düğmesi her zaman var.
+ * JS yoksa: ilk sekmenin kapak karesi ve bütün sekme açıklamaları liste olarak görünür.
  */
 import Device from './Device.astro';
 import AppIcon from './AppIcon.astro';
@@ -16,7 +16,7 @@ interface Props {
   id: string;
   title: string;
   lead: string;
-  tabs: { id: string; name: string; icon: TabIcon; screen: ScreenName; text: string }[];
+  tabs: { id: string; name: string; icon: TabIcon; screen: ScreenName; video?: string; text: string }[];
 }
 
 const { id, title, lead, tabs } = Astro.props;
@@ -33,6 +33,7 @@ const { id, title, lead, tabs } = Astro.props;
       <span class="dotgrid" aria-hidden="true"></span>
       <Device
         screens={tabs.map((t) => t.screen)}
+        videos={tabs.map((t) => t.video)}
         sizes="(min-width: 64rem) 320px, (min-width: 48rem) 38vw, 64vw"
         class="tour__device"
       />
@@ -196,31 +197,18 @@ const { id, title, lead, tabs } = Astro.props;
     opacity: 0;
   }
 
+  /* Klibin ilerlemesi: site.ts --tp'yi (0–1) her karede yazar */
   .tour__bar i {
     display: block;
     height: 100%;
-    background: rgb(255 255 255 / 0.85);
+    background: rgb(255 255 255 / 0.9);
     transform-origin: left;
-    transform: scaleX(0);
+    transform: scaleX(var(--tp, 0));
   }
 
   :global(.tour.is-playing) .tour__tab.is-active .tour__bar {
     opacity: 1;
     background: rgb(255 255 255 / 0.25);
-  }
-
-  :global(.tour.is-playing) .tour__tab.is-active .tour__bar i {
-    animation: tour-progress var(--tour-ms, 5200ms) linear both;
-  }
-
-  :global(.tour.is-held) .tour__tab.is-active .tour__bar i {
-    animation-play-state: paused;
-  }
-
-  @keyframes tour-progress {
-    to {
-      transform: scaleX(1);
-    }
   }
 
   .tour__panel {

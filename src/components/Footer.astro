@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import { liveProducts, statusLabel } from '../data/products';
-import { legalLinks, companyLinks } from '../data/nav';
+import { legalLinks, companyLinks, toolLinks } from '../data/nav';
 import { site, contactEmail } from '../config/site';
 
 const socials = [
@@ -36,6 +36,13 @@ const year = new Date().getFullYear();
               </li>
             ))
           }
+        </ul>
+      </nav>
+
+      <nav aria-label="Araçlar">
+        <h2 class="site-footer__title">Araçlar</h2>
+        <ul>
+          {toolLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
         </ul>
       </nav>
 
@@ -104,6 +111,7 @@ const year = new Date().getFullYear();
   }
 
   .site-footer__mail {
+    font-family: var(--font-body);
     display: inline-flex;
     align-items: center;
     min-height: 44px;
@@ -171,7 +179,7 @@ const year = new Date().getFullYear();
 
   @media (min-width: 48rem) {
     .site-footer__grid {
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     }
 
     .site-footer__brand {

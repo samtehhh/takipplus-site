@@ -80,8 +80,8 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 
       <div class="hero__visual stage" role="img" aria-label={c.hero.visualLabel}>
         <Trajectory variant="hero" animate="intro" class="hero__traj" />
-        <Device screens={['home-harita']} sizes="(min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hero__device">
-          <div class="co hero__quad" style="--x:-17.2%;--y:62.4%;--w:134.5cqw">
+        <Device screens={['p-home-sayac']} sizes="(min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hero__device">
+          <div class="co co--plate hero__quad" style="--x:-17.2%;--y:73.1%;--ty:-50%;--w:134.5cqw">
             <FocusQuad animate="intro" />
           </div>
         </Device>
@@ -161,6 +161,13 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     <div class="container finale__inner">
       <h2 class="finale__title" id="finale-title">Sayaç çalışıyor.</h2>
       <Countdown iso={c.exam.iso} label={c.exam.label} dateText={c.exam.dateText} note={c.exam.note} />
+      {
+        product.slug === 'yks' && (
+          <a class="finale__tool" href="/yks-sayaci">
+            TYT, AYT ve YDT için ayrı ayrı: YKS 2027 Sayacı
+          </a>
+        )
+      }
     </div>
     <div class="finale__band" aria-hidden="true">
       <span class="dotgrid"></span>
@@ -464,11 +471,16 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     justify-items: center;
   }
 
-  /* Poster: ortalanmış başlık, altında sahne */
-  .chap--poster .chap__copy {
+  /* Poster ve çift telefon: ortalanmış başlık, altında sahne */
+  .chap--poster .chap__copy,
+  .chap--pair .chap__copy {
     justify-items: center;
     margin-inline: auto;
     text-align: center;
+  }
+
+  .chap--pair .chap__points {
+    justify-items: center;
   }
 
   .chap--poster .chap__note {
@@ -477,7 +489,8 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     text-align: left;
   }
 
-  .chap--poster {
+  .chap--poster,
+  .chap--pair {
     overflow-x: clip;
   }
 
@@ -596,6 +609,17 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     justify-items: center;
     gap: var(--space-6);
     text-align: center;
+  }
+
+  .finale__tool {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgb(196 181 253 / 0.55);
+    text-underline-offset: 0.3em;
   }
 
   .finale__title {

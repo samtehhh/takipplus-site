@@ -1,0 +1,675 @@
+---
+import '../styles/tools.css';
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import Faq from '../components/Faq.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import Device from '../components/app/Device.astro';
+import { faqLd } from '../lib/jsonld';
+import { areas, tytSubjects, aytSubjects, distribution, type Subject } from '../data/tools';
+
+const DEFAULT_AREA = 'SAY'; // uygulamadaki Net Sihirbazı da SAY ile açılır
+const groups: { key: 'tyt' | 'ayt'; list: Subject[] }[] = [
+  { key: 'tyt', list: tytSubjects },
+  { key: 'ayt', list: aytSubjects },
+];
+const aytMax = aytSubjects.filter((s) => s.areas?.includes(DEFAULT_AREA)).reduce((n, s) => n + s.q, 0);
+
+const faq = [
+  {
+    q: 'Net nasıl hesaplanır?',
+    a: '<p>Net = doğru − yanlış ÷ 4. Dört yanlış bir doğruyu götürür; boş bıraktığın sorular neti etkilemez. Örneğin 32 doğru ve 8 yanlış 30 net eder.</p>',
+  },
+  {
+    q: 'TYT ve AYT kaç soru?',
+    a: '<p>TYT 120 soru ve 165 dakika: Türkçe 40, Sosyal Bilimler 20, Temel Matematik 40, Fen Bilimleri 20. AYT 160 soru ve 180 dakika: Matematik, Fen Bilimleri, Edebiyat ve Sosyal Bilimler-1, Sosyal Bilimler-2 testleri 40’ar soru. YDT 80 soru ve 120 dakika.</p>',
+  },
+  {
+    q: 'Hangi puan türünde hangi testler sayılır?',
+    a: '<p>SAY: AYT Matematik ve Fen Bilimleri. EA: AYT Matematik ile Edebiyat, Tarih-1 ve Coğrafya-1. SÖZ: Edebiyat ve Sosyal Bilimler-1 ile Sosyal Bilimler-2. DİL: YDT. Her puan türünde TYT netlerin de hesaba girer.</p>',
+  },
+  {
+    q: 'Bu sayfa puanımı ve sıralamamı da hesaplıyor mu?',
+    a: '<p>Hayır, yalnızca net hesaplar. Puan ve tahmini sıralama Takip+ YKS’deki Net Sihirbazı’nda: netlerin ve OBP’n ile 2026 verisine göre hesaplanır.</p>',
+  },
+  {
+    q: 'Girdiğim değerler kaydediliyor mu?',
+    a: '<p>Yalnızca bu tarayıcıda, bir sonraki ziyaretinde kaldığın yerden devam edebilmen için. Değerler hiçbir sunucuya gönderilmez; Temizle düğmesi hepsini siler.</p>',
+  },
+];
+---
+
+<Base
+  title="YKS Net Hesaplama: TYT ve AYT Net Hesapla"
+  description="Doğru ve yanlış sayını yaz, TYT ve AYT netin anında çıksın. Dört yanlış bir doğruyu götürür; SAY, EA, SÖZ ve DİL testleri dahil."
+  path="/net-hesaplama"
+  ogImage="net-hesaplama"
+  ogAlt="YKS Net Hesaplama: TYT ve AYT net hesapla"
+  breadcrumbs={[{ name: 'Net Hesaplama', path: '/net-hesaplama' }]}
+  jsonLd={[faqLd(faq)]}
+  ctaHref="#erken-erisim"
+>
+  <section class="th" aria-labelledby="nh-title">
+    <div class="th__sky" aria-hidden="true"><span class="dotgrid"></span></div>
+    <div class="container">
+      <div class="th__head">
+        <h1 class="th__title" id="nh-title">YKS Net Hesaplama</h1>
+        <p class="lead th__lead">Doğru ve yanlışlarını yaz, TYT ve AYT netin anında çıksın. Dört yanlış bir doğruyu götürür.</p>
+      </div>
+
+      <!-- Uygulamadaki Net Sihirbazı: puan türü, ders kartları (D/Y) ve toplam net çubuğu -->
+      <div class="app-card nc" data-netcalc>
+        <div class="seg nc__area" role="group" aria-label="Puan türü">
+          {
+            areas.map((a) => (
+              <button type="button" data-area={a} aria-pressed={a === DEFAULT_AREA ? 'true' : 'false'}>
+                {a}
+              </button>
+            ))
+          }
+        </div>
+
+        {
+          groups.map((g) => (
+            <div class:list={['nc__block', `nc__block--${g.key}`]} data-ayt={g.key === 'ayt' ? '' : undefined}>
+              <h2 class="bar-title nc__title" data-ayt-title={g.key === 'ayt' ? '' : undefined}>
+                {g.key === 'tyt' ? 'TYT netlerin' : `AYT netlerin (${DEFAULT_AREA})`}
+              </h2>
+              <div class="nc__grid">
+                {g.list.map((s) => (
+                  <div
+                    class="nsub"
+                    data-subject={s.key}
+                    data-q={s.q}
+                    data-group={g.key}
+                    data-areas={s.areas?.join(' ')}
+                    hidden={s.areas && !s.areas.includes(DEFAULT_AREA)}
+                  >
+                    <p class="nsub__label">
+                      {s.name} <span>{s.q} soru</span>
+                    </p>
+                    <p class="nsub__net">
+                      <b data-net id={`${s.key}-net`}>0</b>
+                      <span>net</span>
+                    </p>
+                    <div class="nsub__dy">
+                      <label class="nsub__f nsub__f--d">
+                        <input
+                          data-d
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          placeholder="0"
+                          aria-label={`${s.name} doğru sayısı`}
+                          aria-describedby={`${s.key}-net`}
+                        />
+                        <span aria-hidden="true">Doğru</span>
+                      </label>
+                      <label class="nsub__f nsub__f--y">
+                        <input
+                          data-y
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          placeholder="0"
+                          aria-label={`${s.name} yanlış sayısı`}
+                          aria-describedby={`${s.key}-net`}
+                        />
+                        <span aria-hidden="true">Yanlış</span>
+                      </label>
+                    </div>
+                    <p class="nsub__blank">
+                      <span data-blank>{s.q}</span> boş
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div class:list={['nc__total', `nc__total--${g.key}`]} data-total={g.key}>
+                <span class="nc__badge">{g.key === 'tyt' ? 'TYT' : 'AYT'}</span>
+                <span class="nc__tl">Toplam net</span>
+                <output class="nc__tv" aria-live="polite">
+                  <b data-total-net>0</b>
+                  <span>
+                    / <span data-total-max>{g.key === 'tyt' ? 120 : aytMax}</span>
+                  </span>
+                </output>
+                <span class="nc__track" aria-hidden="true"></span>
+              </div>
+            </div>
+          ))
+        }
+
+        <div class="nc__foot">
+          <p class="fine">Değerler yalnızca bu tarayıcıda saklanır.</p>
+          <button type="button" class="nc__reset" data-reset>Temizle</button>
+          <p class="sr-only" role="status" data-reset-status></p>
+        </div>
+        <noscript>
+          <p class="nc__noscript">Hesaplama için tarayıcında JavaScript açık olmalı. Kural aşağıda: net = doğru − yanlış ÷ 4.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
+  <section class="section nh-how" aria-labelledby="how-title">
+    <div class="container nh-how__grid">
+      <div class="nh-how__copy">
+        <h2 class="h2" id="how-title">Net nasıl hesaplanır?</h2>
+        <p class="lead">Dört yanlış bir doğruyu götürür. Her testin neti yalnızca kendi doğru ve yanlışlarıyla hesaplanır.</p>
+      </div>
+      <div class="formula">
+        <p class="formula__eq">Net = Doğru − Yanlış ÷ 4</p>
+        <p class="formula__ex">Türkçe’de 32 doğru, 8 yanlış: 32 − 8 ÷ 4 = <b>30 net</b></p>
+        <ul class="formula__rules" role="list">
+          <li>Boş bıraktığın soru neti etkilemez.</li>
+          <li>Yanlışlar yalnızca kendi testinin netinden düşer.</li>
+          <li>Net eksiye düşebilir: 2 doğru, 12 yanlış eksi 1 net eder.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section defer" aria-labelledby="dist-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2" id="dist-title">Soru dağılımı.</h2>
+        <p class="lead">Her testte kaç soru var; netin bu soruların üzerinden hesaplanır.</p>
+      </div>
+      <div class="dist">
+        {
+          distribution.map((t) => (
+            <div class="dist__test">
+              <p class="dist__head">
+                <b>{t.test}</b> {t.total}
+              </p>
+              <ul class="dist__list" role="list">
+                {t.parts.map((p) => (
+                  <li>
+                    <span class="dist__name">
+                      {p.name}
+                      {p.sub && <small>{p.sub}</small>}
+                    </span>
+                    <span class="dist__q">{p.q}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section defer" aria-labelledby="app-title">
+    <div class="container tool-app">
+      <Device screens={['p-net-sihirbazi']} sizes="(min-width: 56rem) 300px, 64vw" class="tool-app__phone" />
+      <div class="tool-app__copy">
+        <h2 class="h2" id="app-title">Puanın ve sıralaman: Net Sihirbazı.</h2>
+        <p class="lead">
+          Bu sayfa netini hesaplar. Takip+ YKS’deki Net Sihirbazı bir adım ileri gider: netlerin ve OBP’n ile ham
+          puanını, yerleştirme puanını ve 2026 verisine göre tahmini sıralamanı çıkarır, hedef bölümüne kaç sıra
+          kaldığını gösterir.
+        </p>
+        <div class="tool-app__actions">
+          <Button href="/yks" arrow track="cta_tool_net">Takip+ YKS’yi keşfet</Button>
+          <a class="tool-app__link" href="#erken-erisim">Erken erişime katıl</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section defer" aria-label="YKS 2027 Sayacı">
+    <div class="container">
+      <a class="tool-link" href="/yks-sayaci">
+        <span>
+          <span class="tool-link__t">YKS’ye kaç gün kaldı?</span>
+          <span class="muted tool-link__d">TYT, AYT ve YDT için Türkiye saatiyle saniye saniye geri sayım.</span>
+        </span>
+        <span class="btn btn--secondary btn--md btn--arrow" aria-hidden="true">
+          <span class="btn__label">Sayaca git</span>
+          <span class="btn__icon">
+            <svg viewBox="0 0 20 20" width="16" height="16">
+              <path d="M5 10h9.5M10.5 5.5 15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section defer" aria-labelledby="sss-title">
+    <div class="container container-narrow">
+      <h2 class="h2 nh-faq-title" id="sss-title">Sık sorulanlar</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="section defer">
+    <div class="container">
+      <WaitlistForm
+        product="yks"
+        text="Takip+ YKS mağazalara çıktığında ilk sen haberdar ol. Tek ihtiyacımız e-posta adresin; yalnızca yayın ve erken erişim hakkında yazarız."
+      />
+    </div>
+  </section>
+</Base>
+
+<script>
+  import '../scripts/tools';
+</script>
+
+<style>
+  /* ---------- Hesaplayıcı ---------- */
+  .nc {
+    display: grid;
+    gap: var(--space-6);
+    width: min(100%, 56rem);
+    margin-inline: auto;
+    padding: clamp(1rem, 0.6rem + 2vw, 2rem);
+  }
+
+  .nc__area {
+    width: 100%;
+  }
+
+  .nc__block {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .nc__block[hidden] {
+    display: none;
+  }
+
+  .nc__block--ayt {
+    --bar: var(--amber-500);
+  }
+
+  .nc__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Ders kartı: uygulamadaki D/Y kartı (köşe 16, %5,5 beyaz, altta 2 px vurgu) */
+  .nsub {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: 0.875rem 0.875rem 1rem;
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.055);
+    overflow: hidden;
+  }
+
+  .nsub[hidden] {
+    display: none;
+  }
+
+  .nsub::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: var(--bar, var(--violet-500));
+    opacity: 0.6;
+  }
+
+  .nsub__label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-2);
+    line-height: 1.3;
+  }
+
+  .nsub__label span {
+    display: block;
+    font-weight: 500;
+    color: var(--text-3);
+  }
+
+  .nsub__net {
+    display: grid;
+    justify-items: center;
+    gap: 0.125rem;
+    padding-block: 0.25rem;
+  }
+
+  .nsub__net b {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .nsub.is-negative .nsub__net b {
+    color: #fc8181;
+  }
+
+  .nsub__net span {
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--text-3);
+  }
+
+  .nsub__dy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid rgb(255 255 255 / 0.07);
+    padding-top: 0.5rem;
+  }
+
+  .nsub__f {
+    display: grid;
+    justify-items: center;
+    gap: 0.125rem;
+  }
+
+  .nsub__f + .nsub__f {
+    box-shadow: -1px 0 0 rgb(255 255 255 / 0.07);
+  }
+
+  .nsub__f input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+
+  .nsub__f input::placeholder {
+    color: currentColor;
+    opacity: 0.45;
+  }
+
+  .nsub__f input:focus {
+    background: rgb(255 255 255 / 0.07);
+  }
+
+  .nsub__f--d input {
+    color: #34d399;
+  }
+
+  .nsub__f--y input {
+    color: #fc8181;
+  }
+
+  .nsub__f > span {
+    font-size: 0.6875rem;
+    color: var(--text-3);
+  }
+
+  .nsub__blank {
+    font-size: 0.6875rem;
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  /* Toplam net çubuğu (uygulamadaki _buildTotalNetBar) */
+  .nc__total {
+    --c: var(--violet-400);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.625rem 0.75rem;
+    padding: 0.875rem 1rem 1rem;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--c) 7%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 16%, transparent) inset;
+  }
+
+  .nc__total--ayt {
+    --c: var(--amber-400);
+  }
+
+  .nc__badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--c);
+  }
+
+  .nc__tl {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .nc__tv {
+    font-family: var(--font-display);
+    white-space: nowrap;
+  }
+
+  .nc__tv b {
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+    font-weight: 700;
+    color: var(--c);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .nc__tv span {
+    font-size: var(--text-sm);
+    color: var(--text-3);
+  }
+
+  .nc__track {
+    grid-column: 1 / -1;
+    height: 4px;
+    border-radius: 4px;
+    background: rgb(255 255 255 / 0.06);
+    overflow: hidden;
+  }
+
+  .nc__track::before {
+    content: '';
+    display: block;
+    height: 100%;
+    background: var(--c);
+    transform: scaleX(var(--p, 0));
+    transform-origin: left;
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  .nc__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .nc__reset {
+    min-height: 44px;
+    padding: 0 1.125rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 600;
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+
+  .nc__reset:active {
+    transform: scale(0.97);
+  }
+
+  @media (hover: hover) {
+    .nc__reset:hover {
+      background: rgb(255 255 255 / 0.12);
+    }
+  }
+
+  .nc__noscript {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: rgb(245 158 11 / 0.1);
+    color: var(--text);
+  }
+
+  @media (min-width: 40rem) {
+    .nc__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nc__track::before {
+      transition: none;
+    }
+  }
+
+  /* ---------- Net nasıl hesaplanır ---------- */
+  .nh-how__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .nh-how__copy {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .formula {
+    display: grid;
+    gap: var(--space-4);
+    padding: clamp(1.25rem, 0.9rem + 1.6vw, 2rem);
+    border-radius: var(--radius-xl);
+    background: var(--grad-card);
+    box-shadow:
+      0 0 0 1px var(--line) inset,
+      var(--shadow-2);
+  }
+
+  .formula__eq {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.375rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .formula__ex {
+    color: var(--text-2);
+  }
+
+  .formula__ex b {
+    color: var(--teal-300);
+    font-weight: 700;
+  }
+
+  .formula__rules {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .formula__rules li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .formula__rules li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    color: var(--violet-400);
+    font-weight: 700;
+  }
+
+  @media (min-width: 56rem) {
+    .nh-how__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: center;
+    }
+  }
+
+  /* ---------- Soru dağılımı ---------- */
+  .dist {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .dist__test {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+  }
+
+  .dist__head {
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-display);
+    color: var(--text-2);
+  }
+
+  .dist__head b {
+    margin-right: 0.375rem;
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .dist__list {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .dist__list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+
+  .dist__name {
+    display: grid;
+    gap: 0.125rem;
+    font-weight: 600;
+  }
+
+  .dist__name small {
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--text-2);
+  }
+
+  .dist__q {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 56rem) {
+    .dist {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-7);
+    }
+  }
+
+  .nh-faq-title {
+    margin-bottom: var(--space-6);
+  }
+</style>

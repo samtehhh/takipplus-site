@@ -1,0 +1,146 @@
+---
+/**
+ * StoreGallery'nin şeritleri: iPhone ve iPad mağaza görselleri. İki kez kullanılır:
+ * <template> içinde (JS ile, sekmeli: kimlikler ve tabpanel rolleriyle) ve <noscript>
+ * içinde (JS yok: iki şerit alt alta, kimliksiz).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { STORE, storeShots } from '../../data/screens';
+
+interface Props {
+  id: string;
+  /** Sekmeli sürüm: kimlikler, tabpanel rolü ve ilk şerit seçili */
+  tabs?: boolean;
+}
+
+const { id, tabs = false } = Astro.props;
+const files = import.meta.glob<ImageMetadata>('/src/assets/app/s-*.webp', { eager: true, import: 'default' });
+const sets = (['iphone', 'ipad'] as const).map((kind) => ({
+  kind,
+  label: kind === 'iphone' ? 'iPhone' : 'iPad',
+  items: storeShots[kind].map((alt, i) => {
+    const key = `/src/assets/app/s-${kind}-${String(i + 1).padStart(2, '0')}.webp`;
+    const img = files[key];
+    if (!img) throw new Error(`Mağaza görseli bulunamadı: ${key}`);
+    return { img, alt: `Takip+ YKS mağaza görseli, ${kind === 'iphone' ? 'iPhone' : 'iPad'}: ${alt}` };
+  }),
+}));
+---
+
+{
+  sets.map((s, i) => (
+    <div
+      class="sg__set"
+      id={tabs ? `${id}-${s.kind}` : undefined}
+      role={tabs ? 'tabpanel' : undefined}
+      aria-labelledby={tabs ? `${id}-tab-${s.kind}` : undefined}
+      data-gallery-set={s.kind}
+      data-active={tabs && i === 0 ? '' : undefined}
+    >
+      {!tabs && <p class="sg__setlabel container">{s.label}</p>}
+      <ul class:list={['sg__track', `sg__track--${s.kind}`]} role="list" tabindex="0" aria-label={`${s.label} mağaza görselleri, yatay kaydırılır`}>
+        {s.items.map((it) => (
+          <li class="sg__item">
+            <Picture
+              src={it.img}
+              alt={it.alt}
+              widths={s.kind === 'iphone' ? [240, 360, 480, 720] : [360, 540, 720, 1080]}
+              sizes={s.kind === 'iphone' ? '(min-width: 64rem) 260px, (min-width: 48rem) 30vw, 62vw' : '(min-width: 64rem) 420px, (min-width: 48rem) 48vw, 84vw'}
+              formats={['avif', 'webp']}
+              fallbackFormat="webp"
+              quality={82}
+              width={STORE[s.kind].w}
+              height={STORE[s.kind].h}
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))
+}
+
+<style>
+  .sg__setlabel {
+    margin-bottom: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--text-2);
+  }
+
+  .sg__set + .sg__set {
+    margin-top: var(--space-6);
+  }
+
+  /* Sekmeli sürümde yalnız seçili şerit görünür; gizli şeridin görselleri inmez */
+  .sg__set[role='tabpanel']:not([data-active]) {
+    display: none;
+  }
+
+  .sg__set[role='tabpanel'] + .sg__set[role='tabpanel'] {
+    margin-top: 0;
+  }
+
+  /* Şerit: konteynerin sol hizasından başlar, sağa taşar; dokunmayla kaydırılır */
+  .sg__track {
+    display: flex;
+    gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding: var(--space-2) var(--gutter) var(--space-5);
+    padding-inline-start: max(var(--gutter), calc((100vw - var(--container)) / 2));
+    padding-inline-end: var(--gutter);
+    scroll-padding-inline-start: max(var(--gutter), calc((100vw - var(--container)) / 2));
+    list-style: none;
+    scrollbar-width: none;
+  }
+
+  .sg__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sg__track:focus-visible {
+    outline-offset: -4px;
+  }
+
+  .sg__item {
+    flex: none;
+    scroll-snap-align: start;
+  }
+
+  .sg__track--iphone .sg__item {
+    width: min(62vw, 260px);
+  }
+
+  .sg__track--ipad .sg__item {
+    width: min(84vw, 420px);
+  }
+
+  .sg__item :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: clamp(14px, 3.4vw, 22px);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.08),
+      0 30px 60px -28px rgb(5 2 25 / 0.95);
+  }
+
+  @media (min-width: 48rem) {
+    .sg__track--iphone .sg__item {
+      width: min(30vw, 260px);
+    }
+
+    .sg__track--ipad .sg__item {
+      width: min(48vw, 420px);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sg__track {
+      scroll-behavior: smooth;
+    }
+  }
+</style>

@@ -22,12 +22,16 @@ html {
   }
 }
 
+/* Varsayılan aile Outfit (ilk ekranda zaten yüklü); Inter yalnızca metin öğelerinde.
+   Chrome bir web fontunu, o aileyle biçimlenen her kutu için (boş olsa bile) ilk
+   yerleşimde indiriyor; gövde Inter olunca 31 KB'lık Inter her sayfada hero görseliyle
+   yarışıyordu. Artık Inter, ancak Inter'li bir metin ekrana yaklaşınca iner. */
 body {
   margin: 0;
   min-height: 100svh;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-size: var(--text-base);
   line-height: var(--leading-body);
   font-feature-settings: 'cv11', 'ss01';
@@ -35,6 +39,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
   text-rendering: optimizeLegibility;
+}
+
+p,
+li,
+dt,
+dd,
+td,
+th,
+label,
+figcaption,
+blockquote,
+address,
+time,
+legend {
+  font-family: var(--font-body);
 }
 
 html:has(dialog[open]) {
@@ -152,6 +171,13 @@ select,
 textarea {
   font: inherit;
   color: inherit;
+}
+
+/* Form alanları metin girişidir: Inter (düğmeler bulundukları yerin ailesini alır) */
+input,
+select,
+textarea {
+  font-family: var(--font-body);
 }
 
 button {

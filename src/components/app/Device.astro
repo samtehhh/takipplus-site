@@ -1,9 +1,12 @@
 ---
 /**
- * Telefon ya da tablet çerçevesinde gerçek uygulama ekranı.
- * Çerçeve ölçüleri mağaza görsellerinden (magaza-final/kaynak-html) oranlanmıştır;
- * hepsi çerçevenin kendi genişliğine göre (cqw) ölçeklenir.
- * Birden çok ekran verilirse üst üste dizilir; görünen `is-active` olandır (Tur).
+ * iPhone ya da iPad çerçevesinde gerçek uygulama ekranı.
+ * Çerçeve sade: ince siyah kenar ve titanyum kenar ışığı. Sahte durum çubuğu, Dynamic
+ * Island ya da ana ekran çubuğu çizilmez; ekran görüntüsü olduğu gibi, tam boy görünür
+ * (yazı çentiğin altına girmez, ton farkı oluşmaz).
+ * Ölçüler cihazın kendi genişliğine göre (cqw). Birden çok ekran verilirse üst üste
+ * dizilir; görünen `is-active` olandır (Tur). `videos` verilirse o ekranın üstünde
+ * sessiz bir video durur; görüntü kapak olarak kalır, video oynayınca üstüne gelir.
  */
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -16,18 +19,20 @@ interface Props {
   sizes: string;
   eager?: boolean;
   class?: string;
-  /** Ekran görüntüsü süs mü (yanında aynı bilgiyi veren metin varsa) */
+  /** Ekran görüntüsü süs mü (yanında aynı bilgiyi veren metin ya da sahne açıklaması varsa) */
   decorative?: boolean;
+  /** Ekranlarla aynı sırada video yolları (public/ altında) */
+  videos?: (string | undefined)[];
 }
 
-const { screens: list, kind = 'phone', sizes, eager = false, class: cls, decorative = false } = Astro.props;
+const { screens: list, kind = 'phone', sizes, eager = false, class: cls, decorative = false, videos = [] } = Astro.props;
 const files = import.meta.glob<ImageMetadata>('/src/assets/app/*.webp', { eager: true, import: 'default' });
 const dims = kind === 'phone' ? PHONE : TABLET;
-const widths = kind === 'phone' ? [280, 440, 600, 800, 1080] : [480, 720, 1000, 1400, 2064];
-const shots = list.map((name) => {
+const widths = kind === 'phone' ? [360, 450, 540, 720] : [600, 900, 1200, 1536];
+const shots = list.map((name, i) => {
   const img = files[`/src/assets/app/${name}.webp`];
   if (!img) throw new Error(`Ekran bulunamadı: src/assets/app/${name}.webp`);
-  return { name, img, alt: screens[name].alt };
+  return { name, img, alt: screens[name].alt, video: videos[i] };
 });
 ---
 
@@ -44,17 +49,32 @@ const shots = list.map((name) => {
               sizes={sizes}
               formats={['avif', 'webp']}
               fallbackFormat="webp"
+              quality={80}
               width={dims.w}
               height={dims.h}
               loading={eager && i === 0 ? 'eager' : 'lazy'}
               decoding="async"
               fetchpriority={eager && i === 0 ? 'high' : undefined}
             />
+            {s.video && (
+              <video
+                class="device__video"
+                src={s.video}
+                width={dims.w}
+                height={dims.h}
+                muted
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                aria-hidden="true"
+                tabindex="-1"
+                data-shot-video
+              />
+            )}
           </div>
         ))
       }
     </div>
-    <span class="device__cam" aria-hidden="true"></span>
   </div>
   <slot />
 </figure>
@@ -66,21 +86,24 @@ const shots = list.map((name) => {
     container-type: inline-size;
   }
 
+  /* Siyah cam çerçeve, titanyum kenar: bir iç ışık çizgisi, ince metal kenar, yumuşak gölge */
   .device__body {
     position: relative;
-    background: #0a0912;
+    background: linear-gradient(160deg, #15131c, #07060b 45%);
     box-shadow:
-      0 0 0 1.5px #4b4663,
-      0 0 0 5px rgb(139 92 246 / 0.16),
-      0 40px 80px rgb(5 2 25 / 0.62),
-      -16px 0 60px rgb(139 92 246 / 0.28);
+      0 0 0 1px rgb(255 255 255 / 0.16) inset,
+      0 0 0 1.5px #2a2733,
+      0 0 0 2.5px #0b0a10,
+      0 34px 70px -18px rgb(5 2 25 / 0.8),
+      0 0 70px -10px rgb(139 92 246 / 0.22);
   }
 
   .device__screen {
     position: relative;
     overflow: hidden;
-    background: var(--ink-900);
+    background: #181c39;
     isolation: isolate;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.7);
   }
 
   .device__shot {
@@ -95,62 +118,99 @@ const shots = list.map((name) => {
   }
 
   .device__shot picture,
-  .device__shot img {
+  .device__shot img,
+  .device__video {
     width: 100%;
     height: 100%;
   }
 
-  .device__shot img {
+  .device__shot img,
+  .device__video {
     object-fit: cover;
+    object-position: top;
   }
 
-  /* Telefon: 290 px'lik mağaza çerçevesi → 9 px kenar, 50/41 köşe, 76×22 ada */
+  /* Video kapağın üstünde; ilk kare gelip oynamaya başlayınca görünür */
+  .device__video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out);
+  }
+
+  .device__video.is-playing {
+    opacity: 1;
+  }
+
+  /* ---- Telefon: ekran 720×1600 (9:20) ---- */
   .device--phone .device__body {
-    padding: 3.1cqw;
-    border-radius: 17.2cqw;
+    padding: 2.6cqw;
+    border-radius: 15cqw;
+  }
+
+  /* Yan tuşlar: solda ses, sağda güç; çerçeveyle aynı koyulukta */
+  .device--phone .device__body::before,
+  .device--phone .device__body::after {
+    content: '';
+    position: absolute;
+    width: 0.9cqw;
+    border-radius: 1cqw;
+    background: linear-gradient(90deg, #2c2935, #15131b);
+  }
+
+  .device--phone .device__body::before {
+    left: -0.9cqw;
+    top: 24%;
+    height: 12%;
+    box-shadow: 0 -10cqw 0 -0.05cqw #211f29;
+  }
+
+  .device--phone .device__body::after {
+    right: -0.9cqw;
+    top: 28%;
+    height: 18%;
   }
 
   .device--phone .device__screen {
-    aspect-ratio: 1080 / 2400;
-    border-radius: 14.1cqw;
+    aspect-ratio: 720 / 1600;
+    border-radius: 12.6cqw;
   }
 
-  .device--phone .device__cam {
-    position: absolute;
-    top: calc(3.1cqw + 3.4cqw);
-    left: 50%;
-    width: 26.2cqw;
-    height: 7.6cqw;
-    translate: -50% 0;
-    border-radius: 999px;
-    background: #000;
-  }
-
-  /* Tablet: ince eşit kenar, küçük ön kamera */
+  /* ---- iPad: ekran 1536×2048 (3:4) ---- */
   .device--tablet .device__body {
-    padding: 2.4cqw;
-    border-radius: 5.2cqw;
+    padding: 2.2cqw;
+    border-radius: 4.8cqw;
   }
 
   .device--tablet .device__screen {
-    aspect-ratio: 2064 / 2752;
-    border-radius: 3cqw;
-  }
-
-  .device--tablet .device__cam {
-    position: absolute;
-    top: 1cqw;
-    left: 50%;
-    width: 0.9cqw;
-    aspect-ratio: 1;
-    translate: -50% 0;
-    border-radius: 50%;
-    background: #1d1a2b;
+    aspect-ratio: 1536 / 2048;
+    border-radius: 2.7cqw;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .device__shot {
+    .device__shot,
+    .device__video {
       transition: none;
     }
+  }
+
+  /* ---- DeviceDuo: iPad + iPhone, telefon tabletin sağ altına biner ---- */
+  .duo {
+    position: relative;
+    container-type: inline-size;
+    width: 100%;
+    padding-bottom: 9cqw;
+  }
+
+  .duo .duo__tablet {
+    width: 80cqw;
+  }
+
+  .duo .duo__phone {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 34cqw;
+    z-index: 2;
   }
 </style>

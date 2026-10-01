@@ -19,7 +19,7 @@ export const hero = {
   title: ['Tüm YKS', 'hazırlığın', 'tek uygulamada.'],
   lead: 'Konu, deneme, net ve hedef takibin tek yerde. Kendi koçluğunu yap, başarını kanıtla.',
   visualLabel:
-    'Takip+ YKS ana sayfası: son 30 günün aktivite haritası ve Günün Odağı kartları. Bugün 6 saatin 4,2’si, 100 sorunun 80’i, 10 videonun 5’i ve 5 konunun 5’i tamam.',
+    'Takip+ YKS ana sayfası: YKS 2027’ye 260 gün, hedef Boğaziçi Endüstri Mühendisliği. Günün Odağı: 8 saatin 4,2’si, 100 sorunun 80’i, 10 videonun 5’i ve 5 konunun 5’i tamam.',
 };
 
 export type TabIcon = 'bugun' | 'konular' | 'calisma' | 'denemeler' | 'hedef' | 'planlar' | 'sosyal';
@@ -33,53 +33,59 @@ export const tour = {
       id: 'bugun',
       name: 'Bugün',
       icon: 'bugun',
-      screen: 'home-program',
+      screen: 'v-bugun',
+      video: '/videos/tur-bugun.mp4',
       text: 'Günün Odağı, rutinlerin, tekrar zamanı gelen soruların ve plan görevlerin tek listede. Uygulamayı açınca ne yapacağını düşünmezsin, başlarsın.',
     },
     {
       id: 'konular',
       name: 'Konular',
       icon: 'konular',
-      screen: 'konular-tab',
+      screen: 'v-konular',
+      video: '/videos/tur-konular.mp4',
       text: 'TYT ve AYT’nin bütün konuları. Çalışılıyor, bitti ya da tekrar lazım diye işaretle; tekrarını Ebbinghaus, hafta sonu ya da kendi tarihinle planla.',
     },
     {
       id: 'calisma',
       name: 'Çalışma',
       icon: 'calisma',
-      screen: 'optik-kurulum',
-      text: 'Pomodoro, kronometre ve geri sayım. Rutinler, doğru-yanlış girişi, haftalık ders programı ve Optik Çözüm de burada.',
+      screen: 'v-calisma',
+      video: '/videos/tur-calisma.mp4',
+      text: 'Pomodoro, kronometre ve geri sayım tek dokunuşta. Optik Çözüm oturumların, rutinlerin ve haftalık ders programın da burada.',
     },
     {
       id: 'denemeler',
       name: 'Denemeler',
       icon: 'denemeler',
-      screen: 'perf-tyt-net',
-      text: 'Genel ve branş denemelerini ders ders gir. Netlerin, hedefe kalan farkın ve gelişim grafiğin kendiliğinden çıkar.',
+      screen: 'v-denemeler',
+      video: '/videos/tur-denemeler.mp4',
+      text: 'Genel ve branş denemelerini ders ders gir. Deneme geçmişin, netlerin, hedefe kalan farkın ve gelişim grafiğin kendiliğinden çıkar.',
     },
     {
       id: 'hedef-net',
       name: 'Hedef&Net',
       icon: 'hedef',
-      screen: 'hedefnet-tab',
-      text: 'Sınava kalan süre, hedef üniversiten ve bölümün. Net Sihirbazı hedefe ulaşmak için gereken netleri hesaplar.',
+      screen: 'v-hedef',
+      video: '/videos/tur-hedef.mp4',
+      text: 'Hedef üniversiteni ve bölümünü seç; taban puanı, başarı sırasını ve gereken tahmini netleri gör. Net Sihirbazı netlerinden puanını ve sıralamanı hesaplar, hedefe kaç sıra kaldığını gösterir.',
     },
     {
       id: 'planlar',
       name: 'Planlar',
       icon: 'planlar',
-      screen: 'plan',
+      screen: 'v-planlar',
+      video: '/videos/tur-planlar.mp4',
       text: 'Günlük takvim, plan takvimi, rutinler ve ders programı. Saat, soru, video ve konu hedeflerini günlere yay.',
     },
-  ] as { id: string; name: string; icon: TabIcon; screen: ScreenName; text: string }[],
+  ] as { id: string; name: string; icon: TabIcon; screen: ScreenName; video?: string; text: string }[],
 };
 
-export type ChapterVisual = 'deneme' | 'optik' | 'hedef' | 'yapamadiklarim' | 'odak' | 'sosyal';
+export type ChapterVisual = 'deneme' | 'optik' | 'hedef' | 'yapamadiklarim' | 'odak' | 'sosyal' | 'konular' | 'planlar';
 
 export const chapters: {
   id: string;
   visual: ChapterVisual;
-  layout: 'split' | 'split-flip' | 'poster' | 'band';
+  layout: 'split' | 'split-flip' | 'poster' | 'band' | 'pair';
   /** Uygulamada hangi sekmede (görselin altındaki etiket) */
   tab: string;
   tabIcon: TabIcon;
@@ -100,7 +106,7 @@ export const chapters: {
     text: 'Netlerini ders ders gir. En düşük, en yüksek ve son netin, hata türlerin ve en zayıf konuların kendiliğinden çıkar; yanlışların tekrar listene düşer.',
     points: ['Genel ve branş denemeleri', 'Ders ders gelişim grafiği', 'Deneme ve soru takvimi'],
     label:
-      'Performans Analizi ekranı. En düşük net 59, en son ve en yüksek net 93,25. Hata dağılımı: yüzde 37 dikkat, yüzde 33 bilgi, yüzde 29 strateji. En zayıf konular Ek Fiil, Kümeler ve İslam Tarihi.',
+      'Performans Analizi ekranı. En düşük net 59, en son ve en yüksek net 97,75. Hata dağılımı: yüzde 37 dikkat, yüzde 45 bilgi, yüzde 16 strateji. En zayıf konular Fiil Çatısı, Kimyanın Temel Kanunları, Nüfus ve Yerleşme.',
   },
   {
     id: 'optik-cozum',
@@ -126,6 +132,18 @@ export const chapters: {
     note: 'Sıralama ve taban verileri uygulamaya gömülü, YÖK Atlas kaynaklı veri setinden gelir. Hesaplar senin netlerine göre yapılan tahminlerdir; görseldeki değerler örnektir.',
     label:
       'Bölüm ve üniversite seçimi. Hedef Boğaziçi Üniversitesi Endüstri Mühendisliği, başarı sırası 2.197. Netlerle hesaplanan tahmini sıralama 20.377; hedefe 18.180 sıra kaldı.',
+  },
+  {
+    id: 'konu-takibi',
+    visual: 'konular',
+    layout: 'pair',
+    tab: 'Konular sekmesinde',
+    tabIcon: 'konular',
+    title: 'Müfredatın bir bakışta.',
+    text: 'TYT ve AYT’nin bütün konularını bitti, tekrar lazım, çalışılıyor ya da başlanmadı diye işaretle. Tekrarını Ebbinghaus, hafta sonu ya da kendi seçtiğin tarihlerle planla.',
+    points: ['Ders ders ilerleme yüzdesi', 'Sözel tekrar ve soru çözümü planı', 'Konu takvimi'],
+    label:
+      'İki ekran: TYT Geometri konuları bitti, tekrar lazım ve başlanmadı durumlarıyla; yanında Tekrar Planla penceresi, Ebbinghaus sistemiyle 1, 7, 14 ve 30. gün tekrarları.',
   },
   {
     id: 'yapamadiklarim',
@@ -161,6 +179,18 @@ export const chapters: {
     points: ['Pomodoro ve Optik düellosu', 'Klanlar ve Global Sohbet', 'Soru Paylaşımı'],
     label:
       'Sosyal merkez. 40 soruluk optik düellosunu 33 netle kazandın, rakibin 29,5 net. Haftalık bölüm sıralamasında 17 saat 5 dakikayla ikincisin.',
+  },
+  {
+    id: 'planlar',
+    visual: 'planlar',
+    layout: 'pair',
+    tab: 'Planlar sekmesinde',
+    tabIcon: 'planlar',
+    title: 'Ne çalışacağını düşünme, uygula.',
+    text: 'Günlük saat, soru, video ve konu hedeflerini koy. Planladığın aktiviteler ve soru tekrarların takvime yerleşir; ders programın ve rutinlerin her sabah Günün Odağı’nda hazır olur.',
+    points: ['Plan takvimi ve günlük takvim', 'Rutinler ve haftalık ders programı', 'Saat, soru, video ve konu hedefi'],
+    label:
+      'İki ekran: Plan Takvimi’nde planlanan aktiviteler ve soru tekrarları, yanında Günlük Takvim. Önde Bugünün Programı: dört görevden ikisi tamam.',
   },
 ];
 
@@ -200,7 +230,7 @@ export const modules = {
     ['Gizlilik Ayarları', 'slate'],
     ['Android Widget', 'slate'],
   ] as [string, 'violet' | 'amber' | 'red' | 'teal' | 'green' | 'blue' | 'slate'][],
-  tabletLabel: 'Takip+ YKS tablette: aktivite haritası, sekmeler ve Günün Odağı geniş ekranda.',
+  tabletLabel: 'Aynı hesap, her ekranda: iPad’de aktivite haritası ve Günün Odağı, iPhone’da YKS 2027 sayacı.',
 };
 
 /**

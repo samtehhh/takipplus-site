@@ -2,6 +2,9 @@
  * Uygulama arayüzü kopyası kartlar ("callout"): telefonun içinden dışarı taşan,
  * mağaza görsellerindeki gibi. Ölçüler telefon genişliğine göre cqw
  * (Device bir kapsayıcıdır); konumlar telefon kutusunun yüzdesi.
+ * Ekran görüntüsündeki bir pikselin (px, py; 720×1600) telefon kutusundaki yeri:
+ *   x% = 2.6 + px × 0.131667      y% = (2.6 + py × 0.131667) / 2.1587
+ * (çerçeve 2.6cqw, ekran 94.8cqw genişlik, telefon 215.87cqw yükseklik)
  * Yüzeyler uygulamanın kendi lacivert kart gradyanı (#27304D → #1A2036).
  * Kartlar süs öğesidir: aria-hidden; anlamı sahnenin aria-label'ı ve metin taşır.
  */
@@ -11,6 +14,8 @@
   left: var(--x, 0);
   top: var(--y, 0);
   width: var(--w, auto);
+  /* --tx/--ty: -50% verilirse --x/--y kartın ortasıdır (ekrandaki öğenin ortasına oturtmak için) */
+  translate: var(--tx, 0) var(--ty, 0);
   z-index: 2;
   font-family: var(--font-display);
   color: #fff;
@@ -111,6 +116,24 @@
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+/* Ekrandaki bir sıranın birebir üstüne oturan kart dizisi (hero dörtlüsü, net kartları):
+   kartların arasındaki boşluktan alttaki asıl kartların kenarı görünmesin diye arkada,
+   yalnız ekran genişliğinde, ekranın tonunda bulanık bir zemin. */
+.co--plate {
+  isolation: isolate;
+}
+
+.co--plate::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 3% var(--plate-x, 14.5%);
+  border-radius: 4cqw;
+  background: rgb(22 20 48 / 0.86);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 /* Sahne: telefon + taşan kartlar. Görünür olunca kartlar telefondan çıkar. */

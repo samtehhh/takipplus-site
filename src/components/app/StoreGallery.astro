@@ -1,0 +1,181 @@
+---
+/**
+ * Mağaza görselleri galerisi: App Store / Google Play için hazırlanan 10 iPhone ve
+ * 10 iPad görseli, yatay kaydırmalı şerit. iPhone / iPad seçici (JS ile sekme);
+ * JS yoksa iki şerit alt alta görünür. Otomatik kayma yok.
+ *
+ * Şeritler bir <template> içinde gelir ve bölüm ekrana ~800 px yaklaşınca site.ts
+ * tarafından sayfaya eklenir: görseller ilk açılışta hero görseliyle yarışmaz (mobilde
+ * tembel yükleme eşiği bu bölümü kapsıyordu). JS yoksa aynı şeritler <noscript> içinden.
+ */
+import AppIcon from './AppIcon.astro';
+import StoreGallerySets from './StoreGallerySets.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  lead: string;
+}
+
+const { id, title, lead } = Astro.props;
+const kinds = [
+  { kind: 'iphone', label: 'iPhone' },
+  { kind: 'ipad', label: 'iPad' },
+] as const;
+---
+
+<section class="section sg defer" id={id} aria-labelledby={`${id}-title`} data-gallery>
+  <div class="container">
+    <div class="sg__head" data-reveal>
+      <div class="sg__copy">
+        <h2 class="h2" id={`${id}-title`}>{title}</h2>
+        <p class="lead">{lead}</p>
+      </div>
+      <div class="sg__switch" role="tablist" aria-label="Cihaz" hidden data-gallery-switch>
+        {
+          kinds.map((s, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`${id}-tab-${s.kind}`}
+              aria-controls={`${id}-${s.kind}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-gallery-tab={s.kind}
+            >
+              <AppIcon name={s.kind === 'iphone' ? 'widget' : 'tablet'} size={16} />
+              {s.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <template data-gallery-tpl>
+    <StoreGallerySets id={id} tabs />
+  </template>
+  <noscript>
+    <StoreGallerySets id={id} />
+  </noscript>
+  <div class="sg__sets" data-gallery-sets></div>
+
+  <div class="container sg__nav" hidden data-gallery-nav>
+    <button type="button" class="sg__btn" data-gallery-prev>
+      <span class="sr-only">Önceki görsel</span>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <button type="button" class="sg__btn" data-gallery-next>
+      <span class="sr-only">Sonraki görsel</span>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9.5 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+  </div>
+</section>
+
+<style>
+  .sg {
+    overflow-x: clip;
+  }
+
+  .sg__head {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+
+  .sg__copy {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 40rem;
+  }
+
+  .sg__switch {
+    display: inline-flex;
+    justify-self: start;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px var(--line) inset;
+  }
+
+  .sg__switch[hidden] {
+    display: none;
+  }
+
+  .sg__switch button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font-display);
+    font-weight: 600;
+    transition:
+      background-color var(--dur-2) var(--ease-out),
+      color var(--dur-2) var(--ease-out);
+  }
+
+  .sg__switch button[aria-selected='true'] {
+    background: var(--white);
+    color: var(--uv-800);
+  }
+
+  /* Şeritler eklenene kadar yer tutar: iPhone görseli (1290×2796) + şerit boşlukları */
+  .sg__sets:empty {
+    min-height: calc(min(62vw, 260px) * 2.1674 + 2rem);
+  }
+
+  @media (min-width: 48rem) {
+    .sg__sets:empty {
+      min-height: calc(min(30vw, 260px) * 2.1674 + 2rem);
+    }
+  }
+
+  .sg__nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+
+  .sg__nav[hidden] {
+    display: none;
+  }
+
+  .sg__btn {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px var(--line-strong) inset;
+    color: var(--text);
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+
+  .sg__btn:active {
+    transform: scale(0.95);
+  }
+
+  @media (hover: hover) {
+    .sg__btn:hover {
+      background: rgb(255 255 255 / 0.12);
+    }
+
+    .sg__switch button:not([aria-selected='true']):hover {
+      color: var(--text);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .sg__head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+  }
+</style>

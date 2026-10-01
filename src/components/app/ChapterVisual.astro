@@ -21,15 +21,18 @@ interface Props {
 
 const { kind, label, tab, tabIcon } = Astro.props;
 
-const screenOf: Record<ChapterVisual, ScreenName> = {
-  deneme: 'perf-tyt',
-  optik: 'optik',
-  hedef: 'hedef-arama-2',
-  yapamadiklarim: 'yap-detay',
-  odak: 'pomodoro',
-  sosyal: 'sosyal',
+const screenOf: Record<ChapterVisual, ScreenName[]> = {
+  deneme: ['p-performans'],
+  optik: ['p-optik'],
+  hedef: ['p-uni-liste'],
+  yapamadiklarim: ['p-yap-liste'],
+  odak: ['p-pomodoro'],
+  sosyal: ['p-sosyal'],
+  konular: ['p-konu-durum', 'p-tekrar-planla'],
+  planlar: ['p-plan-takvimi', 'p-gunluk-takvim'],
 };
-const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
+const pair = screenOf[kind].length === 2;
+const sizes = pair ? '(min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' : '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 ---
 
 <div class:list={['stage', 'cv', `cv--${kind}`]} data-animate role="img" aria-label={label}>
@@ -41,16 +44,70 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
       </span>
     )
   }
-  <Device screens={[screenOf[kind]]} sizes={sizes} decorative>
+  {
+    pair && (
+      <div class="cv__pair">
+        <Device screens={[screenOf[kind][0]]} sizes={sizes} decorative class="cv__p1" />
+        <Device screens={[screenOf[kind][1]]} sizes={sizes} decorative class="cv__p2" />
+        {kind === 'konular' && (
+          <div class="co pills" aria-hidden="true" style="--x:-4%;--y:44%;--d:200ms">
+            <span class="pill" style="--tone:#34d399">
+              <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>BİTTİ
+            </span>
+            <span class="pill" style="--tone:#fbbf24">
+              <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5" /></svg>TEKRAR LAZIM
+            </span>
+            <span class="pill" style="--tone:#2dd4bf">
+              <svg viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z" /></svg>ÇALIŞILIYOR
+            </span>
+            <span class="pill pill--off" style="--tone:#e2e8f0">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5" /></svg>BAŞLANMADI
+            </span>
+          </div>
+        )}
+        {kind === 'planlar' && (
+          <div class="co co-panel prog" aria-hidden="true" style="--x:-6%;--y:50%;--w:70cqw;--d:220ms">
+            <div class="co-row co-row--between">
+              <span class="co-row">
+                <span class="prog__ic">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>
+                </span>
+                <span class="co-title">Bugünün Programı</span>
+              </span>
+              <span class="co-chip" style="--tone:#34d399">2/4</span>
+            </div>
+            {[
+              ['08:30', 'Yüzde Kar Zarar Problemleri', '60 soru · TYT Matematik', 'SORU', true],
+              ['10:00', 'Türev', '5 video · AYT Matematik', 'VİDEO', true],
+              ['19:30', 'Sinir Sistemi', '40 soru · AYT Biyoloji', 'SORU', false],
+              ['21:00', 'Kimyasal Tepkimelerde Denge', '30 dk · AYT Kimya', 'TEKRAR', false],
+            ].map(([t, name, sub, tag, done]) => (
+              <div class:list={['prog__row', { 'is-done': done }]}>
+                <span class="prog__t">{t}</span>
+                <span class="prog__check" />
+                <span class="co-grow">
+                  <span class="co-name">{name}</span>
+                  <span class="co-sub">{sub}</span>
+                </span>
+                <span class="prog__tag">{tag}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+  {!pair && (
+  <Device screens={screenOf[kind]} sizes={sizes} decorative>
     {
       kind === 'deneme' && (
         <Fragment>
-          <div class="co nets" aria-hidden="true" style="--x:-16.5%;--y:29.4%;--w:133cqw;--d:120ms">
+          <div class="co co--plate nets" aria-hidden="true" style="--x:-16.5%;--y:36.95%;--ty:-50%;--w:133cqw;--d:120ms">
             <div class="net net--min"><span class="net__k">En Düşük</span><span class="net__v cnt" style="--vi:59;--vf:0"></span><span class="net__u">NET</span></div>
-            <div class="net net--last"><span class="net__k">En Son</span><span class="net__v cnt" style="--vi:93;--vf:25"></span><span class="net__u">NET</span></div>
-            <div class="net net--max"><span class="net__k">En Yüksek</span><span class="net__v cnt" style="--vi:93;--vf:25"></span><span class="net__u">NET</span></div>
+            <div class="net net--last"><span class="net__k">En Son</span><span class="net__v cnt" style="--vi:97;--vf:75"></span><span class="net__u">NET</span></div>
+            <div class="net net--max"><span class="net__k">En Yüksek</span><span class="net__v cnt" style="--vi:97;--vf:75"></span><span class="net__u">NET</span></div>
           </div>
-          <div class="co co-panel errs" aria-hidden="true" style="--x:-16.5%;--y:45.5%;--w:133cqw;--d:280ms">
+          <div class="co co-panel errs" aria-hidden="true" style="--x:-16.5%;--y:46%;--w:133cqw;--d:280ms">
             <div class="co-row co-row--between">
               <span class="co-title">Hata Dağılımın</span>
               <span class="co-chip">TYT · Tümü</span>
@@ -60,22 +117,22 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
                 <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
                 <span class="err__v">%37</span><span class="err__k">Dikkat</span><span class="err__bar"><i></i></span>
               </div>
-              <div class="err" style="--tone:#a78bfa;--bar:#8b5cf6;--p:.33">
+              <div class="err" style="--tone:#a78bfa;--bar:#8b5cf6;--p:.45">
                 <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21.5h4M12 2.5a6.8 6.8 0 0 0-4 12.3V17h8v-2.2a6.8 6.8 0 0 0-4-12.3z" /></svg>
-                <span class="err__v">%33</span><span class="err__k">Bilgi</span><span class="err__bar"><i></i></span>
+                <span class="err__v">%45</span><span class="err__k">Bilgi</span><span class="err__bar"><i></i></span>
               </div>
-              <div class="err" style="--tone:#2dd4bf;--bar:#2dd4bf;--p:.29">
+              <div class="err" style="--tone:#2dd4bf;--bar:#2dd4bf;--p:.16">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
-                <span class="err__v">%29</span><span class="err__k">Strateji</span><span class="err__bar"><i></i></span>
+                <span class="err__v">%16</span><span class="err__k">Strateji</span><span class="err__bar"><i></i></span>
               </div>
             </div>
             <div class="co-row errs__head">
               <svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8" /><path d="M15 8h5v5" /></svg>
               <span>En Zayıf Konular</span>
             </div>
-            <div class="co-item"><span class="co-badge" style="--tone:#f87171">1</span><span class="co-grow"><span class="co-name">Ek Fiil</span><span class="co-sub">TYT Türkçe</span></span><span class="co-strong weak">4 hata</span></div>
-            <div class="co-item"><span class="co-badge">2</span><span class="co-grow"><span class="co-name">Kümeler</span><span class="co-sub">TYT Matematik</span></span><span class="co-strong weak">4 hata</span></div>
-            <div class="co-item"><span class="co-badge">3</span><span class="co-grow"><span class="co-name">İslam Tarihi ve Uygarlığı</span><span class="co-sub">TYT Sosyal</span></span><span class="co-strong weak">3 hata</span></div>
+            <div class="co-item"><span class="co-badge" style="--tone:#f87171">1</span><span class="co-grow"><span class="co-name">Fiil Çatısı</span><span class="co-sub">TYT Türkçe</span></span><span class="co-strong weak">5 hata</span></div>
+            <div class="co-item"><span class="co-badge">2</span><span class="co-grow"><span class="co-name">Kimyanın Temel Kanunları</span><span class="co-sub">TYT Fen</span></span><span class="co-strong weak">4 hata</span></div>
+            <div class="co-item"><span class="co-badge">3</span><span class="co-grow"><span class="co-name">Nüfus ve Yerleşme</span><span class="co-sub">TYT Sosyal</span></span><span class="co-strong weak">3 hata</span></div>
           </div>
         </Fragment>
       )
@@ -84,12 +141,12 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
     {
       kind === 'optik' && (
         <Fragment>
-          <div class="co timer" aria-hidden="true" style="--x:64%;--y:5.2%;--d:420ms;--fy:-5cqw">
+          <div class="co timer" aria-hidden="true" style="--x:82.3%;--y:8.5%;--tx:-50%;--ty:-50%;--d:420ms;--fy:-5cqw">
             <span class="timer__ic">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5" /><path d="M12 9.5v4l2.6 1.8M9.5 2.5h5" /></svg>
             </span>
             <span class="timer__t">
-              <span class="timer__v" data-tick="94">01:34</span>
+              <span class="timer__v" data-tick="8">0:08</span>
               <span class="timer__k">bu soruda</span>
             </span>
           </div>
@@ -133,7 +190,7 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
     {
       kind === 'hedef' && (
         <Fragment>
-          <div class="co unis" aria-hidden="true" style="--x:-18.6%;--y:48.8%;--w:137.2cqw;--d:120ms">
+          <div class="co unis" aria-hidden="true" style="--x:-18.6%;--y:34.1%;--ty:-50%;--w:137.2cqw;--d:120ms">
             {[
               ['O', 'ODTÜ', '531.787'],
               ['İ', 'İTÜ', '533.676'],
@@ -148,7 +205,7 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
               </span>
             ))}
           </div>
-          <div class="co target" aria-hidden="true" style="--x:-17.9%;--y:60%;--w:135.9cqw;--d:280ms">
+          <div class="co target" aria-hidden="true" style="--x:-17.9%;--y:43.9%;--ty:-50%;--w:135.9cqw;--d:280ms">
             <span class="target__l">B</span>
             <span class="co-grow">
               <span class="target__n">Boğaziçi Üniversitesi (İstanbul)</span>
@@ -164,7 +221,7 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
               <span><b>77.83</b> AYT</span>
             </span>
           </div>
-          <div class="co rank" aria-hidden="true" style="--x:-13.8%;--y:77.3%;--w:127.6cqw;--d:440ms">
+          <div class="co rank" aria-hidden="true" style="--x:-13.8%;--y:67%;--w:127.6cqw;--d:440ms">
             <div class="rank__row">
               <span class="rank__in"><small>TYT</small>91.5</span>
               <span class="rank__in"><small>AYT</small>67.5</span>
@@ -191,7 +248,7 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
               <span class="yap__ic">?</span>
               <span class="co-grow">
                 <span class="co-title">İşçi Emek Problemleri</span>
-                <span class="co-sub">TYT Matematik · 29.09</span>
+                <span class="co-sub">TYT Matematik · 30.09</span>
               </span>
             </span>
             <span class="yap__chips">
@@ -256,14 +313,14 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
     {
       kind === 'sosyal' && (
         <Fragment>
-          <div class="co co-panel duel" aria-hidden="true" style="--x:-17.2%;--y:39.7%;--w:134.5cqw;--d:160ms">
+          <div class="co co-panel duel" aria-hidden="true" style="--x:-17.2%;--y:33%;--w:134.5cqw;--d:160ms">
             <div class="co-row co-row--between">
               <span class="duel__k">OPTİK DÜELLO · 40 SORU</span>
               <span class="co-chip" style="--tone:#34d399">Kazandın!</span>
             </div>
             <div class="duel__vs">
               <span class="duel__p">
-                <span class="duel__a" style="--tone:#8b5cf6">D</span>
+                <span class="duel__a" style="--tone:#8b5cf6">S</span>
                 <span class="co-sub">Sen</span>
                 <b class="cnt" style="--vi:33;--vf:0"></b>
                 <span class="duel__m">34 D · 4 Y · 52:10</span>
@@ -277,27 +334,40 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
               </span>
             </div>
           </div>
-          <div class="co co-panel wk" aria-hidden="true" style="--x:13.1%;--y:70.3%;--w:104.1cqw;--d:340ms">
+          {/* Haftalık sıralama kürsüsü: mağaza görselindeki gibi altın, gümüş, bronz */}
+          <div class="co co-panel pod" aria-hidden="true" style="--x:9%;--y:58%;--w:106cqw;--d:340ms">
             <div class="co-row co-row--between">
-              <span class="co-title">Haftalık Sıralama</span>
+              <span class="co-row pod__head">
+                <svg viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 0 1-10 0z" /><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20.5h7M10 17h4" /></svg>
+                <span class="co-title">Haftalık Sıralama</span>
+              </span>
               <span class="co-sub">Bölüm · TOP 10</span>
             </div>
-            {[
-              ['1', 'Mert', '18 sa 40 dk', '#fbbf24'],
-              ['2', 'Deniz (Sen)', '17 sa 05 dk', '#cbd5e1'],
-              ['3', 'Zeynep', '15 sa 50 dk', '#f59e0b'],
-            ].map(([n, name, t, tone]) => (
-              <div class:list={['co-item', { 'is-me': n === '2' }]}>
-                <span class="co-badge" style={`--tone:${tone}`}>{n}</span>
-                <span class="co-name co-grow">{name}</span>
-                <span class="co-strong wk__t">{t}</span>
-              </div>
-            ))}
+            <div class="pod__cols">
+              {[
+                { r: 2, l: 'S', name: 'Samet (Sen)', t: '17 sa 05 dk', av: '#8b5cf6' },
+                { r: 1, l: 'M', name: 'Mert', t: '18 sa 40 dk', av: '#10b981' },
+                { r: 3, l: 'Z', name: 'Zeynep', t: '15 sa 50 dk', av: '#ec4899' },
+              ].map((p) => (
+                <div class:list={['pod__col', `pod__col--${p.r}`]} style={`--av:${p.av}`}>
+                  {p.r === 1 && (
+                    <svg class="pod__crown" viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 10H5z" /></svg>
+                  )}
+                  <span class="pod__av">{p.l}</span>
+                  <span class="pod__name">{p.name}</span>
+                  <span class="pod__time">{p.t}</span>
+                  <span class="pod__bar">
+                    <span class="pod__medal">#{p.r}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </Fragment>
       )
     }
   </Device>
+  )}
   <p class="cv__tab">
     <AppIcon name={tabIcon} size={16} />
     {tab}
@@ -340,6 +410,166 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 
     .cv--hedef {
       --pw: min(40vw, 330px);
+    }
+  }
+
+  /* ---------- Çift telefon ---------- */
+  .cv--konular,
+  .cv--planlar {
+    --pw: min(40vw, 215px);
+    padding-inline: 0;
+  }
+
+  /* Genişlik açık verilmeli: inline-size kapsayıcısı içeriğinden genişlik almaz */
+  .cv__pair {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: calc(var(--pw) * 1.92);
+    container-type: inline-size;
+    padding-bottom: calc(var(--pw) * 0.26);
+  }
+
+  .cv__pair :global(.cv__p1),
+  .cv__pair :global(.cv__p2) {
+    width: var(--pw);
+    flex: none;
+  }
+
+  .cv__pair :global(.cv__p2) {
+    margin-left: calc(var(--pw) * -0.08);
+    margin-top: calc(var(--pw) * 0.26);
+  }
+
+  .pills {
+    display: grid;
+    justify-items: start;
+    gap: 2.2cqw;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.6cqw;
+    padding: 1.8cqw 3.4cqw 1.8cqw 2.6cqw;
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--tone) 14%, rgb(14 10 40 / 0.94));
+    box-shadow:
+      0 0 0 1.5px color-mix(in srgb, var(--tone) 70%, transparent) inset,
+      0 14px 30px rgb(5 2 25 / 0.55),
+      0 0 22px color-mix(in srgb, var(--tone) 35%, transparent);
+    font-size: max(9px, 3cqw);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--tone);
+    white-space: nowrap;
+  }
+
+  .pill svg {
+    width: max(10px, 3.2cqw);
+    height: max(10px, 3.2cqw);
+    stroke-width: 2.8;
+  }
+
+  .pill--off {
+    background: rgb(14 10 40 / 0.94);
+    box-shadow:
+      0 0 0 1.5px rgb(226 232 240 / 0.6) inset,
+      0 14px 30px rgb(5 2 25 / 0.55);
+  }
+
+  .prog {
+    gap: 2.2cqw;
+    padding: 3.4cqw;
+    border-radius: 5cqw;
+  }
+
+  .prog .co-title {
+    font-size: max(10px, 3.4cqw);
+  }
+
+  .prog .co-chip {
+    font-size: max(8px, 2.2cqw);
+    padding: 0.6cqw 2cqw;
+  }
+
+  .prog__ic {
+    display: grid;
+    place-items: center;
+    width: 6.4cqw;
+    height: 6.4cqw;
+    border-radius: 2cqw;
+    background: rgb(245 158 11 / 0.18);
+    color: #fbbf24;
+  }
+
+  .prog__ic svg {
+    width: 4cqw;
+    height: 4cqw;
+  }
+
+  .prog__row {
+    display: flex;
+    align-items: center;
+    gap: 2cqw;
+    padding: 1.6cqw 2.2cqw;
+    border-radius: 2.8cqw;
+    background: rgb(255 255 255 / 0.04);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08) inset;
+  }
+
+  .prog__t {
+    flex: none;
+    width: 7.5cqw;
+    font-size: max(8px, 2.3cqw);
+    font-weight: 700;
+    color: rgb(248 250 252 / 0.6);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prog__check {
+    flex: none;
+    width: 4.2cqw;
+    height: 4.2cqw;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1.5px rgb(248 250 252 / 0.45) inset;
+  }
+
+  .prog__row.is-done .prog__check {
+    background: #8b5cf6
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 70% no-repeat;
+    box-shadow: none;
+  }
+
+  .prog__row.is-done .co-name {
+    text-decoration: line-through;
+    color: rgb(248 250 252 / 0.55);
+  }
+
+  .prog .co-name {
+    font-size: max(9px, 2.7cqw);
+  }
+
+  .prog .co-sub {
+    font-size: max(8px, 2.1cqw);
+  }
+
+  .prog__tag {
+    flex: none;
+    padding: 0.5cqw 1.6cqw;
+    border-radius: 1.4cqw;
+    background: rgb(139 92 246 / 0.18);
+    font-size: max(7px, 1.9cqw);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #c4b5fd;
+  }
+
+  @media (min-width: 48rem) {
+    .cv--konular,
+    .cv--planlar {
+      --pw: min(24vw, 235px);
     }
   }
 
@@ -509,6 +739,7 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 
   /* ---------- Optik ---------- */
   .timer {
+    width: max-content;
     display: flex;
     align-items: center;
     gap: 2cqw;
@@ -603,11 +834,11 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 
   /* ---------- Hedef ---------- */
   /* HEDEF çizgisi hedef bölüm kartının ortasından geçer, telefonun arkasında kalır.
-     Telefon yüksekliği = 2.146 × genişlik; kart ortası yüksekliğin ~%65,5'i. */
+     Telefon yüksekliği = 2.1587 × genişlik; kart ortası yüksekliğin %43,9'u. */
   .cv__goal {
     position: absolute;
     left: 50%;
-    top: calc(var(--pw) * 2.146 * 0.655);
+    top: calc(var(--pw) * 2.1587 * 0.439);
     width: 100vw;
     height: 1.5px;
     translate: -50% 0;
@@ -1125,22 +1356,174 @@ const sizes = '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
     color: rgb(248 250 252 / 0.4);
   }
 
-  .wk {
-    gap: 2.4cqw;
-    padding: 4.1cqw;
+  .pod {
+    gap: 3.4cqw;
+    padding: 4.1cqw 4.1cqw 0;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgb(251 191 36 / 0.35) inset,
+      0 30px 60px rgb(5 2 25 / 0.6),
+      0 0 44px rgb(251 191 36 / 0.14);
   }
 
-  .wk .co-item {
-    padding: 2cqw 3cqw;
+  .pod__head {
+    gap: 2cqw;
   }
 
-  .wk .is-me {
-    background: rgb(139 92 246 / 0.18);
-    box-shadow: 0 0 0 1px rgb(139 92 246 / 0.55) inset;
+  .pod__head svg {
+    width: 5.2cqw;
+    height: 5.2cqw;
+    color: #fbbf24;
   }
 
-  .wk__t {
+  .pod__cols {
+    display: grid;
+    grid-template-columns: 1fr 1.12fr 1fr;
+    align-items: end;
+    gap: 2.6cqw;
+  }
+
+  .pod__col {
+    --tone: #cbd5e1;
+    --bar-a: #9aa3b8;
+    --bar-b: #5e6578;
+    --medal-a: #f8fafc;
+    --medal-b: #cbd5e1;
+    --medal-ink: #334155;
+    --h: 15cqw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4cqw;
+  }
+
+  .pod__col--1 {
+    --tone: #fbbf24;
+    --bar-a: #b59a2c;
+    --bar-b: #6f5d17;
+    --medal-a: #fde68a;
+    --medal-b: #f59e0b;
+    --medal-ink: #fff;
+    --h: 21cqw;
+  }
+
+  .pod__col--3 {
+    --tone: #f97316;
+    --bar-a: #b4582a;
+    --bar-b: #6e3215;
+    --medal-a: #fdba74;
+    --medal-b: #ea580c;
+    --medal-ink: #fff;
+    --h: 12cqw;
+  }
+
+  .pod__crown {
+    width: 6.6cqw;
+    height: 6.6cqw;
+    margin-bottom: -0.6cqw;
+    fill: #fbbf24;
+    stroke: #f59e0b;
+    stroke-width: 1.2;
+    filter: drop-shadow(0 0 6px rgb(251 191 36 / 0.6));
+  }
+
+  .pod__av {
+    display: grid;
+    place-items: center;
+    width: 12.4cqw;
+    height: 12.4cqw;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--av) 65%, white), var(--av));
+    box-shadow:
+      0 0 0 0.9cqw var(--tone),
+      0 0 18px color-mix(in srgb, var(--tone) 45%, transparent);
+    font-size: max(12px, 5.6cqw);
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .pod__col--1 .pod__av {
+    width: 14.6cqw;
+    height: 14.6cqw;
+    font-size: max(13px, 6.6cqw);
+  }
+
+  .pod__name {
+    margin-top: 0.6cqw;
     font-size: max(9px, 3.6cqw);
-    color: rgb(248 250 252 / 0.85);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pod__col--1 .pod__name {
+    color: #fbbf24;
+  }
+
+  .pod__time {
+    padding: 0.7cqw 2.4cqw;
+    border-radius: 99px;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tone) 55%, transparent) inset;
+    font-size: max(8px, 2.9cqw);
+    font-weight: 700;
+    white-space: nowrap;
+    color: rgb(248 250 252 / 0.9);
+  }
+
+  /* Kürsü çubuğu: madalya ve iki şerit; kartın alt kenarına kadar iner */
+  .pod__bar {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    width: 100%;
+    height: var(--h);
+    margin-top: 1cqw;
+    padding-top: 3.2cqw;
+    border-radius: 3cqw 3cqw 0 0;
+    background: linear-gradient(180deg, var(--bar-a), var(--bar-b));
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.18) inset,
+      0 -10px 24px -12px color-mix(in srgb, var(--tone) 60%, transparent);
+    transform-origin: bottom;
+  }
+
+  .pod__bar::before {
+    content: '';
+    position: absolute;
+    top: 0.8cqw;
+    left: 50%;
+    width: 4.2cqw;
+    height: 3.4cqw;
+    translate: -50% 0;
+    background: linear-gradient(90deg, var(--medal-b) 0 42%, transparent 42% 58%, var(--medal-b) 58%);
+    opacity: 0.85;
+  }
+
+  .pod__medal {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 9.6cqw;
+    height: 9.6cqw;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--medal-a), var(--medal-b));
+    box-shadow:
+      0 0 0 0.7cqw color-mix(in srgb, var(--medal-a) 60%, transparent),
+      0 6px 14px rgb(5 2 25 / 0.45);
+    font-size: max(9px, 3.6cqw);
+    font-weight: 800;
+    color: var(--medal-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion) .stage[data-animate]:not(.is-in) .pod__bar {
+      transform: scaleY(0.2);
+    }
+
+    .stage[data-animate] .pod__bar {
+      transition: transform 900ms var(--ease-spring);
+      transition-delay: calc(var(--d, 340ms) + 300ms);
+    }
   }
 </style>

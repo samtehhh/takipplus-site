@@ -303,7 +303,7 @@ alan adını `vercel.json` CSP'sinde `script-src` ve `connect-src`'ye ekle (`che
 | `npm run build` | Derleme + `check-dist`: kırık iç link/varlık/çapa, tek H1, başlık/açıklama uzunluğu, canonical = production ve kendisi, OG 1200×630, `lang="tr"`, satır içi betik/stil yok, JSON-LD geçerli ve doğruluk kuralları, sitemap ↔ sayfalar, ana sayfa < 500 KB; `vercel.json` taklidiyle 130+ HTTP testi |
 | html-validate | HTML doğrulaması (`.htmlvalidate.mjs`) |
 | lychee | Kırık link (iç + dış) |
-| Lighthouse CI (`lighthouserc.json`) | Mobil: Performans ≥ 95, Erişilebilirlik / En İyi Uyg. / SEO = 100, LCP ≤ 2 sn, CLS ≤ 0,05, TBT ≤ 200 ms, sayfa ≤ 500 KB |
+| Lighthouse CI (`lighthouserc.json`) | Mobil: Performans ≥ 95, Erişilebilirlik / En İyi Uyg. / SEO = 100, LCP ≤ 2,5 sn (Google "iyi" eşiği; ekran görüntüleri yüksek kalitede, AVIF %80), CLS ≤ 0,05, TBT ≤ 200 ms, sayfa ≤ 500 KB |
 | gitleaks | Tüm git geçmişinde gizli anahtar |
 
 `.github/workflows/smoke.yml`: production deploy sonrası + günlük canlı testler (`scripts/smoke.mjs`): http→https,
@@ -469,12 +469,16 @@ src/config/site.js          TEK yapılandırma dosyası (alan adı, yayın bayra
 src/data/products.ts        ürünlerin görünen bilgileri
 src/data/product-content/   her ürünün sayfa metinleri (yks.ts)
 src/data/screens.ts         sitede kullanılan uygulama ekranları ve alt metinleri
-src/assets/app/             uygulama ekranları (WebP; kaynak: Claude outputs/takipplus/magaza-final/ham-ekranlar)
+src/assets/app/             uygulama ekranları (WebP; scripts/prepare-screens.mjs üretir, aşağıya bak)
+src/data/tools.ts           web araçlarının verisi: YKS oturumları, dersler ve soru sayıları
+src/scripts/tools.ts        YKS Sayacı ve Net Hesaplama betiği (yalnız bu iki sayfada yüklenir)
+src/styles/tools.css        araç sayfalarının ortak stilleri (uygulama kartı, segment seçici)
 src/styles/tokens.css       tüm tasarım token'ları (tek kaynak)
 src/components/             Header, Footer, Button, WaitlistForm, Faq, StoreButtons, Logo
-src/components/app/         ürün sayfası parçaları: Device (telefon/tablet çerçevesi), Trajectory (HEDEF çizgisi),
-                            FocusQuad, ChapterVisual, Tour, RepeatTimeline, ModuleCloud, Plans, Countdown, PhoneFan,
-                            AppIcon, callout.css (ekrandan taşan uygulama kartları)
+src/components/app/         ürün sayfası parçaları: Device (telefon/tablet çerçevesi), DeviceDuo (iPad + iPhone),
+                            StoreGallery (mağaza görselleri), Trajectory (HEDEF çizgisi), FocusQuad, ChapterVisual,
+                            Tour, RepeatTimeline, ModuleCloud, Plans, Countdown, PhoneFan, AppIcon,
+                            callout.css (ekrandan taşan uygulama kartları)
 src/layouts/                Base (SEO, OG, JSON-LD), Legal (yasal metin şablonu)
 src/lib/jsonld.ts           Organization, WebSite, BreadcrumbList, FAQPage, MobileApplication, Article şemaları
 src/pages/                  sayfalar; [product].astro ürün şablonu; rehber/ yazı şablonu; .well-known/
@@ -491,14 +495,45 @@ altı hata mesajları. JS kapalıyken de çalışır. Arka uç Brevo (liste, abo
 Brevo değişkenleri ve README'deki ilgili satırlar birlikte silinmeli, "Erken erişime katıl" butonlarına yeni hedef
 verilmeli.
 
-### Ekran görüntüleri
+### Ekran görüntüleri ve videolar
 
-Sitedeki bütün telefon ve tablet ekranları uygulamanın örnek veriyle çekilmiş gerçek ekranlarıdır
-(`src/assets/app/*.webp`, kaynak: mağaza görselleri çalışmasındaki `ham-ekranlar`). `Device` bileşeni bunları
-çerçeveye koyar ve derlemede AVIF + WebP, beş genişlikte `srcset` üretir. Ekrandan taşan kartlar (net kartları,
-Kritik Sorular, sıralama, Kontrol Zamanı, düello…) uygulamadaki gerçek bileşenlerin HTML kopyalarıdır; konumları
-mağaza görsellerinden oranlanmıştır. Gerçek kullanıcı adı ya da profil fotoğrafı görünen ekran eklenmez
-(örneğin sıralama ekranı bu yüzden kullanılmadı).
+Sitedeki telefon ekranları kurucunun kendi hesabıyla (Samet) çekilmiş gerçek ekranlardır; iPad ekranları
+gerçek iPad (TestFlight) ekranları ve mağaza çalışmasındaki ham iPad çizimleri, galeri mağaza görsellerinin son
+setidir. Hepsi tek komutla üretilir:
+
+```bash
+node scripts/prepare-screens.mjs "C:/Projeler/flutter_application_1/Claude outputs/takipplus"
+```
+
+- `p-*` telefon: `KENDI ALDIGIM SS'LER` (720×1600), olduğu gibi, WebP %95.
+- `t-*` tablet: `magaza-v2/ham-ekranlar/ipad-temiz` kayıpsız; `t-home-harita` gerçek iPad ekranı
+  (`Downloads/ipad taslaklar`, üstteki iPadOS durum satırı kırpılır).
+- `v-*` tur videolarının ilk karesi (kapak), `s-*` `magaza-v3` mağaza görselleri.
+
+Cihaz çerçevesi (`Device`) sade: ince siyah kenar, titanyum kenar ışığı. Sahte saat, Dynamic Island ya da durum
+çubuğu çizilmez; ekran görüntüsü tam boy görünür. Derlemede AVIF + WebP %80 kalitede, ekran genişliğine uyan
+`srcset` üretilir (kaynaklar bir kez daha kayıplı sıkıştırılmaz). Ekrandan taşan kartlar uygulamadaki gerçek
+bileşenlerin HTML kopyalarıdır; ekrandaki bir öğenin tam üstüne oturacaklarsa konumları `callout.css` başındaki
+formülle (720×1600 piksel → telefon kutusu yüzdesi) hesaplanır. Başka bir kullanıcının adı ya da kullanıcı adı
+görünen ekran eklenmez (sıralama ekranları bu yüzden kullanılmıyor).
+
+**Tur videoları** (`public/videos/tur-*.mp4`): `Downloads/Uygulamamın müthiş klipleri` klasöründeki kayıtlardan,
+720×1600 H.264, sessiz, `faststart`. Yeniden üretmek için (örnek):
+
+```bash
+ffmpeg -ss 0.6 -i "hedef belirleme.mp4" -an -vf "scale=720:1600:flags=lanczos,format=yuv420p" -c:v libx264 -profile:v high -preset slow -crf 21 -g 60 -movflags +faststart public/videos/tur-hedef.mp4
+```
+
+Klibin başında telefonun kendi durum çubuğu ya da yükleme ekranı görünüyorsa `-ss` ile kırp (hedef belirleme 0,6 sn,
+plan takvimi 1,4 sn). Video yalnızca tur görünürken iner ve oynar; kapak karesi `prepare-screens` ile üretilir.
+
+### Web araçları
+
+`/yks-sayaci` uygulamanın ana ekranındaki YKS 2027 kartının, `/net-hesaplama` Net Sihirbazı'nın web halidir; veriler
+`src/data/tools.ts`'te, uygulamadaki `ana_panel.dart` ve `net_wizard_screen.dart` ile aynıdır. Net hesaplamada
+değerler yalnızca tarayıcıda (`localStorage`) tutulur. **ÖSYM 2027 takvimini açıklayınca** tarihleri
+`src/data/tools.ts`, `src/data/product-content/yks.ts` (`exam`) ve uygulamada güncelle; iki sayfadaki "tahmini"
+ifadelerini ve SSS cevabını resmî takvime göre düzelt.
 
 ### Fontlar
 

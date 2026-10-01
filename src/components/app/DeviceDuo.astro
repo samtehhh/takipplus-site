@@ -1,0 +1,28 @@
+---
+/**
+ * iPad + iPhone bir arada: aynı hesap, her ekranda. Telefon tabletin sağ alt
+ * köşesine biner. Ölçüler kapsayıcının genişliğine göre (cqw), slot içine konan
+ * kartlar da aynı ölçeği kullanır. Stiller Device.astro içinde (.duo): ayrı bir CSS
+ * dosyası ilk açılışta bir istek daha demekti.
+ */
+import Device from './Device.astro';
+import type { ScreenName } from '../../data/screens';
+
+interface Props {
+  tablet: ScreenName;
+  phone: ScreenName;
+  /** <img sizes>: tablet ikilinin %80'i, telefon %34'ü kadar */
+  tabletSizes: string;
+  phoneSizes: string;
+  eager?: boolean;
+  class?: string;
+}
+
+const { tablet, phone, tabletSizes, phoneSizes, eager = false, class: cls } = Astro.props;
+---
+
+<div class:list={['duo', cls]}>
+  <Device screens={[tablet]} kind="tablet" sizes={tabletSizes} eager={eager} decorative class="duo__tablet" />
+  <Device screens={[phone]} sizes={phoneSizes} eager={eager} decorative class="duo__phone" />
+  <slot />
+</div>

@@ -21,7 +21,7 @@ const toc = [
   description="Takip+ YKS hesabını silme adımları, silinen veriler, saklanan veriler ve saklama süreleri."
   path="/hesap-silme"
   ogImage="hesap-silme"
-  updated="2026-09-24"
+  updated="2026-10-01"
   toc={toc}
 >
   <p>
@@ -36,17 +36,19 @@ const toc = [
       etmez. Android’de Google Play › Ödemeler ve abonelikler; iPhone’da Ayarlar › Apple Kimliği › Abonelikler.
     </li>
     <li>
-      <strong>Silme talebini gönder.</strong> Uygulamaya giriş yaptığın Google e-posta adresinden
+      <strong>Uygulamadan sil (en hızlı yol).</strong> Ana sayfada sağ üstteki profil fotoğrafına dokunarak Profil’e
+      geç ve en alttaki <strong>Hesabımı Sil</strong>’e dokun. Açılan pencerede onay için
+      <strong>HESABIMI SIL</strong> yaz ve <strong>HESABI SİL</strong>’e bas. Hesabın ve aşağıdaki veriler o anda
+      sunucudan silinir. Apple ile giriş yaptıysan uygulama bir kez daha Apple onayı ister ve Apple oturum bağlantısı
+      da iptal edilir.
+    </li>
+    <li>
+      <strong>Uygulamaya giremiyorsan e-postayla iste.</strong> Uygulamaya giriş yaptığın e-posta adresinden
       <a href={mailto}>{contactEmail}</a> adresine “Hesap silme talebi” konulu bir e-posta gönder ve kullanıcı adını
-      yaz. İstersen talebini uygulamadaki “Bize Bildir” formundan da iletebilirsin.
-    </li>
-    <li>
-      <strong>Doğrulama.</strong> Talep, hesabına bağlı e-posta adresinden geldiyse ek bir şey istemeyiz. Başka bir
-      adresten yazdıysan hesabın sana ait olduğunu doğrulamak için kısa bir soru sorabiliriz.
-    </li>
-    <li>
-      <strong>Silme.</strong> Hesabın ve aşağıdaki veriler talebin doğrulandıktan sonra en geç
-      <strong>30 gün</strong> içinde silinir. İşlem tamamlanınca sana e-postayla haber veririz.
+      yaz. İstersen talebini uygulamadaki “Bize Bildir” formundan da iletebilirsin. Talep hesabına bağlı e-posta
+      adresinden geldiyse ek bir şey istemeyiz; başka bir adresten yazdıysan hesabın sana ait olduğunu doğrulamak için
+      kısa bir soru sorabiliriz. Hesabın ve aşağıdaki veriler talebin doğrulandıktan sonra en geç
+      <strong>30 gün</strong> içinde silinir; işlem tamamlanınca sana e-postayla haber veririz.
     </li>
     <li>
       <strong>Cihazındaki veriler.</strong> Cihazında yerel olarak tutulan veriler (örneğin Optik Çözüm oturumları)
@@ -59,7 +61,7 @@ const toc = [
 
   <h2 id="silinenler">2. Silinen veriler</h2>
   <ul>
-    <li>Hesap bilgilerin: Google ile giriş kaydı, ad, e-posta, kullanıcı adı.</li>
+    <li>Hesap bilgilerin: Google ya da Apple ile giriş kaydı, ad, e-posta, kullanıcı adı.</li>
     <li>Profil ve kapak fotoğrafların, başlangıç netlerin ve hedefin.</li>
     <li>Konu, deneme, çalışma sayacı, rutin, ders programı ve plan verilerin; Optik Çözüm sonuçların ve raporların.</li>
     <li>Yapamadıklarım’a eklediğin soru fotoğrafları, notlar ve tekrar takvimi.</li>

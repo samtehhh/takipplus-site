@@ -1,0 +1,214 @@
+/*
+ * Web araçları (YKS Sayacı, Net Hesaplama) ortak stilleri.
+ * Kartlar uygulamadaki karşılıklarının ölçüleriyle: GlassCard (köşe 28, %3 beyaz),
+ * kutular (köşe 16, %3 beyaz, %5 çizgi), segment seçici (köşe 18/14, seçili mor gradyan).
+ */
+
+/* ---------- Üst bölüm: mağaza görsellerinin gökyüzü ---------- */
+.th {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  margin-top: calc(-1 * var(--header-h));
+  padding: calc(var(--header-h) + var(--space-7)) 0 var(--space-8);
+}
+
+.th__sky {
+  position: absolute;
+  inset: 0 0 -8rem;
+  z-index: -1;
+  background:
+    radial-gradient(60% 34% at 50% 34%, rgb(139 92 246 / 0.38), transparent 70%),
+    radial-gradient(30% 24% at 18% 18%, rgb(224 86 253 / 0.14), transparent 70%),
+    var(--grad-sky);
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+
+.th__sky .dotgrid {
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 80%);
+  mask-image: linear-gradient(180deg, #000 30%, transparent 80%);
+}
+
+.th__head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+  text-align: center;
+}
+
+.th__title {
+  font-size: clamp(2.5rem, 1.55rem + 4.2vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.th__lead {
+  max-width: 34rem;
+  color: rgb(248 250 252 / 0.82);
+}
+
+/* ---------- Uygulama kartı ---------- */
+.app-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025));
+  background-color: rgb(21 13 56 / 0.72);
+  box-shadow:
+    0 0 0 1px rgb(139 92 246 / 0.24) inset,
+    0 1px 0 rgb(255 255 255 / 0.08) inset,
+    0 40px 90px -34px rgb(5 2 25 / 0.95);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+/* Segment seçici (Net Sihirbazı: puan türü) */
+.seg {
+  display: flex;
+  padding: 4px;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.05);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.07) inset;
+}
+
+.seg button {
+  flex: 1;
+  min-height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: rgb(255 255 255 / 0.62);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+
+.seg button[aria-pressed='true'] {
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-700));
+  color: #fff;
+  box-shadow: 0 4px 14px rgb(139 92 246 / 0.4);
+}
+
+@media (hover: hover) {
+  .seg button:not([aria-pressed='true']):hover {
+    color: #fff;
+  }
+}
+
+/* Bölüm başlığı: soldaki renkli çubukla (uygulamadaki _buildSectionTitle) */
+.bar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bar-title::before {
+  content: '';
+  flex: none;
+  width: 4px;
+  height: 1.375em;
+  border-radius: 2px;
+  background: var(--bar, var(--violet-500));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--bar, var(--violet-500)) 55%, transparent);
+}
+
+/* Araçlar arası bağlantı kartı */
+.tool-link {
+  display: grid;
+  gap: var(--space-4);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(80% 120% at 100% 0%, rgb(139 92 246 / 0.22), transparent 60%),
+    var(--grad-card);
+  box-shadow:
+    0 0 0 1px var(--line) inset,
+    var(--shadow-2);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--dur-2) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .tool-link:hover {
+    box-shadow:
+      0 0 0 1px var(--line-strong) inset,
+      var(--shadow-3);
+  }
+}
+
+.tool-link__t {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.tool-link__d {
+  display: block;
+  font-family: var(--font-body);
+  margin-top: 0.375rem;
+}
+
+@media (min-width: 48rem) {
+  .tool-link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+/* Uygulama bölümü: telefon + metin */
+.tool-app {
+  display: grid;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.tool-app__phone {
+  justify-self: center;
+  width: min(64vw, 280px);
+}
+
+.tool-app__copy {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.tool-app__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-2);
+}
+
+.tool-app__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgb(196 181 253 / 0.55);
+  text-underline-offset: 0.3em;
+}
+
+@media (min-width: 56rem) {
+  .tool-app {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .tool-app__phone {
+    width: min(100%, 300px);
+  }
+}

@@ -2,9 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
-import Device from '../components/app/Device.astro';
+import DeviceDuo from '../components/app/DeviceDuo.astro';
 import Trajectory from '../components/app/Trajectory.astro';
 import PhoneFan from '../components/app/PhoneFan.astro';
+import StoreGallery from '../components/app/StoreGallery.astro';
 import AppIcon from '../components/app/AppIcon.astro';
 import { liveProducts, statusLabel } from '../data/products';
 import { site } from '../config/site';
@@ -49,17 +50,24 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
       <div
         class="hh__visual stage"
         role="img"
-        aria-label="Takip+ YKS Hedef&Net sekmesi: sınava kalan süre, hedef Boğaziçi Üniversitesi Endüstri Mühendisliği ve Net Sihirbazı. Hedefe 18.180 sıra kaldı."
+        aria-label="Takip+ YKS iPad’de ve iPhone’da: iPad’de YKS 2027 sayacı ve Günün Odağı, iPhone’da hedef Boğaziçi Üniversitesi Endüstri Mühendisliği. Hedefe 18.180 sıra kaldı."
       >
-        <Trajectory variant="hero" goal={69} animate="intro" class="hh__traj" />
-        <Device screens={['hedefnet-tab']} sizes="(min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hh__device">
+        <Trajectory variant="hero" goal={64} animate="intro" class="hh__traj" />
+        <DeviceDuo
+          tablet="t-home-sayac"
+          phone="p-hedef-detay"
+          tabletSizes="(min-width: 60rem) 470px, 74vw"
+          phoneSizes="(min-width: 60rem) 200px, 32vw"
+          eager
+          class="hh__duo"
+        >
           <div class="co hh__pill" aria-hidden="true">
             <span class="hh__pill-ic">
               <svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
             </span>
             <span>Hedefe <b>18.180</b> sıra kaldı</span>
           </div>
-        </Device>
+        </DeviceDuo>
       </div>
     </div>
   </section>
@@ -75,8 +83,8 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
         </p>
       </div>
       <PhoneFan
-        screens={['yap-liste', 'perf-tyt', 'home-program', 'optik', 'hedef-arama-2']}
-        label="Takip+ YKS’den beş ekran: Yapamadıklarım listesi, Performans Analizi, Bugün sekmesi, Optik Çözüm ve bölüm arama."
+        screens={['p-yap-analiz', 'p-ders-turkce', 'p-home-sayac', 'p-optik', 'p-net-sihirbazi']}
+        label="Takip+ YKS’den beş ekran: Yapamadıklarım analizi, TYT Türkçe net grafiği, YKS 2027 sayacı ve Günün Odağı, Optik Çözüm ve Net Sihirbazı."
       />
       <ul class="one__list" role="list">
         {highlights.map((h) => <li><span aria-hidden="true">+</span>{h}</li>)}
@@ -85,7 +93,14 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     </div>
   </section>
 
-  <!-- 3. Neden Takip+ -->
+  <!-- 3. Mağaza görselleri -->
+  <StoreGallery
+    id="gorseller"
+    title="Takip+ YKS, on karede."
+    lead="App Store ve Google Play için hazırladığımız görseller. Her biri uygulamanın bir parçasını anlatıyor; kaydırarak gez."
+  />
+
+  <!-- 4. Neden Takip+ -->
   <section class="section why defer" aria-labelledby="why-title">
     <div class="container why__grid">
       <div class="why__copy" data-reveal>
@@ -108,7 +123,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     </div>
   </section>
 
-  <!-- 4. Ürün ailesi -->
+  <!-- 5. Ürün ailesi -->
   <section class="section defer" id="urunler" aria-labelledby="urunler-title">
     <div class="container">
       <div class="fam__head" data-reveal>
@@ -166,7 +181,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     )
   }
 
-  <section class="section">
+  <section class="section defer">
     <div class="container">
       <WaitlistForm />
     </div>
@@ -253,23 +268,27 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     padding-inline: var(--gutter);
   }
 
-  .hh__visual :global(.hh__device) {
-    width: min(60vw, 290px);
+  /* Alt boşluk hap için: hap tabletin altında, telefonun solunda durur, ekranların
+     üstüne binmez */
+  .hh__visual :global(.hh__duo) {
+    width: min(92vw, 440px);
+    padding-bottom: 17cqw;
   }
 
   .hh__pill {
-    --x: -22%;
-    --y: 66%;
+    top: auto;
+    bottom: 1.5cqw;
+    left: 1cqw;
     display: inline-flex;
     align-items: center;
     gap: 2.4cqw;
-    padding: 2.8cqw 5cqw 2.8cqw 2.8cqw;
+    padding: 1.8cqw 3.4cqw 1.8cqw 1.8cqw;
     border-radius: 99px;
     background: rgb(59 20 38 / 0.96);
     box-shadow:
       0 0 0 1.5px rgb(244 63 94 / 0.55) inset,
       0 18px 40px rgb(5 2 25 / 0.6);
-    font-size: max(12px, 5.5cqw);
+    font-size: max(12px, 3.6cqw);
     font-weight: 600;
     white-space: nowrap;
   }
@@ -281,16 +300,16 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
   .hh__pill-ic {
     display: grid;
     place-items: center;
-    width: 8.5cqw;
-    height: 8.5cqw;
+    width: 5.6cqw;
+    height: 5.6cqw;
     border-radius: 50%;
     background: rgb(244 63 94 / 0.22);
     color: #fb7185;
   }
 
   .hh__pill-ic svg {
-    width: 5cqw;
-    height: 5cqw;
+    width: 3.4cqw;
+    height: 3.4cqw;
     fill: none;
     stroke: currentColor;
     stroke-width: 2.6;
@@ -311,7 +330,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
       animation-delay: 160ms;
     }
 
-    .hh__visual :global(.hh__device) {
+    .hh__visual :global(.hh__duo) {
       animation: hh-rise 1100ms var(--ease-out) 120ms both;
     }
 
@@ -343,12 +362,8 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
   }
 
   @media (min-width: 48rem) {
-    .hh__visual :global(.hh__device) {
-      width: 290px;
-    }
-
-    .hh__pill {
-      --x: -36%;
+    .hh__visual :global(.hh__duo) {
+      width: 520px;
     }
   }
 
@@ -379,8 +394,8 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
       padding-inline: 0;
     }
 
-    .hh__visual :global(.hh__device) {
-      width: 300px;
+    .hh__visual :global(.hh__duo) {
+      width: min(100%, 540px);
     }
 
     .hh__visual :global(.hh__traj) {
@@ -538,6 +553,11 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     height: 88px;
     margin-bottom: var(--space-2);
     filter: drop-shadow(0 10px 30px rgb(139 92 246 / 0.6));
+  }
+
+  .fam__meta,
+  .fam__tag {
+    font-family: var(--font-body);
   }
 
   .fam__meta {

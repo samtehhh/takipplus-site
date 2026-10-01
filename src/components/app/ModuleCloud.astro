@@ -3,7 +3,7 @@
  * "Saymakla bitmez": uygulamadaki modüller, mağaza görselindeki artılı haplar.
  * Artının rengi modülün ailesini taşır (uygulamadaki renk dili).
  */
-import Device from './Device.astro';
+import DeviceDuo from './DeviceDuo.astro';
 import AppIcon from './AppIcon.astro';
 
 type Tone = 'violet' | 'amber' | 'red' | 'teal' | 'green' | 'blue' | 'slate';
@@ -48,7 +48,13 @@ const tones: Record<Tone, string> = {
     </div>
 
     <figure class="mc__tablet">
-      <Device screens={['tablet-home']} kind="tablet" sizes="(min-width: 64rem) 440px, (min-width: 48rem) 40vw, 78vw" />
+      <DeviceDuo
+        tablet="t-home-harita"
+        phone="p-home-sayac"
+        tabletSizes="(min-width: 64rem) 400px, (min-width: 48rem) 34vw, 72vw"
+        phoneSizes="(min-width: 64rem) 170px, (min-width: 48rem) 15vw, 30vw"
+        class="mc__duo"
+      />
       <figcaption>
         <AppIcon name="tablet" size={16} />
         {tabletLabel}
@@ -130,9 +136,8 @@ const tones: Record<Tone, string> = {
     background: radial-gradient(closest-side, rgb(139 92 246 / 0.38), rgb(224 86 253 / 0.08) 65%, transparent);
   }
 
-  .mc__tablet :global(.device) {
-    width: min(78vw, 420px);
-    rotate: -3deg;
+  .mc__tablet :global(.mc__duo) {
+    width: min(90vw, 460px);
   }
 
   .mc__tablet figcaption {
@@ -170,8 +175,8 @@ const tones: Record<Tone, string> = {
       gap: var(--space-8);
     }
 
-    .mc__tablet :global(.device) {
-      width: min(40vw, 440px);
+    .mc__tablet :global(.mc__duo) {
+      width: min(44vw, 500px);
     }
   }
 </style>

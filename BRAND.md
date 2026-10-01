@@ -164,6 +164,13 @@ Uygulamadaki Material ikonlarla aynı çizgi karakterini taşır. Emoji ikon yer
 
 - Uydurma ekran tasarlanmaz. Sitede uygulamanın örnek veriyle çekilmiş gerçek ekranları kullanılır; ekrandan taşan
   kartlar yalnızca uygulamada gerçekten olan bileşenleri ve metinleri kopyalar.
+- Telefon ekranları kurucunun kendi hesabıyla (ad ve profil fotoğrafı görünür) çekilir; başka bir kullanıcının adı
+  ya da kullanıcı adı görünen ekran kullanılmaz.
+- Cihaz maketleri sadedir: ince siyah kenar ve titanyum kenar ışığı. Sahte durum çubuğu (saat, Wi-Fi, pil), Dynamic
+  Island ya da ana ekran çubuğu çizilmez; ekran görüntüsü tam boy görünür. Gerçek ekran görüntüsündeki işletim sistemi
+  durum satırı (ör. iPad'de "TestFlight 18:45") kırpılır.
+- Ekrandan taşan uygulama kartları dışında maketin ekranına etiket bindirilmez; taşan kart da ekranın ana içeriğini
+  (başlık, sekmeler) örtmez. Bağımsız vurgu etiketleri (ör. "Hedefe 18.180 sıra kaldı") ekranın dışında, boş alanda durur.
 - Üniversite logosu, stok fotoğraf, gerçek kişi adı (ör. premium plan adlarındaki kişi) ve başarım adlarındaki
   film isimleri/görselleri kullanılmaz.
 - Sıralama/puan rakamları her zaman "örnek" ya da "tahmin" olarak etiketlenir; kaynak: uygulamaya gömülü,

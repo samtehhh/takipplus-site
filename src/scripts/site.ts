@@ -37,6 +37,12 @@ export function track(name: string, data?: Record<string, string>) {
   }
 }
 
+// Sayfaya özgü betikler (tools.ts) ölçümü bu olayla iletir; site.ts'i içe aktarmazlar
+window.addEventListener('tp:track', (e) => {
+  const { name, data } = (e as CustomEvent<{ name: string; data?: Record<string, string> }>).detail;
+  track(name, data);
+});
+
 document.addEventListener('click', (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>('[data-track]');
   if (el) track(el.dataset.track!, { path: location.pathname });
@@ -125,7 +131,12 @@ if (!reduceMotion && 'IntersectionObserver' in window && revealEls.length) {
   revealEls.forEach((el) => el.classList.add('is-in'));
 }
 
-// ---------- Uygulama turu (ARIA sekmeleri + otomatik ilerleme) ----------
+// ---------- Uygulama turu (ARIA sekmeleri + videolar) ----------
+// Her sekmenin kısa bir uygulama klibi var. Bölüm görünürken seçili sekmenin klibi oynar,
+// sekmedeki çubuk videonun ilerlemesini gösterir, klip bitince sıradaki sekmeye geçilir.
+// Kullanıcı bir sekme seçerse otomatik geçiş durur, o klip döngüde oynar. "Turu durdur"
+// videoyu da durdurur. Hareket azaltılmışsa hiçbir şey kendiliğinden oynamaz; düğmeyle başlar.
+// Videosu olmayan sekmede ya da video açılamazsa eski zamanlayıcı (5,2 sn) çalışır.
 document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
   const tabs = [...tour.querySelectorAll<HTMLButtonElement>('[data-tour-tab]')];
   const texts = [...tour.querySelectorAll<HTMLElement>('[data-tour-text]')];
@@ -136,25 +147,81 @@ document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
   if (!tabs.length || !panel) return;
 
   const MS = 5200;
+  const videoOf = (k: number) => shots[k]?.querySelector<HTMLVideoElement>('video[data-shot-video]') ?? null;
+  const barOf = (k: number) => tabs[k].querySelector<HTMLElement>('.tour__bar i');
   let current = 0;
-  let timer = 0;
   let inView = false;
-  let held = false;
-  let stopped = reduceMotion;
+  let focused = false;
+  let auto = !reduceMotion; // klip bitince sıradakine geç
+  let stopped = reduceMotion; // hiç oynatma (düğmeyle)
+  let timer = 0;
+  let raf = 0;
+  let started = 0;
 
-  const playing = () => !stopped && inView && !held;
+  const setProgress = (k: number, r: number) => barOf(k)?.style.setProperty('--tp', String(Math.min(1, Math.max(0, r))));
 
-  const schedule = () => {
+  const stopAll = () => {
     clearTimeout(timer);
+    cancelAnimationFrame(raf);
     tour.classList.remove('is-playing');
-    if (!playing()) return;
-    void tour.offsetWidth; // ilerleme çubuğunun animasyonunu baştan başlat
-    tour.classList.add('is-playing');
-    timer = window.setTimeout(() => select(current + 1), MS);
   };
 
+  const tick = () => {
+    const v = videoOf(current);
+    if (v && v.duration) setProgress(current, v.currentTime / v.duration);
+    else if (started) setProgress(current, (performance.now() - started) / MS);
+    raf = requestAnimationFrame(tick);
+  };
+
+  const advance = () => {
+    if (auto && !focused) select(current + 1);
+    else run();
+  };
+
+  const run = () => {
+    stopAll();
+    if (stopped || !inView) {
+      videoOf(current)?.pause();
+      return;
+    }
+    tour.classList.add('is-playing');
+    const v = videoOf(current);
+    started = 0;
+    if (v) {
+      v.loop = !auto;
+      v.play().catch(() => {
+        // video açılamadı: zamanlayıcıyla devam
+        started = performance.now();
+        timer = window.setTimeout(advance, MS);
+      });
+    } else {
+      started = performance.now();
+      timer = window.setTimeout(advance, MS);
+    }
+    raf = requestAnimationFrame(tick);
+  };
+
+  shots.forEach((s, k) => {
+    const v = videoOf(k);
+    if (!v) return;
+    v.addEventListener('playing', () => v.classList.add('is-playing'));
+    v.addEventListener('ended', () => {
+      if (k === current) advance();
+    });
+  });
+
   const select = (n: number, focus = false) => {
+    const prev = current;
     current = (n + tabs.length) % tabs.length;
+    if (prev !== current) {
+      const pv = videoOf(prev);
+      if (pv) {
+        pv.pause();
+        pv.currentTime = 0;
+        pv.classList.remove('is-playing');
+      }
+      setProgress(prev, 0);
+    }
     tabs.forEach((t, k) => {
       const on = k === current;
       t.classList.toggle('is-active', on);
@@ -169,7 +236,10 @@ document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
     });
     panel.setAttribute('aria-labelledby', tabs[current].id);
     if (focus) tabs[current].focus();
-    schedule();
+    setProgress(current, 0);
+    const v = videoOf(current);
+    if (v) v.currentTime = 0;
+    run();
   };
 
   const setStopped = (value: boolean) => {
@@ -178,13 +248,13 @@ document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
       playBtn.setAttribute('aria-pressed', String(value));
       playLabel.textContent = value ? 'Turu başlat' : 'Turu durdur';
     }
-    schedule();
+    run();
   };
 
   tabs.forEach((t, k) =>
     t.addEventListener('click', () => {
-      // Kullanıcı seçti: otomatik ilerleme biter
-      if (!stopped) setStopped(true);
+      // Kullanıcı seçti: otomatik geçiş biter, seçilen klip döngüde oynar
+      auto = false;
       select(k);
     }),
   );
@@ -204,54 +274,38 @@ document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
     else if (key === 'End') next = tabs.length - 1;
     if (next === null) return;
     e.preventDefault();
-    if (!stopped) setStopped(true);
+    auto = false;
     select(Math.min(tabs.length - 1, Math.max(0, next)), true);
   });
 
-  // Üzerine gelince ya da içine odaklanınca bekle
-  tour.addEventListener('pointerenter', (e) => {
-    if ((e as PointerEvent).pointerType === 'mouse') {
-      held = true;
-      schedule();
-    }
-  });
-  tour.addEventListener('pointerleave', () => {
-    if (held) {
-      held = false;
-      schedule();
-    }
-  });
+  // Klavyeyle içerideyken sekme kendiliğinden değişmez (klip döngüde)
   tour.addEventListener('focusin', () => {
-    held = true;
-    schedule();
+    focused = true;
   });
   tour.addEventListener('focusout', (e) => {
-    if (!tour.contains((e as FocusEvent).relatedTarget as Node)) {
-      held = false;
-      schedule();
-    }
+    if (!tour.contains((e as FocusEvent).relatedTarget as Node)) focused = false;
   });
 
-  if (playBtn && !reduceMotion) {
+  if (playBtn) {
     playBtn.hidden = false;
-    playBtn.setAttribute('aria-pressed', 'false');
+    playBtn.setAttribute('aria-pressed', String(stopped));
+    if (playLabel) playLabel.textContent = stopped ? 'Turu başlat' : 'Turu durdur';
     playBtn.addEventListener('click', () => {
+      if (stopped) auto = true;
       setStopped(!stopped);
-      // düğmeye basmak odak demek; turun sürmesi için bekleme bırakılır
-      held = false;
-      schedule();
     });
   }
 
   new IntersectionObserver(
     ([entry]) => {
+      const was = inView;
       inView = entry.isIntersecting;
-      schedule();
+      if (inView !== was) run();
     },
     { threshold: 0.35 },
   ).observe(tour);
 
-  // Diğer sekmelerin ekranları ancak tura yaklaşınca yüklensin (ilk açılışta bant genişliği hero'ya)
+  // Diğer sekmelerin kapakları ancak tura yaklaşınca yüklensin (ilk açılışta bant genişliği hero'ya)
   const arm = new IntersectionObserver(
     ([entry]) => {
       if (!entry.isIntersecting) return;
@@ -262,6 +316,62 @@ document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
   );
   arm.observe(tour);
 });
+
+// ---------- Mağaza görselleri galerisi ----------
+// Şeritler <template> içinde; bölüm ekrana ~800 px yaklaşınca sayfaya eklenir (ilk açılışta
+// görseller hero ile yarışmasın). Sekme ve oklar şeritler gelince bağlanır.
+document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((g) => {
+  const tpl = g.querySelector<HTMLTemplateElement>('template[data-gallery-tpl]');
+  const host = g.querySelector<HTMLElement>('[data-gallery-sets]');
+  if (!tpl || !host) return;
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      host.append(tpl.content.cloneNode(true));
+      initGallery(g);
+    },
+    { rootMargin: '800px 0px' },
+  );
+  io.observe(g);
+});
+
+function initGallery(g: HTMLElement) {
+  const tabs = [...g.querySelectorAll<HTMLButtonElement>('[data-gallery-tab]')];
+  const sets = [...g.querySelectorAll<HTMLElement>('[data-gallery-set]')];
+  const sw = g.querySelector<HTMLElement>('[data-gallery-switch]');
+  const nav = g.querySelector<HTMLElement>('[data-gallery-nav]');
+  if (sw) sw.hidden = false;
+  if (nav) nav.hidden = false;
+  const active = () => sets.find((s) => s.hasAttribute('data-active'))?.querySelector<HTMLElement>('.sg__track');
+  const select = (kind: string, focus = false) => {
+    tabs.forEach((t) => {
+      const on = t.dataset.galleryTab === kind;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    sets.forEach((s) => s.toggleAttribute('data-active', s.dataset.gallerySet === kind));
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => select(t.dataset.galleryTab!)));
+  sw?.addEventListener('keydown', (e) => {
+    const key = (e as KeyboardEvent).key;
+    if (key !== 'ArrowRight' && key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const i = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    const next = tabs[(i + (key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    select(next.dataset.galleryTab!, true);
+  });
+  const step = (dir: number) => {
+    const track = active();
+    const item = track?.querySelector<HTMLElement>('.sg__item');
+    if (!track || !item) return;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 16;
+    track.scrollBy({ left: dir * (item.offsetWidth + gap), behavior: reduceMotion ? 'auto' : 'smooth' });
+  };
+  g.querySelector('[data-gallery-prev]')?.addEventListener('click', () => step(-1));
+  g.querySelector('[data-gallery-next]')?.addEventListener('click', () => step(1));
+}
 
 // ---------- Sınav sayacı ----------
 document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((cd) => {
@@ -310,12 +420,17 @@ document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((cd) => {
 // ---------- Akan soru süresi (Optik Çözüm kartı) ----------
 document.querySelectorAll<HTMLElement>('[data-tick]').forEach((el) => {
   if (reduceMotion) return;
-  let sec = Number(el.dataset.tick) || 0;
+  // Uygulamadaki sayacın üstünde durur ve onun gösterdiği değerden başlar (m:ss). Her
+  // görünüşte baştan başlar: sayfa uzun süre açık kalınca "17:01" gibi anlamsız değerler çıkmaz.
+  const start = Number(el.dataset.tick) || 0;
+  let sec = start;
   let id = 0;
-  const fmt = (n: number) => `${String(Math.floor(n / 60)).padStart(2, '0')}:${String(n % 60).padStart(2, '0')}`;
+  const fmt = (n: number) => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`;
   new IntersectionObserver(([entry]) => {
     clearInterval(id);
     if (entry.isIntersecting) {
+      sec = start;
+      el.textContent = fmt(sec);
       id = window.setInterval(() => {
         sec += 1;
         el.textContent = fmt(sec);

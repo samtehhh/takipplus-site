@@ -22,6 +22,8 @@ const pages = {
   gizlilik: { kicker: 'Gizlilik Politikası', title: 'Verilerini nasıl işliyoruz?', sub: 'Takip+ uygulamasında hangi veriler, neden ve ne kadar süre işlenir.' },
   'kullanim-sartlari': { kicker: 'Kullanım Şartları', title: 'Takip+ kullanım şartları.', sub: 'Hesap, topluluk kuralları, Premium ve sorumluluklar.' },
   'kvkk-aydinlatma': { kicker: 'KVKK Aydınlatma Metni', title: 'Kişisel verilerin ve hakların.', sub: '6698 sayılı Kanun kapsamında aydınlatma metni.' },
+  'yks-sayaci': { kicker: 'YKS 2027 Sayacı', title: 'YKS’ye kaç gün kaldı?', sub: 'TYT, AYT ve YDT için Türkiye saatiyle saniye saniye geri sayım.' },
+  'net-hesaplama': { kicker: 'YKS Net Hesaplama', title: 'Doğrunu ve yanlışını yaz, netin çıksın.', sub: 'TYT ve AYT netleri, dört yanlış bir doğru kuralıyla.' },
 };
 
 // Küçük boyutta (64 px) düz uygulama karosu; ışıltılı sürüm bu boyutta çamurlaşır (marka kiti s.05)

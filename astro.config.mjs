@@ -41,6 +41,16 @@ export default defineConfig({
   vite: {
     build: {
       assetsInlineLimit: 0,
+      rollupOptions: {
+        output: {
+          // Birden çok sayfada kullanılan küçük bileşenlerin stilleri tek ortak dosyada: sayfa
+          // başına daha az CSS isteği (ilk boyama bu dosyaları bekler; ayrı ayrı bölününce /yks
+          // altı stil dosyası indiriyordu). Tek sayfaya özgü bileşenler o sayfanın dosyasında kalır.
+          manualChunks(id) {
+            if (/\/src\/components\/(app\/)?(Header|Footer|Logo|Button|AppIcon|Device|DeviceDuo|Trajectory|Faq|WaitlistForm|StoreButtons|Analytics)\.astro/.test(id)) return 'ui';
+          },
+        },
+      },
     },
   },
 });

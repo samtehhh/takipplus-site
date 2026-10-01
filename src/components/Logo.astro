@@ -6,8 +6,6 @@
  */
 import tileSvg from '../../assets/brand/kit/yks/svg/uygulama-karosu-duz.svg?raw';
 
-let instance = 0;
-
 interface Props {
   size?: number;
   wordmark?: boolean;
@@ -19,8 +17,12 @@ interface Props {
 const { size = 32, wordmark = true, class: cls } = Astro.props;
 
 // Kitteki SVG'nin kendisi, satır içi (ayrı istek yok). Aynı sayfada birden çok logo
-// olduğunda gradyan kimlikleri çakışmasın diye her kopyaya ayrı ek verilir.
-const uid = `tg${++instance}`;
+// olduğunda gradyan kimlikleri çakışmasın diye her kopyaya ayrı ek verilir. Sayaç sayfa
+// başına (Astro.locals): ön bilgideki değişkenler her çizimde sıfırdan başladığı için
+// modül düzeyindeki sayaç hep "tg1" veriyordu.
+const seq = Astro.locals as { logoSeq?: number };
+seq.logoSeq = (seq.logoSeq ?? 0) + 1;
+const uid = `tg${seq.logoSeq}`;
 const svg = tileSvg
   .replace(/<title>.*?<\/title>/, '')
   .replace(/ width="512" height="512"/, ` width="${size}" height="${size}" class="logo__mark" aria-hidden="true" focusable="false"`)
