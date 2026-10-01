@@ -80,7 +80,7 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 
       <div class="hero__visual stage" role="img" aria-label={c.hero.visualLabel}>
         <Trajectory variant="hero" animate="intro" class="hero__traj" />
-        <Device screens={['p-home-sayac']} sizes="(min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hero__device">
+        <Device screens={['p-home-sayac']} sizes="(min-width: 80rem) 340px, (min-width: 60rem) 300px, (min-width: 48rem) 290px, 60vw" eager decorative class="hero__device">
           <div class="co co--plate hero__quad" style="--x:-17.2%;--y:73.1%;--ty:-50%;--w:134.5cqw">
             <FocusQuad animate="intro" />
           </div>
@@ -402,6 +402,12 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     .hero__fine {
       grid-column: 2;
       margin-top: calc(-1 * var(--space-5));
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .hero__visual :global(.hero__device) {
+      --pw: 340px;
     }
   }
 

@@ -21,7 +21,7 @@ const slots = ['far-l', 'near-l', 'center', 'near-r', 'far-r'];
   {
     screens.map((s, i) => (
       <div class:list={['fan__item', `fan__item--${slots[i]}`]}>
-        <Device screens={[s]} sizes="(min-width: 64rem) 260px, (min-width: 48rem) 30vw, 46vw" decorative />
+        <Device screens={[s]} sizes="(min-width: 80rem) 300px, (min-width: 64rem) 260px, (min-width: 48rem) 30vw, 46vw" decorative />
       </div>
     ))
   }
@@ -104,15 +104,23 @@ const slots = ['far-l', 'near-l', 'center', 'near-r', 'far-r'];
     }
   }
 
+  /* Dıştaki eğik telefonlar ortadakinin ~1,7 katı yana açılır: tablette kenara taşmasın */
   @media (min-width: 48rem) {
     .fan {
-      --w: min(30vw, 260px);
+      --w: min(27vw, 260px);
       height: calc(var(--w) * 2.35);
     }
 
     .fan__item--far-l,
     .fan__item--far-r {
       display: block;
+    }
+  }
+
+  /* Geniş ekranda telefonlar büyür: küçük çerçevede 720 px'lik ekranın yazıları minicik kalıyordu */
+  @media (min-width: 80rem) {
+    .fan {
+      --w: 300px;
     }
   }
 </style>

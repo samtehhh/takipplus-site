@@ -32,7 +32,7 @@ const screenOf: Record<ChapterVisual, ScreenName[]> = {
   planlar: ['p-plan-takvimi', 'p-gunluk-takvim'],
 };
 const pair = screenOf[kind].length === 2;
-const sizes = pair ? '(min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' : '(min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
+const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' : '(min-width: 80rem) 350px, (min-width: 64rem) 300px, (min-width: 48rem) 34vw, 60vw';
 ---
 
 <div class:list={['stage', 'cv', `cv--${kind}`]} data-animate role="img" aria-label={label}>
@@ -422,6 +422,26 @@ const sizes = pair ? '(min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' :
   @media (min-width: 64rem) {
     .cv--yapamadiklarim {
       --pw: min(31vw, 300px);
+    }
+  }
+
+  /* Geniş ekranda telefonlar büyür: küçük çerçevede 720 px'lik ekranın yazıları minicik kalıyordu */
+  @media (min-width: 80rem) {
+    .cv {
+      --pw: 350px;
+    }
+
+    .cv--hedef {
+      --pw: 370px;
+    }
+
+    .cv--yapamadiklarim {
+      --pw: 330px;
+    }
+
+    .cv--konular,
+    .cv--planlar {
+      --pw: 275px;
     }
   }
 

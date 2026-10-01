@@ -143,7 +143,15 @@ document.querySelectorAll<HTMLImageElement>('.device__shot img').forEach((img) =
   if (img.complete && img.naturalWidth > 0) return done();
   if (img.loading === 'lazy') img.classList.add('is-loading');
   img.addEventListener('load', done, { once: true });
-  img.addEventListener('error', done, { once: true });
+  // Yüklenemezse kırık görsel simgesi yerine boş koyu ekran kalır
+  img.addEventListener(
+    'error',
+    () => {
+      img.classList.add('is-broken');
+      device?.classList.add('is-loaded');
+    },
+    { once: true },
+  );
 });
 
 // ---------- Uygulama turu (ARIA sekmeleri + videolar) ----------

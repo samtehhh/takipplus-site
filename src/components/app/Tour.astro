@@ -34,7 +34,7 @@ const { id, title, lead, tabs } = Astro.props;
       <Device
         screens={tabs.map((t) => t.screen)}
         videos={tabs.map((t) => t.video)}
-        sizes="(min-width: 64rem) 320px, (min-width: 48rem) 38vw, 64vw"
+        sizes="(min-width: 80rem) 360px, (min-width: 64rem) 320px, (min-width: 48rem) 38vw, 64vw"
         class="tour__device"
       />
     </div>
@@ -316,6 +316,13 @@ const { id, title, lead, tabs } = Astro.props;
 
     .tour__visual :global(.tour__device) {
       width: min(38vw, 320px);
+    }
+  }
+
+  /* Geniş ekranda telefonlar büyür: küçük çerçevede 720 px'lik ekranın yazıları minicik kalıyordu */
+  @media (min-width: 80rem) {
+    .tour__visual :global(.tour__device) {
+      width: 360px;
     }
   }
 
