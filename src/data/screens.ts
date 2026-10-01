@@ -31,7 +31,7 @@ export const screens = {
   'p-net-analizi': { alt: 'Performans Analizi: net ilerleme grafiği ve ders ders net analizi' },
   'p-ders-turkce': { alt: 'TYT Türkçe: ortalama, en yüksek ve son net, deneme grafiği' },
   'p-deneme-gecmisi': { alt: 'Deneme Geçmişi: 20 genel deneme, yayınlara göre TYT ve AYT netleri' },
-  'p-yap-liste': { alt: 'Yapamadıklarım: derslere göre sorular, hata sebepleri ve tekrar durumları' },
+  'p-yap-liste': { alt: 'Yapamadıklarım: derslere göre soruların fotoğrafları, hata sebepleri ve tekrar durumları' },
   'p-yap-analiz': { alt: 'Yapamadıklarım analizi: yüzde 37 dikkat, yüzde 45 bilgi, yüzde 16 strateji hatası ve en zayıf konular' },
   'p-yap-detay': { alt: 'Yapamadıklarım soru ayrıntısı: işlem hatası, koç önerisi ve tekrar ilerlemesi' },
   'p-hedef-detay': { alt: 'Hedef Detayı: Boğaziçi Üniversitesi Endüstri Mühendisliği, taban puan 534.828, tahmini sıralama 2.197' },

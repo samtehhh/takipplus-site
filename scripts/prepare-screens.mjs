@@ -51,7 +51,6 @@ const phones = {
   '191004': 'p-net-analizi',
   '191022': 'p-ders-turkce',
   '191050': 'p-deneme-gecmisi',
-  '191103': 'p-yap-liste',
   '191107': 'p-yap-analiz',
   '191511': 'p-yap-detay',
   '191121': 'p-hedef-detay',
@@ -70,6 +69,11 @@ const ipadShots = {
 };
 const IPAD_STATUS = 48; // 24 pt × 2
 
+// Kökteki tek tek eklenen telefon ekranları: dosya → çıktı adı
+const extraPhones = {
+  'görselli yapamadıklarım.jpg': 'p-yap-liste', // soru fotoğraflarıyla
+};
+
 const tablets = {
   'home.png': 't-home-sayac',
   'perf.png': 't-performans',
@@ -86,6 +90,11 @@ for (const [stamp, name] of Object.entries(phones)) {
   const info = await sharp(join(own, f)).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
   if (info.width !== 720 || info.height !== 1600) throw new Error(`${name}: 720×1600 bekleniyordu (${info.width}×${info.height})`);
   report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB`);
+}
+for (const [file, name] of Object.entries(extraPhones)) {
+  const info = await sharp(join(src, file)).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
+  if (info.width !== 720 || info.height !== 1600) throw new Error(`${name}: 720×1600 bekleniyordu (${info.width}×${info.height})`);
+  report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB (${file})`);
 }
 for (const [file, name] of Object.entries(tablets)) {
   const info = await sharp(join(ipad, file)).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
