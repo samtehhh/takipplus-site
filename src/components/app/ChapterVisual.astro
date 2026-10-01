@@ -403,20 +403,25 @@ const sizes = pair ? '(min-width: 64rem) 240px, (min-width: 48rem) 26vw, 42vw' :
     width: var(--pw);
   }
 
-  /* Tablette bölüm tek sütun: telefon biraz büyür; geniş ekranda yan sütuna sığacak kadar */
+  /* Yan yana düzende sahne (telefon + iki yandan %20 taşan kartlar = 1,4 × telefon) yarım
+     sütuna sığmalı: 768 px'te sütun 348 px → telefon 31vw. Tek sütunlu poster ve bant daha büyük. */
   @media (min-width: 48rem) {
     .cv {
-      --pw: min(40vw, 320px);
-    }
-  }
-
-  @media (min-width: 60rem) {
-    .cv {
-      --pw: min(30vw, 300px);
+      --pw: min(31vw, 300px);
     }
 
     .cv--hedef {
       --pw: min(40vw, 330px);
+    }
+
+    .cv--yapamadiklarim {
+      --pw: min(40vw, 320px);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .cv--yapamadiklarim {
+      --pw: min(31vw, 300px);
     }
   }
 

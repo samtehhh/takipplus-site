@@ -3,11 +3,10 @@
 //
 // Telefon: kurucunun kendi hesabıyla çekilmiş Android ekranları (720×1600, durum çubuğu yok),
 // olduğu gibi. Çerçeve sahte durum çubuğu ya da Dynamic Island çizmez; ekran tam görünür.
-// Kalite: kaynak JPEG; bir kez daha kayıplı sıkıştırılıp derlemede tekrar sıkıştırılınca
-// gradyanlarda bantlanma ve yazıda yumuşama oluyordu. Bu yüzden WebP %95 (pratikte kayıpsız)
-// saklanır; tarayıcıya giden AVIF/WebP'yi Astro tek seferde yüksek kalitede üretir.
-// Tablet: iPad ekranları (1536×2048, düz arayüz çizimi) kayıpsız WebP.
-// Mağaza görselleri (magaza-v3) WebP %92.
+// Kalite: bütün kaynaklar kayıpsız WebP saklanır (kaynaktaki her piksel korunur); tarayıcıya
+// giden AVIF/WebP'yi Astro tek seferde, tam renk çözünürlüğüyle (4:4:4) üretir. AVIF %80 bu
+// ekranlarda 46–47 dB PSNR verir (gözle kayıpsız); %90 boyutu %40 artırıp görünür bir şey katmaz.
+// Tablet: iPad ekranları (1536×2048) kayıpsız WebP. Mağaza görselleri (magaza-v3) kayıpsız WebP.
 // Video kapakları: public/videos/tur-*.mp4 dosyalarının ilk karesi (ffmpeg), kayıpsız WebP.
 //
 // Gerçek iPad ekranları (TestFlight, 1536×2048): ikinci argüman ya da Downloads/ipad taslaklar.
@@ -84,7 +83,7 @@ const ownFiles = readdirSync(own);
 for (const [stamp, name] of Object.entries(phones)) {
   const f = ownFiles.find((x) => x.includes(stamp));
   if (!f) throw new Error(`Ekran bulunamadı: ${stamp}`);
-  const info = await sharp(join(own, f)).webp({ quality: 95, effort: 6 }).toFile(join(out, `${name}.webp`));
+  const info = await sharp(join(own, f)).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
   if (info.width !== 720 || info.height !== 1600) throw new Error(`${name}: 720×1600 bekleniyordu (${info.width}×${info.height})`);
   report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB`);
 }
@@ -98,7 +97,7 @@ for (const [file, name] of Object.entries(ipadShots)) {
   const { width, height } = await img.metadata();
   const info = await img
     .extract({ left: 0, top: IPAD_STATUS, width, height: height - IPAD_STATUS })
-    .webp({ quality: 95, effort: 6 })
+    .webp({ lossless: true, effort: 6 })
     .toFile(join(out, `${name}.webp`));
   report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB (gerçek iPad, durum satırı kırpıldı)`);
 }
@@ -107,7 +106,7 @@ for (const [file, name] of Object.entries(ipadShots)) {
 for (const f of readdirSync(videos).filter((x) => /^tur-.*\.mp4$/.test(x))) {
   const png = execFileSync('ffmpeg', ['-v', 'error', '-i', join(videos, f), '-frames:v', '1', '-f', 'image2pipe', '-vcodec', 'png', '-'], { maxBuffer: 1 << 26 });
   const name = `v-${f.replace(/^tur-|\.mp4$/g, '')}`;
-  const info = await sharp(png).webp({ quality: 95, effort: 6 }).toFile(join(out, `${name}.webp`));
+  const info = await sharp(png).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
   report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB (${f})`);
 }
 
@@ -123,7 +122,7 @@ for (const [dir, prefix] of [
   let i = 1;
   for (const f of files) {
     const name = `${prefix}-${String(i++).padStart(2, '0')}`;
-    await sharp(join(dir, f)).webp({ quality: 92, effort: 6 }).toFile(join(out, `${name}.webp`));
+    await sharp(join(dir, f)).webp({ lossless: true, effort: 6 }).toFile(join(out, `${name}.webp`));
     report.push(`${name.padEnd(18)} ${f}`);
   }
 }

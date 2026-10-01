@@ -37,6 +37,15 @@ export default defineConfig({
   ],
   image: {
     responsiveStyles: false,
+    // Uygulama ekranları yazı ve ince çizgi dolu: renk kanalı tam çözünürlükte (4:4:4).
+    // Varsayılan 4:2:0'da mor/turkuaz yazıların kenarı bulanıklaşıyordu.
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        avif: { chromaSubsampling: '4:4:4', effort: 6 },
+        webp: { smartSubsample: true, effort: 6 },
+      },
+    },
   },
   vite: {
     build: {

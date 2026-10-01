@@ -169,21 +169,21 @@ const tones: Record<Tone, string> = {
     }
   }
 
-  /* Tablette alt alta (ikili geniş görünür); yan yana yalnız geniş ekranda, sütuna sığarak */
+  /* Yan yana; ikili sağ sütunun genişliğini aşmaz (tablette kenarda kesiliyordu) */
   @media (min-width: 48rem) {
+    .mc__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-6);
+    }
+
     .mc__tablet :global(.mc__duo) {
-      width: min(76vw, 560px);
+      width: min(100%, 500px);
     }
   }
 
   @media (min-width: 60rem) {
     .mc__grid {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
       gap: var(--space-8);
-    }
-
-    .mc__tablet :global(.mc__duo) {
-      width: min(100%, 500px);
     }
   }
 </style>

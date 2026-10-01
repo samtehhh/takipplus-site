@@ -505,14 +505,15 @@ setidir. Hepsi tek komutla üretilir:
 node scripts/prepare-screens.mjs "C:/Projeler/flutter_application_1/Claude outputs/takipplus"
 ```
 
-- `p-*` telefon: `KENDI ALDIGIM SS'LER` (720×1600), olduğu gibi, WebP %95.
+- `p-*` telefon: `KENDI ALDIGIM SS'LER` (720×1600), olduğu gibi, kayıpsız WebP.
 - `t-*` tablet: `magaza-v2/ham-ekranlar/ipad-temiz` kayıpsız; `t-home-harita` gerçek iPad ekranı
   (`Downloads/ipad taslaklar`, üstteki iPadOS durum satırı kırpılır).
 - `v-*` tur videolarının ilk karesi (kapak), `s-*` `magaza-v3` mağaza görselleri.
 
 Cihaz çerçevesi (`Device`) sade: ince siyah kenar, titanyum kenar ışığı. Sahte saat, Dynamic Island ya da durum
-çubuğu çizilmez; ekran görüntüsü tam boy görünür. Derlemede AVIF + WebP %80 kalitede, ekran genişliğine uyan
-`srcset` üretilir (kaynaklar bir kez daha kayıplı sıkıştırılmaz). Ekrandan taşan kartlar uygulamadaki gerçek
+çubuğu çizilmez; ekran görüntüsü tam boy görünür. Kaynaklar kayıpsız saklanır; derlemede AVIF + WebP %80, tam renk
+çözünürlüğüyle (4:4:4, `astro.config.mjs`) ve gösterilen boyutun en az ~2 katı genişlikte üretilir (telefon 540/720,
+iPad 768/1024/1536). Görüntü gelene kadar çerçevede bir ışık süzülür, gelince yumuşakça açılır (`site.ts`). Ekrandan taşan kartlar uygulamadaki gerçek
 bileşenlerin HTML kopyalarıdır; ekrandaki bir öğenin tam üstüne oturacaklarsa konumları `callout.css` başındaki
 formülle (720×1600 piksel → telefon kutusu yüzdesi) hesaplanır. Başka bir kullanıcının adı ya da kullanıcı adı
 görünen ekran eklenmez (sıralama ekranları bu yüzden kullanılmıyor).

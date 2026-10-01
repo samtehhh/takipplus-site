@@ -28,7 +28,9 @@ interface Props {
 const { screens: list, kind = 'phone', sizes, eager = false, class: cls, decorative = false, videos = [] } = Astro.props;
 const files = import.meta.glob<ImageMetadata>('/src/assets/app/*.webp', { eager: true, import: 'default' });
 const dims = kind === 'phone' ? PHONE : TABLET;
-const widths = kind === 'phone' ? [360, 450, 540, 720] : [600, 900, 1200, 1536];
+// En küçük aday ekranda gösterilen boyutun ~2 katı: yan yatık telefonlar (yelpaze) ve
+// masaüstündeki küçük çerçeveler de keskin kalır. 720 ve 1536 ekranların kendi çözünürlüğü.
+const widths = kind === 'phone' ? [540, 720] : [768, 1024, 1536];
 const shots = list.map((name, i) => {
   const img = files[`/src/assets/app/${name}.webp`];
   if (!img) throw new Error(`Ekran bulunamadı: src/assets/app/${name}.webp`);
@@ -104,6 +106,43 @@ const shots = list.map((name, i) => {
     background: #181c39;
     isolation: isolate;
     box-shadow: 0 0 0 1px rgb(0 0 0 / 0.7);
+  }
+
+  /* Yükleme ışığı: ekran görüntüsü gelene kadar camın üstünden yumuşak bir ışık geçer.
+     Görüntü yüklenince (site.ts .is-loaded) ışık durur, görüntü hafifçe aydınlanarak açılır. */
+  .device__screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(110deg, transparent 30%, rgb(196 181 253 / 0.1) 46%, rgb(255 255 255 / 0.16) 50%, rgb(196 181 253 / 0.1) 54%, transparent 70%);
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+
+  .device__shot {
+    z-index: 1;
+  }
+
+  .js .device:not(.is-loaded) .device__screen::after {
+    animation: device-shine 1.6s var(--ease-in-out) infinite;
+  }
+
+  .js .device__shot img.is-loading {
+    opacity: 0;
+    filter: brightness(1.35);
+  }
+
+  .js .device__shot img {
+    transition:
+      opacity 700ms var(--ease-out),
+      filter 900ms var(--ease-out);
+  }
+
+  @keyframes device-shine {
+    to {
+      transform: translateX(100%);
+    }
   }
 
   .device__shot {
@@ -189,8 +228,13 @@ const shots = list.map((name, i) => {
 
   @media (prefers-reduced-motion: reduce) {
     .device__shot,
-    .device__video {
+    .device__video,
+    .js .device__shot img {
       transition: none;
+    }
+
+    .js .device:not(.is-loaded) .device__screen::after {
+      animation: none;
     }
   }
 

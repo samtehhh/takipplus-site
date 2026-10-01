@@ -131,6 +131,21 @@ if (!reduceMotion && 'IntersectionObserver' in window && revealEls.length) {
   revealEls.forEach((el) => el.classList.add('is-in'));
 }
 
+// ---------- Cihaz ekranları: yükleme ışığı ve yumuşak açılış ----------
+// Tembel yüklenen ekran görüntüsü gelene kadar gizli kalır (çerçevede ışık süzülür), gelince
+// aydınlanarak açılır. Öncelikli (hero) görsel hiç gizlenmez: LCP gecikmesin.
+document.querySelectorAll<HTMLImageElement>('.device__shot img').forEach((img) => {
+  const device = img.closest<HTMLElement>('.device');
+  const done = () => {
+    img.classList.remove('is-loading');
+    if (img.closest('.device__shot')?.classList.contains('is-active')) device?.classList.add('is-loaded');
+  };
+  if (img.complete && img.naturalWidth > 0) return done();
+  if (img.loading === 'lazy') img.classList.add('is-loading');
+  img.addEventListener('load', done, { once: true });
+  img.addEventListener('error', done, { once: true });
+});
+
 // ---------- Uygulama turu (ARIA sekmeleri + videolar) ----------
 // Her sekmenin kısa bir uygulama klibi var. Bölüm görünürken seçili sekmenin klibi oynar,
 // sekmedeki çubuk videonun ilerlemesini gösterir, klip bitince sıradaki sekmeye geçilir.

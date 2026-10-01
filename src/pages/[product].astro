@@ -500,13 +500,12 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     width: 100%;
   }
 
-  /* Yan yana yalnız geniş ekranda: kartlar telefonun iki yanından ~%20 taşar; tablette
-     (768–959 px) sütun buna yetmiyor, kartlar sayfa kenarında kesiliyordu */
-  @media (min-width: 60rem) {
+  /* Yan yana: tablette sütun arası dar (sahne sütuna sığsın, kartlar kenarda kesilmesin) */
+  @media (min-width: 48rem) {
     .chap--split .chap__grid,
     .chap--split-flip .chap__grid {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: var(--space-8);
+      gap: var(--space-6);
     }
 
     .chap--split-flip .chap__copy {
@@ -535,6 +534,13 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 
     .chap--band .chap__band {
       grid-area: band;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .chap--split .chap__grid,
+    .chap--split-flip .chap__grid {
+      gap: var(--space-8);
     }
   }
 
