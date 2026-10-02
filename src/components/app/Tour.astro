@@ -30,7 +30,6 @@ const { id, title, lead, tabs } = Astro.props;
     </div>
 
     <div class="tour__visual">
-      <span class="dotgrid" aria-hidden="true"></span>
       <Device
         screens={tabs.map((t) => t.screen)}
         videos={tabs.map((t) => t.video)}

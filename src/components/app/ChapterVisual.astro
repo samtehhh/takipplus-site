@@ -36,7 +36,6 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
 ---
 
 <div class:list={['stage', 'cv', `cv--${kind}`]} data-animate role="img" aria-label={label}>
-  <span class="dotgrid cv__grid" aria-hidden="true"></span>
   {
     kind === 'hedef' && (
       <span class="cv__goal" aria-hidden="true">
@@ -394,10 +393,6 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     background: radial-gradient(closest-side, rgb(139 92 246 / 0.42), rgb(224 86 253 / 0.1) 62%, transparent);
   }
 
-  .cv__grid {
-    inset: -6% -14% 8%;
-    z-index: -1;
-  }
 
   .cv :global(.device) {
     width: var(--pw);

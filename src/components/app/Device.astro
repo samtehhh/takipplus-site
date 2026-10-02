@@ -243,11 +243,15 @@ const shots = list.map((name, i) => {
   }
 
   /* ---- DeviceDuo: iPad + iPhone, telefon tabletin sağ altına biner ---- */
+  /* Yükseklik ikilinin kendi genişliğine bağlı (aspect-ratio). Önceki `padding-bottom: 9cqw`
+     kapsayıcının kendisine değil üst kapsayıcıya/ekrana göre çözülüyordu: geniş ekranda
+     telefon tabletin çok altına sarkıyordu. Tablet 1,055 × genişlik yüksekliğinde; telefon
+     (0,734 × genişlik) sağ alta oturur, tabletin altından 0,12 × genişlik taşar. */
   .duo {
     position: relative;
     container-type: inline-size;
     width: 100%;
-    padding-bottom: 9cqw;
+    aspect-ratio: 1 / 1.175;
   }
 
   .duo .duo__tablet {

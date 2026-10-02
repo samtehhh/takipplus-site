@@ -27,9 +27,10 @@ html {
    yerleşimde indiriyor; gövde Inter olunca 31 KB'lık Inter her sayfada hero görseliyle
    yarışıyordu. Artık Inter, ancak Inter'li bir metin ekrana yaklaşınca iner. */
 body {
+  position: relative;
   margin: 0;
   min-height: 100svh;
-  background: var(--bg);
+  /* Zemin rengi html'de; body şeffaf ki altındaki sayfa boyu doku görünsün */
   color: var(--text);
   font-family: var(--font-display);
   font-size: var(--text-base);
@@ -362,6 +363,61 @@ button {
   background: var(--text-3);
 }
 
+/* ---------- Sayfa boyu arka plan ----------
+ * Mağaza görsellerindeki kareli defter bütün sayfada sürer: içerik bölümlerinin arkasında
+ * çok hafif, ince ışıltılı noktalar (belgeye bağlı, sayfayla kayar) ve arkada çok yavaş
+ * kayan iki yumuşak mor ışık (ekrana sabit; yalnız transform, kaydırmada yeniden boyama yok).
+ * Noktalar hero gökyüzündeki ızgarayla aynı aralık ve hizada (22 px, sayfanın sol üstü):
+ * gökyüzü saydamlaşırken iki ızgara üst üste biner, çift ızgara oluşmaz. Yoğunluk sayfa
+ * boyunca hafifçe dalgalanır (sol ve sağda dönüşümlü). Hareket azaltılmışsa ışıklar durur.
+ */
+body::before,
+body::after {
+  content: '';
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  position: fixed;
+  inset: -12%;
+  background:
+    radial-gradient(34% 30% at 20% 30%, rgb(139 92 246 / 0.12), transparent 70%),
+    radial-gradient(30% 28% at 80% 72%, rgb(224 86 253 / 0.06), transparent 70%);
+}
+
+body::after {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgb(221 214 254 / 0.1) 0 1px, rgb(167 139 250 / 0.035) 1.7px, transparent 2.7px);
+  background-size: 22px 22px;
+  background-position: 0 0;
+  -webkit-mask-image:
+    radial-gradient(60% 520px at 14% 420px, #000, transparent),
+    radial-gradient(60% 520px at 86% 1220px, #000, transparent),
+    linear-gradient(rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.45));
+  mask-image:
+    radial-gradient(60% 520px at 14% 420px, #000, transparent),
+    radial-gradient(60% 520px at 86% 1220px, #000, transparent),
+    linear-gradient(rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.45));
+  -webkit-mask-size: 100% 1600px;
+  mask-size: 100% 1600px;
+  -webkit-mask-repeat: repeat-y;
+  mask-repeat: repeat-y;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body::before {
+    animation: bg-drift 38s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes bg-drift {
+  to {
+    transform: translate3d(7%, -6%, 0) scale(1.08);
+  }
+}
+
 /* ---------- Kareli defter: mağaza görsellerindeki nokta ızgarası ---------- */
 .dotgrid {
   position: absolute;
@@ -370,7 +426,8 @@ button {
   pointer-events: none;
   background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1.4px);
   background-size: 22px 22px;
-  background-position: center;
+  /* Sayfa boyu dokuyla aynı hizada (sol üst); gökyüzleri sayfanın sol üstünden başlar */
+  background-position: 0 0;
   -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
   mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
 }

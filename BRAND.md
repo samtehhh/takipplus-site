@@ -159,6 +159,8 @@ Uygulamadaki Material ikonlarla aynı çizgi karakterini taşır. Emoji ikon yer
 3. **Kareli defter:** 22 px aralıklı nokta ızgarası; telefonların arkasında, kenarlara doğru söner.
 4. **Ekrandan taşan kartlar:** gerçek ekranın üstünde, uygulamanın kendi bileşenlerinden kopyalanmış kartlar.
 5. **Artı işareti:** liste işaretleri, modül hapları ve SSS'te açılınca çarpıya dönen düğme.
+6. **Kareli defter:** mağaza görsellerindeki nokta ızgarası bütün sayfada sürer (22 px, sayfanın sol üstüne hizalı,
+   çok düşük kontrast); arkasında çok yavaş kayan iki yumuşak mor ışık. Bölümlere ayrı nokta deseni konmaz, çift ızgara olur.
 
 ## 8. Görsel içerik kuralları
 
