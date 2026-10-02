@@ -383,14 +383,15 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     padding-inline: calc(var(--pw) * 0.2);
   }
 
-  /* Mağaza görsellerindeki gibi: telefonun arkasında mor ışık havuzu ve kareli defter */
+  /* Telefonun arkası sakin (koyu çekirdek, noktalar görünmez), kenarında yumuşak mor ışık:
+     cihazın silueti zeminden ayrılır */
   .cv::before {
     content: '';
     position: absolute;
     inset: 2% -8% 14%;
     z-index: -2;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgb(139 92 246 / 0.42), rgb(224 86 253 / 0.1) 62%, transparent);
+    background: radial-gradient(closest-side, rgb(9 5 28 / 0.6) 0 36%, rgb(139 92 246 / 0.2) 60%, rgb(224 86 253 / 0.05) 80%, transparent);
   }
 
 
@@ -471,7 +472,7 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     box-shadow:
       0 0 0 1.5px color-mix(in srgb, var(--tone) 70%, transparent) inset,
       0 14px 30px rgb(5 2 25 / 0.55),
-      0 0 22px color-mix(in srgb, var(--tone) 35%, transparent);
+      0 0 18px color-mix(in srgb, var(--tone) 20%, transparent);
     font-size: max(9px, 3cqw);
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -639,21 +640,21 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
   .net--min {
     --c1: #2a1520;
     --edge: rgb(239 68 68 / 0.75);
-    --halo: rgb(239 68 68 / 0.35);
+    --halo: rgb(239 68 68 / 0.2);
     --tone: #f87171;
   }
 
   .net--last {
     --c1: #2a2012;
     --edge: rgb(245 158 11 / 0.75);
-    --halo: rgb(245 158 11 / 0.35);
+    --halo: rgb(245 158 11 / 0.2);
     --tone: #fbbf24;
   }
 
   .net--max {
     --c1: #102a24;
     --edge: rgb(45 212 191 / 0.75);
-    --halo: rgb(45 212 191 / 0.35);
+    --halo: rgb(45 212 191 / 0.2);
     --tone: #2dd4bf;
   }
 
@@ -764,7 +765,7 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     box-shadow:
       0 0 0 1.5px rgb(245 158 11 / 0.75) inset,
       0 14px 30px rgb(5 2 25 / 0.55),
-      0 0 22px rgb(245 158 11 / 0.35);
+      0 0 18px rgb(245 158 11 / 0.2);
   }
 
   .timer__ic {
@@ -931,7 +932,7 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     box-shadow:
       0 0 0 1.5px rgb(45 212 191 / 0.65) inset,
       0 26px 50px rgb(5 2 25 / 0.6),
-      0 0 30px rgb(45 212 191 / 0.3);
+      0 0 24px rgb(45 212 191 / 0.18);
   }
 
   .target__l {
@@ -1008,7 +1009,7 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     box-shadow:
       0 0 0 1.5px rgb(139 92 246 / 0.6) inset,
       0 22px 44px rgb(5 2 25 / 0.6),
-      0 0 30px rgb(139 92 246 / 0.3);
+      0 0 24px rgb(139 92 246 / 0.18);
   }
 
   .rank__in {
