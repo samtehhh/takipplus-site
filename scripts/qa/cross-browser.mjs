@@ -3,6 +3,8 @@
 //
 //   npm i -g playwright && npx playwright install firefox webkit
 //   PLAYWRIGHT=<playwright modülünün yolu> node scripts/qa/cross-browser.mjs <baseUrl> <ekran-klasörü>
+//   BROWSERS=webkit … yalnız seçilen tarayıcılar (WebKit'i canlı https'te çalıştır: yerel http'de
+//   CSP'deki upgrade-insecure-requests kaynakları https'e çevirir)
 //
 // Her tarayıcıda ve görünümde: yatay kaydırma, kesilen içerik, metin çakışması, menü
 // çakışması, kırık görsel, konsol/JS hataları (audit.mjs ile aynı kontroller). Ayrıca:
@@ -23,7 +25,7 @@ const browsers = [
   ['edge', () => chromium.launch({ channel: 'msedge' })],
   ['firefox', () => firefox.launch()],
   ['webkit', () => webkit.launch()],
-];
+].filter(([name]) => !process.env.BROWSERS || process.env.BROWSERS.split(',').includes(name));
 const views = [
   { id: '390', w: 390, h: 844, dpr: 2, mobile: true },
   { id: '768', w: 768, h: 1024, dpr: 2, mobile: true },
