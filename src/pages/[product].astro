@@ -52,7 +52,7 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 >
   <!-- 1. Hero: mağaza görseli 01'in canlı hâli -->
   <section class="hero" data-hero aria-labelledby="hero-title">
-    <div class="hero__sky atmo" aria-hidden="true"><span class="dotgrid"></span></div>
+    <div class="hero__sky" aria-hidden="true"><span class="dotgrid"></span></div>
     <div class="container hero__grid">
       <div class="hero__copy">
         <p class="hero__status">
@@ -196,8 +196,8 @@ const { product, content: c } = Astro.props as { product: Product; content: type
     inset: 0 0 -12rem;
     z-index: -1;
     background:
-      radial-gradient(70% 45% at 50% 62%, rgb(139 92 246 / 0.34), transparent 70%),
-      radial-gradient(40% 30% at 80% 40%, rgb(224 86 253 / 0.13), transparent 70%),
+      radial-gradient(70% 45% at 50% 62%, rgb(139 92 246 / 0.5), transparent 70%),
+      radial-gradient(40% 30% at 80% 40%, rgb(224 86 253 / 0.22), transparent 70%),
       var(--grad-sky);
     -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
     mask-image: linear-gradient(180deg, #000 72%, transparent);

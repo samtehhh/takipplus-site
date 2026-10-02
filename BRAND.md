@@ -161,10 +161,10 @@ Uygulamadaki Material ikonlarla aynı çizgi karakterini taşır. Emoji ikon yer
 5. **Artı işareti:** liste işaretleri, modül hapları ve SSS'te açılınca çarpıya dönen düğme.
 6. **Kareli defter:** mağaza görsellerindeki nokta ızgarası bütün sayfada sürer (22 px, sayfanın sol üstüne hizalı,
    çok düşük kontrast); arkasında çok yavaş kayan iki yumuşak mor ışık. Bölümlere ayrı nokta deseni konmaz, çift ızgara olur.
-7. **Derinlik:** üç katman. Arka plan (gökyüzü, ışıklar, noktalar), atmosfer (gecenin renginde düşük opaklıklı örtü,
-   kenar karartma, başlık arkasında koyulaşma; `.atmo` sınıfı ve sayfa boyu `main::before`), ön plan (başlık, CTA,
-   cihazlar, kartlar). Karartma yalnız arka plana uygulanır: cihazların arkasındaki mor ışık havuzu, taşan
-   kartların haleleri, cihaz gölgeleri ve HEDEF çizgisinin parıltısı ön plan tasarımının parçasıdır, kısılmaz.
+7. **Derinlik:** ilk açılış ekranları (hero gökyüzleri) canlı kalır. Aşağı bölümlerde arka plan geri çekilir:
+   sayfa boyu ışıklar ve nokta dokusu kısık, üstünde ekran kenarlarını ve üst/alt şeridi hafif koyultan atmosfer
+   (`main::before`). Ön plan kısılmaz: cihazların arkasındaki mor ışık havuzu, taşan kartların haleleri, cihaz
+   gölgeleri ve HEDEF çizgisinin parıltısı tasarımın parçasıdır.
 
 ## 8. Görsel içerik kuralları
 

@@ -363,25 +363,12 @@ button {
   background: var(--text-3);
 }
 
-/* ---------- Derinlik: üç katman ----------
- * 1 Arka plan: gökyüzü gradyanı, mor ışıklar, nokta dokusu, HEDEF çizgisi.
- * 2 Atmosfer: düşük opaklıklı koyu örtü, kenar karartma (vinyet), üst/alt geçiş.
- * 3 Ön plan: başlık, metin, CTA, cihazlar, kartlar.
- * Atmosfer fark edilecek bir "karartma" değil: kenarları ve başlık arkasını sakinleştirir,
- * ortada ve içeriğin çevresinde görsel önceliği ön plana bırakır. Renk paleti aynı;
- * örtü rengi gecenin kendisi (mor tonlu siyah).
+/* ---------- Derinlik: aşağı bölümlerde sakin arka plan ----------
+ * İlk açılış ekranları (hero gökyüzleri, iç sayfaların üst ışığı) canlı kalır. Aşağı
+ * bölümlerin arka planı geri çekilir: sayfa boyu ışıklar ve nokta dokusu kısık, üstlerinde
+ * ekran kenarlarını ve üst/alt şeridi hafifçe koyultan bir atmosfer katmanı. Ön plan
+ * (cihazlar, arkalarındaki mor ışık, kartlar, haleler) olduğu gibi kalır.
  */
-.atmo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(7 3 22 / 0.55) 0%, rgb(7 3 22 / 0.18) 32%, rgb(7 3 22 / 0) 58%),
-    radial-gradient(125% 90% at 50% 46%, rgb(7 3 22 / 0) 48%, rgb(7 3 22 / 0.5) 100%),
-    linear-gradient(rgb(7 3 22 / 0.2), rgb(7 3 22 / 0.2));
-}
-
 /* Sayfa boyu atmosfer: ekranın kenarları ve üst/alt şeridi hafif koyu (Katman 1'in üstünde,
    içeriğin altında). z sırası: ışıklar -3, noktalar -2, atmosfer -1. */
 main::before {
@@ -487,7 +474,7 @@ body::after {
   top: -28rem;
   left: 50%;
   translate: -62% 0;
-  background: radial-gradient(closest-side, rgb(139 92 246 / 0.2), rgb(139 92 246 / 0));
+  background: radial-gradient(closest-side, rgb(139 92 246 / 0.3), rgb(139 92 246 / 0));
 }
 
 .glow::after {
