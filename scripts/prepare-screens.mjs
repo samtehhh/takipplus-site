@@ -119,13 +119,21 @@ for (const f of readdirSync(videos).filter((x) => /^tur-.*\.mp4$/.test(x))) {
   report.push(`${name.padEnd(18)} ${info.width}×${info.height} ${Math.round(info.size / 1024)} KB (${f})`);
 }
 
-// Mağaza görselleri (iPhone 1290×2796, iPad 2064×2752): olduğu gibi, yükleme sırasıyla
+// Mağaza görselleri (iPhone 1290×2796, iPad 2064×2752): olduğu gibi, yükleme sırasıyla.
+// Bazı sıralarda iki seçenek var (ör. 05 ve görselli 05b; mağazaya yalnız biri yüklenir):
+// storeVariant hangisinin sitede gösterileceğini söyler. 2 Ekim 2026: görselli 05b.
+const storeVariant = { '05': '05b' };
 for (const [dir, prefix] of [
   [storePhone, 's-iphone'],
   [storeTablet, 's-ipad'],
 ]) {
-  const files = readdirSync(dir)
-    .filter((f) => /^\d\d-.*\.png$/.test(f))
+  const all = readdirSync(dir).filter((f) => /^\d\d[a-z]?-.*\.png$/.test(f));
+  const files = all
+    .filter((f) => /^\d\d-/.test(f))
+    .map((f) => {
+      const alt = storeVariant[f.slice(0, 2)] && all.find((x) => x.startsWith(`${storeVariant[f.slice(0, 2)]}-`));
+      return alt || f;
+    })
     .sort();
   if (files.length !== 10) throw new Error(`${dir}: 10 görsel bekleniyordu, ${files.length} var`);
   let i = 1;

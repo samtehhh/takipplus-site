@@ -52,9 +52,22 @@ if (!quick) {
   for (const w of [390, 1280]) configs.push({ id: `${w}px metin %200`, w, h: w < 1000 ? 844 : 900, dpr: 2, mobile: w < 1000, kind: 'büyük metin', fontScale: 2 });
 }
 
-const browser = await puppeteer.launch({ executablePath: exe, headless: true, args: ['--hide-scrollbars'] });
+// Paralel sekmelerin çoğu arka planda kalır; tarayıcı orada görünürlük gözlemcilerini ve
+// zamanlayıcıları kısar (yapışkan çubuk gecikmeli gizlenir, sahte "çakışma" çıkar)
+const browser = await puppeteer.launch({
+  executablePath: exe,
+  headless: true,
+  args: ['--hide-scrollbars', '--disable-renderer-backgrounding', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows'],
+});
 const results = [];
 const jobs = [];
+// Aynı anda yalnız bir sekme öne alınıp ölçülür
+let lock = Promise.resolve();
+const exclusive = (fn) => {
+  const run = lock.then(fn, fn);
+  lock = run.catch(() => {});
+  return run;
+};
 for (const path of PAGES) for (const c of configs) jobs.push({ path, c });
 
 async function run({ path, c }) {
@@ -94,12 +107,17 @@ async function run({ path, c }) {
       occl.push(...(await page.evaluate(`(${occlusionAudit.toString()})()`)));
     }
     await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
-    // başa dönünce görünürlük gözlemcileri (yapışkan çubuk vb.) tepki versin
-    await new Promise((r) => setTimeout(r, 500));
     await page.evaluate(async () => {
       await Promise.race([Promise.all([...document.images].filter((i) => !i.complete).map((i) => new Promise((r) => { i.onload = i.onerror = r; }))), new Promise((r) => setTimeout(r, 4000))]);
     });
-    const issues = await page.evaluate(`(${inPageAudit.toString()})({})`);
+    // Arka plandaki sekme çizilmez; görünürlük gözlemcileri (yapışkan çubuk vb.) de ancak bir
+    // çizim karesinden sonra tepki verir. Ölçüm sırayla: sekme öne alınır, iki kare beklenir.
+    const issues = await exclusive(async () => {
+      await page.bringToFront();
+      await page.evaluate(() => Promise.race([new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))), new Promise((r) => setTimeout(r, 2000))]));
+      await new Promise((r) => setTimeout(r, 300));
+      return page.evaluate(`(${inPageAudit.toString()})({})`);
+    });
     // 404 sayfası kendi belgesi için 404 döner; bu beklenen bir "kaynak yüklenemedi" hatasıdır
     for (const e of errors) if (!(path === '/404' && /status of 404/.test(e))) issues.push({ check: 'konsol hatası', sev: 'HIGH', el: '', detail: e });
     results.push({ path, config: c.id, kind: c.kind, issues: [...issues, ...occl] });

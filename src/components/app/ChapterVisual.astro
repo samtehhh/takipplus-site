@@ -6,8 +6,10 @@
  *   x = (sol − 70) / 290, y = (üst − 300) / 660, genişlik = w / 290 (cqw)
  * Kart içerikleri uygulamanın gerçek metinleri ve örnek veriyle.
  */
+import { Picture } from 'astro:assets';
 import Device from './Device.astro';
 import AppIcon from './AppIcon.astro';
+import qGeo from '../../assets/questions/q-geo.png';
 import type { ScreenName } from '../../data/screens';
 import type { ChapterVisual } from '../../data/product-content/yks';
 
@@ -241,50 +243,60 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
 
     {
       kind === 'yapamadiklarim' && (
-        <div class="co co-panel yap" aria-hidden="true" style="--x:-17.2%;--y:21.3%;--w:134.5cqw;--d:150ms">
-          <div class="co-row co-row--between">
-            <span class="co-row">
-              <span class="yap__ic">?</span>
-              <span class="co-grow">
-                <span class="co-title">İşçi Emek Problemleri</span>
-                <span class="co-sub">TYT Matematik · 30.09</span>
-              </span>
+        <Fragment>
+          {/* Mağaza görseli 05b'nin sahnesi: üstte sorunun fotoğrafı ve hata sebebi, altta listedeki
+              "Açıortay ve Kenarortay" satırı büyütülmüş, ekrandaki yerinin tam üstünde (satır 720×1600
+              ekranda x 45–690, y 1185–1343 → merkez %51,0 / %78,3). Fotoğraf uygulamaya eklenmiş asıl soru. */}
+          <div class="co co-panel yapf" aria-hidden="true" style="--x:37%;--y:69.7%;--ty:-100%;--w:76cqw;--d:150ms">
+            <div class="co-row yapf__head">
+              <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+              <span class="yapf__k">SORU FOTOĞRAFI</span>
+              <span class="yapf__ders">TYT Geometri</span>
+            </div>
+            <div class="yapf__photo">
+              <Picture src={qGeo} alt="" widths={[280, 420]} sizes="(min-width: 80rem) 250px, (min-width: 48rem) 22vw, 44vw" formats={['avif', 'webp']} fallbackFormat="webp" quality={85} loading="lazy" decoding="async" />
+            </div>
+            <div class="co-row yapf__why">
+              <span class="yap-tag">Süre Yetmedi</span>
+              <span>Strateji ve Psikoloji</span>
+            </div>
+            <p class="yapf__tip"><b>Koç önerisi:</b> Bir soruyla 2 dakikadan fazla inatlaşma, işaret koy ve geç.</p>
+            <div class="yapf__rep">
+              <div class="co-row yapf__rephead">
+                <span class="yapf__rk">Tekrar İlerlemesi</span>
+                <span class="yapf__plan">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+                  HAFTASONU
+                </span>
+                <span class="yapf__count">0 / 4</span>
+              </div>
+              <div class="yapf__steps">
+                {['3', '4', '10', '11'].map((d, i) => (
+                  <Fragment>
+                    {i > 0 && <i class="yapf__line" />}
+                    <span class:list={['yapf__day', { 'is-next': i === 0 }]}>
+                      <b>{d}</b>Eki
+                    </span>
+                  </Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div class="co yapr" aria-hidden="true" style="--x:51%;--y:78.3%;--tx:-50%;--ty:-50%;--w:124cqw;--d:300ms">
+            <span class="yapr__thumb">
+              <Picture src={qGeo} alt="" widths={[120, 240]} sizes="80px" formats={['avif', 'webp']} fallbackFormat="webp" quality={85} loading="lazy" decoding="async" />
             </span>
-            <span class="yap__chips">
-              <span class="co-chip" style="--tone:#a78bfa">Konu Eksiği</span>
-              <span class="co-chip" style="--tone:#fbbf24">Tekrarla</span>
-            </span>
-          </div>
-          <div class="paper">
-            <p>
-              <b>7.</b> Bir havuzu A musluğu tek başına 6 saatte, B musluğu tek başına 9 saatte dolduruyor. İki musluk birlikte
-              açılırsa havuz kaç saatte dolar?
-            </p>
-            <p class="paper__opts">
-              <span>A) 3</span>
-              <span>B) 3,6</span>
-              <span>C) 4</span>
-              <span class="paper__mark">D) 4,5</span>
-              <span>E) 5</span>
-            </p>
-          </div>
-          <p class="yap__note">
-            <svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>
-            Havuz problemi, oranı ters kurdum.
-          </p>
-          <div class="co-row co-row--between">
-            <span class="yap__k">Tekrar İlerlemesi <b>0/4</b></span>
-            <span class="co-chip">Ebbinghaus 1-3-7-30</span>
-          </div>
-          <div class="yap__steps">
-            {['Bugün', '3. gün', '7. gün', '30. gün'].map((d, i) => (
-              <span class:list={['yap__step', { 'is-now': i === 0 }]}>
-                <i>{i + 1}</i>
-                {d}
+            <span class="yapr__body">
+              <span class="yapr__t">Açıortay ve Kenarortay</span>
+              <span class="co-row yapr__meta">
+                <span class="yap-tag">Süre Yetmedi</span>
+                <span>28.09</span>
               </span>
-            ))}
+              <span class="yapr__note">Açıortay teoremini yanlış kenarlara uyguladım.</span>
+            </span>
+            <span class="yapr__ring">0/4</span>
           </div>
-        </div>
+        </Fragment>
       )
     }
 
@@ -1092,146 +1104,305 @@ const sizes = pair ? '(min-width: 80rem) 270px, (min-width: 64rem) 240px, (min-w
     font-weight: 800;
   }
 
-  /* ---------- Yapamadıklarım ---------- */
-  .yap {
-    gap: 3.1cqw;
+  /* ---------- Yapamadıklarım (mağaza görseli 05b) ----------
+     Ölçüler mağaza görselindeki kartlardan: soru kartında 1 px = 0,355cqw, satırda 1 dp = 0,3607cqw */
+  .yapf {
+    gap: 2.6cqw;
+    padding: 3.55cqw;
+    border-radius: 7.8cqw;
     box-shadow:
       0 0 0 1px rgb(255 255 255 / 0.13) inset,
       0 30px 60px rgb(5 2 25 / 0.6),
-      0 0 44px rgb(139 92 246 / 0.28);
+      0 0 44px rgb(139 92 246 / 0.25);
   }
 
-  .yap__ic {
-    display: grid;
-    place-items: center;
+  .yapf__head {
+    gap: 1.8cqw;
+    white-space: nowrap;
+  }
+
+  .yapf__head svg {
     flex: none;
-    width: 9cqw;
-    height: 9cqw;
-    border-radius: 50%;
-    background: rgb(139 92 246 / 0.22);
-    color: #c4b5fd;
-    font-size: max(10px, 4.8cqw);
-    font-weight: 800;
+    width: 4.6cqw;
+    height: 4.6cqw;
+    fill: none;
+    stroke: #2dd4bf;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .yap__chips {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 1.2cqw;
-  }
-
-  .paper {
-    display: grid;
-    gap: 2cqw;
-    padding: 3.4cqw 3.8cqw;
-    border-radius: 3.1cqw;
-    background: #f8f7f2;
-    color: #1e1b2e;
-    font-family: var(--font-body);
-    font-size: max(9px, 3.4cqw);
-    line-height: 1.45;
-    rotate: -1.2deg;
-    box-shadow: 0 10px 24px rgb(5 2 25 / 0.45);
-  }
-
-  .paper__opts {
-    display: flex;
-    justify-content: space-between;
-    gap: 1cqw;
-    font-weight: 600;
-  }
-
-  .paper__mark {
-    position: relative;
-  }
-
-  .paper__mark::after {
-    content: '';
-    position: absolute;
-    inset: -1.4cqw -2cqw;
-    border: 0.55cqw solid #dc2626;
-    border-radius: 50%;
-    rotate: -6deg;
-  }
-
-  .yap__note {
-    display: flex;
-    align-items: center;
-    gap: 2cqw;
-    font-family: var(--font-body);
-    font-size: max(9px, 3.4cqw);
-    font-style: italic;
-    color: rgb(248 250 252 / 0.75);
-  }
-
-  .yap__note svg {
-    flex: none;
-    width: 4.5cqw;
-    height: 4.5cqw;
-    color: #a78bfa;
-  }
-
-  .yap__k {
-    font-size: max(9px, 3.8cqw);
+  .yapf__k {
+    font-size: max(8px, 3.55cqw);
     font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #2dd4bf;
   }
 
-  .yap__k b {
-    color: rgb(248 250 252 / 0.6);
-  }
-
-  .yap__steps {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-  }
-
-  .yap__steps::before {
-    content: '';
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    top: 4.1cqw;
-    height: 0.5cqw;
-    background: rgb(255 255 255 / 0.12);
-  }
-
-  .yap__step {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1cqw;
-    font-size: max(8px, 2.8cqw);
-    font-weight: 600;
+  .yapf__ders {
+    margin-left: auto;
+    font-family: var(--font-body);
+    font-size: max(7.5px, 3.2cqw);
     color: rgb(248 250 252 / 0.55);
   }
 
-  .yap__step i {
-    display: grid;
-    place-items: center;
-    width: 8.3cqw;
-    height: 8.3cqw;
-    border-radius: 50%;
-    background: #1f2640;
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset;
-    font-style: normal;
-    font-size: max(9px, 3.6cqw);
-    font-weight: 800;
-    color: rgb(248 250 252 / 0.75);
+  .yapf__photo {
+    position: relative;
+    /* kartın üstü filtre satırının (Tümü / TYT / AYT) altında kalsın */
+    height: 43cqw;
+    overflow: hidden;
+    border-radius: 4.3cqw;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08);
   }
 
-  .yap__step.is-now {
+  .yapf__photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* fotoğraf kartın içinde kesilir; alt kenar beyaza erir */
+  .yapf__photo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 5.7cqw;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0), #fff 85%);
+  }
+
+  .yap-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 1.05cqw 2.85cqw;
+    border-radius: 2.1cqw;
+    background: rgb(45 212 191 / 0.17);
+    color: #5fdccf;
+    font-family: var(--font-body);
+    font-size: max(8px, 3.55cqw);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .yapf__why {
+    gap: 2.1cqw;
+    font-family: var(--font-body);
+    font-size: max(7.5px, 3.4cqw);
+    color: rgb(248 250 252 / 0.6);
+    white-space: nowrap;
+  }
+
+  .yapf__tip {
+    font-family: var(--font-body);
+    font-size: max(8px, 3.7cqw);
+    line-height: 1.42;
+    color: rgb(248 250 252 / 0.8);
+  }
+
+  .yapf__tip b {
+    font-weight: 700;
     color: #fbbf24;
   }
 
-  .yap__step.is-now i {
-    background: rgb(245 158 11 / 0.22);
+  .yapf__rep {
+    display: grid;
+    gap: 2.5cqw;
+    padding-top: 2.85cqw;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .yapf__rephead {
+    gap: 1.4cqw;
+    white-space: nowrap;
+  }
+
+  .yapf__rk {
+    font-size: max(8.5px, 3.9cqw);
+    font-weight: 700;
+  }
+
+  .yapf__plan {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7cqw;
+    padding: 0.7cqw 1.8cqw;
+    border-radius: 99px;
+    background: rgb(139 92 246 / 0.16);
+    box-shadow: 0 0 0 1px rgb(139 92 246 / 0.55) inset;
+    font-size: max(6.5px, 2.5cqw);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #a78bfa;
+  }
+
+  .yapf__plan svg {
+    width: 2.85cqw;
+    height: 2.85cqw;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .yapf__count {
+    margin-left: auto;
+    padding: 0.7cqw 2.1cqw;
+    border-radius: 99px;
+    background: rgb(255 255 255 / 0.08);
+    font-size: max(7.5px, 3.2cqw);
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .yapf__steps {
+    display: flex;
+    align-items: center;
+    padding-inline: 0.7cqw;
+  }
+
+  .yapf__line {
+    flex: 1;
+    height: 0.71cqw;
+    margin-inline: 1.4cqw;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .yapf__day {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 8.5cqw;
+    height: 8.5cqw;
+    border-radius: 50%;
+    background: #222839;
+    box-shadow: 0 0 0 0.53cqw rgb(255 255 255 / 0.14) inset;
+    font-family: var(--font-body);
+    font-size: max(5px, 1.95cqw);
+    font-weight: 600;
+    line-height: 1;
+    color: #6b7488;
+  }
+
+  .yapf__day b {
+    font-family: var(--font-display);
+    font-size: max(7px, 3cqw);
+    font-weight: 700;
+    color: #8a94a8;
+  }
+
+  .yapf__day.is-next {
+    width: 11cqw;
+    height: 11cqw;
+    background: #3a3f55;
     box-shadow:
-      0 0 0 1.5px #f59e0b inset,
-      0 0 16px rgb(245 158 11 / 0.55);
+      0 0 0 0.71cqw rgb(226 232 240 / 0.75) inset,
+      0 0 12px rgb(226 232 240 / 0.18);
+    font-size: max(5.5px, 2.3cqw);
+    color: #e2e8f0;
+  }
+
+  .yapf__day.is-next b {
+    font-size: max(8.5px, 4.1cqw);
+    font-weight: 800;
     color: #fff;
+  }
+
+  /* Listedeki satırın büyütülmüş kopyası (uygulamadaki dp ölçüleriyle) */
+  .yapr {
+    display: grid;
+    grid-template-columns: 20.1cqw minmax(0, 1fr) 14.1cqw;
+    align-items: center;
+    column-gap: 4.4cqw;
+    min-height: 30.5cqw;
+    padding: 2.4cqw 4.1cqw 2.4cqw 4.8cqw;
+    border-radius: 5.8cqw;
+    background: linear-gradient(180deg, #1b2438 0%, #182236 100%);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.1) inset,
+      0 14px 34px rgb(5 2 25 / 0.55),
+      0 0 30px rgb(45 212 191 / 0.16);
+  }
+
+  .yapr__thumb {
+    position: relative;
+    width: 20.1cqw;
+    height: 20.1cqw;
+    overflow: hidden;
+    border-radius: 4.3cqw;
+    background: #fff;
+  }
+
+  /* ince turkuaz kenar resmin üstünde */
+  .yapr__thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0.54cqw rgb(45 212 191 / 0.35) inset;
+  }
+
+  .yapr__thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .yapr__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1cqw;
+    min-width: 0;
+  }
+
+  .yapr__t {
+    font-size: max(10px, 5.8cqw);
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .yapr__meta {
+    gap: 2.5cqw;
+    font-family: var(--font-body);
+    font-size: max(8px, 4.7cqw);
+    color: #a9bbd0;
+  }
+
+  .yapr__meta .yap-tag {
+    padding-block: 0.8cqw;
+    border-radius: 2.2cqw;
+    font-size: max(8px, 4.5cqw);
+  }
+
+  .yapr__note {
+    font-family: var(--font-body);
+    font-size: max(8px, 4.7cqw);
+    font-style: italic;
+    line-height: 1.4;
+    color: #7c91a0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .yapr__ring {
+    display: grid;
+    place-items: center;
+    width: 14.1cqw;
+    height: 14.1cqw;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1.1cqw #2a3143 inset;
+    font-size: max(8px, 4.5cqw);
+    font-weight: 700;
+    color: #a1aec3;
   }
 
   /* ---------- Odak ---------- */

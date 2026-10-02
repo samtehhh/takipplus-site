@@ -154,7 +154,7 @@ export const chapters: {
     title: 'Her yanlışın bir dersi var.',
     text: 'Yapamadığın sorunun fotoğrafını çek, hata sebebini seç. Tekrar günü geldiğinde soru Günün Odağı’nda karşına çıkar.',
     label:
-      'Yapamadıklarım: TYT Matematik, İşçi Emek Problemleri sorusu. Hata sebebi Konu Eksiği, not: oranı ters kurdum. Tekrar planı Ebbinghaus: bugün, 3., 7. ve 30. gün.',
+      'Yapamadıklarım: fotoğraflı soru listesi. TYT Geometri, Açıortay ve Kenarortay sorusunun fotoğrafı; hata sebebi Süre Yetmedi (Strateji ve Psikoloji), koç önerisi: bir soruyla 2 dakikadan fazla inatlaşma, işaret koy ve geç. Tekrar planı hafta sonu: 3, 4, 10 ve 11 Ekim.',
   },
   {
     id: 'calisma-sayaci',
