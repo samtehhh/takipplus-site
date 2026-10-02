@@ -39,7 +39,6 @@
 }
 
 .th__title {
-  text-shadow: 0 2px 28px rgb(7 3 22 / 0.45);
   font-size: clamp(2.5rem, 1.55rem + 4.2vw, 4.75rem);
   font-weight: 800;
   line-height: 1;
@@ -129,7 +128,7 @@
   padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(80% 120% at 100% 0%, rgb(139 92 246 / 0.15), transparent 60%),
+    radial-gradient(80% 120% at 100% 0%, rgb(139 92 246 / 0.22), transparent 60%),
     var(--grad-card);
   box-shadow:
     0 0 0 1px var(--line) inset,

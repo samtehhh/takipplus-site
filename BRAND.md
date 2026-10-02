@@ -163,8 +163,8 @@ Uygulamadaki Material ikonlarla aynı çizgi karakterini taşır. Emoji ikon yer
    çok düşük kontrast); arkasında çok yavaş kayan iki yumuşak mor ışık. Bölümlere ayrı nokta deseni konmaz, çift ızgara olur.
 7. **Derinlik:** üç katman. Arka plan (gökyüzü, ışıklar, noktalar), atmosfer (gecenin renginde düşük opaklıklı örtü,
    kenar karartma, başlık arkasında koyulaşma; `.atmo` sınıfı ve sayfa boyu `main::before`), ön plan (başlık, CTA,
-   cihazlar, kartlar). Cihazların arkası sakin (koyu çekirdek), kenarında yumuşak mor ışık. Taşan kartların halesi
-   hafif; neon parlaması yok.
+   cihazlar, kartlar). Karartma yalnız arka plana uygulanır: cihazların arkasındaki mor ışık havuzu, taşan
+   kartların haleleri, cihaz gölgeleri ve HEDEF çizgisinin parıltısı ön plan tasarımının parçasıdır, kısılmaz.
 
 ## 8. Görsel içerik kuralları
 
