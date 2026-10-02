@@ -263,7 +263,9 @@ const faq = [
 <style>
   /* ---------- Hesaplayıcı ---------- */
   .nc {
+    container-type: inline-size;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-6);
     width: min(100%, 56rem);
     margin-inline: auto;
@@ -276,6 +278,7 @@ const faq = [
 
   .nc__block {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
   }
 
@@ -483,6 +486,28 @@ const faq = [
     transform: scaleX(var(--p, 0));
     transform-origin: left;
     transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  /* Hesaplayıcı ancak ~13 em genişlikte yan yana sığar. Yazı büyütülünce (em büyür) ya da
+     çok dar ekranda: puan türü 2×2, ders kartları tek sütun, toplam çubuğu alt alta */
+  @container (max-width: 13em) {
+    .nc__area {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nc__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nc__total {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: start;
+    }
+
+    .nc__track {
+      justify-self: stretch;
+    }
   }
 
   .nc__foot {

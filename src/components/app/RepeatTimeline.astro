@@ -41,6 +41,7 @@ const steps = [
 
 <style>
   .rt {
+    container-type: inline-size;
     display: grid;
     gap: var(--space-5);
   }
@@ -134,6 +135,52 @@ const steps = [
 
   .rt__d:empty {
     display: none;
+  }
+
+  /* Beş sütun ancak etiketler sığarsa (~17,5 em): yazı büyütülünce ya da çok dar ekranda
+     çizelge dikey akar; hat düğümlerin solundan aşağı iner */
+  @container (max-width: 17.4em) {
+    .rt__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+
+    .rt__list::before,
+    .rt__list::after {
+      left: 16.5px;
+      right: auto;
+      top: 18px;
+      bottom: 18px;
+      width: 3px;
+      height: auto;
+    }
+
+    .rt__list::after {
+      background: linear-gradient(180deg, #8b5cf6, #a855f7 60%, #e056fd);
+      transform-origin: top;
+    }
+
+    .rt__step {
+      grid-template-columns: auto minmax(0, 1fr);
+      justify-items: start;
+      align-items: center;
+      column-gap: 0.75rem;
+      row-gap: 0;
+      text-align: left;
+    }
+
+    .rt__dot {
+      grid-row: span 2;
+      margin-bottom: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @container (max-width: 17.4em) {
+      :global(.motion) .rt[data-animate]:not(.is-in) .rt__list::after {
+        transform: scaleY(0);
+      }
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {

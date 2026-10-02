@@ -133,6 +133,7 @@ const { id, title, lead, tabs } = Astro.props;
 
   .tour__controls {
     grid-area: controls;
+    container-type: inline-size;
     display: grid;
     gap: var(--space-5);
     align-content: start;
@@ -160,7 +161,8 @@ const { id, title, lead, tabs } = Astro.props;
     box-shadow: 0 0 0 1px rgb(255 255 255 / 0.09) inset;
     color: var(--text-2);
     font-family: var(--font-display);
-    font-size: 0.875rem;
+    /* cqw: sekme alanının genişliği; yalnız yazı çok büyütülünce devreye girer (varsayılan 14 px) */
+    font-size: min(0.875rem, 6.5cqw);
     font-weight: 600;
     transition:
       color var(--dur-2) var(--ease-out),
@@ -182,7 +184,16 @@ const { id, title, lead, tabs } = Astro.props;
   }
 
   .tour__name {
-    white-space: nowrap;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  /* Üç sütun ancak sekme adları (en uzunu ~5 em) sığarsa: yazı büyütülünce ya da çok dar
+     ekranda iki sütun. em, yazı boyutuyla büyüdüğü için eşik de onunla büyür. */
+  @container (max-width: 16em) {
+    .tour__tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .tour__bar {

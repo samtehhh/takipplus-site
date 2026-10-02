@@ -210,11 +210,14 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 
   .hero__grid {
     display: grid;
+    /* Tek sütun ekran genişliğini aşmasın (uzun kelime / büyük yazı sütunu genişletmesin) */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-6);
   }
 
   .hero__copy {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
     gap: var(--space-4);
     text-align: center;

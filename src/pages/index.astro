@@ -217,18 +217,21 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
 
   .hh__grid {
     display: grid;
+    /* Tek sütun ekran genişliğini aşmasın (uzun kelime / büyük yazı sütunu genişletmesin) */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-7);
   }
 
   .hh__copy {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
     gap: var(--space-4);
     text-align: center;
   }
 
   .hh__title {
-    font-size: clamp(2.75rem, 1.6rem + 5.6vw, 5.75rem);
+    font-size: min(clamp(2.75rem, 1.6rem + 5.6vw, 5.75rem), 14vw);
     font-weight: 800;
     line-height: 0.98;
     letter-spacing: -0.04em;
@@ -365,7 +368,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
 
   @media (min-width: 48rem) {
     .hh__visual :global(.hh__duo) {
-      width: 520px;
+      width: min(100%, 520px);
     }
   }
 

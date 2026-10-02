@@ -217,7 +217,9 @@ const accentStyle = accent
     padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
   }
 
-  @media (min-width: 48rem) {
+  /* Geniş ekranda gerek yok; kısa ekranda (yatay telefon, yüksek yakınlaştırma) üst menüyle
+     birlikte ekranın üçte birini örterdi */
+  @media (min-width: 48rem), (max-height: 28rem) {
     .sticky-cta {
       display: none !important;
     }

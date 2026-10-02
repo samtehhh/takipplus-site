@@ -64,8 +64,10 @@ Diğer komutlar:
 |---|---|
 | `npm run test:live` | Canlı site kabul testleri (`scripts/smoke.mjs`): yönlendirmeler, 404, başlıklar, sitemap, `.well-known` |
 | `npm run validate:html` | `dist/` HTML doğrulaması (html-validate) |
-| `npm run qa:visual -- capture http://localhost:4322 .qa/once` | Tüm sayfaların 7 genişlikte tam sayfa görüntüsü + konsol/CSP ihlali raporu |
+| `npm run qa:visual -- capture http://localhost:4322 .qa/once` | Tüm sayfaların 9 genişlikte (320–1920) ekran ekran görüntüsü + konsol/CSP ihlali raporu; sayaçlar ve videolar gizlenir |
 | `npm run qa:visual -- compare .qa/once .qa/sonra` | İki çekimi piksel piksel karşılaştırır; tasarımın değişmediğini kanıtlamak için |
+| `npm run qa:audit` | Duyarlılık / yakınlaştırma / taşma denetimi: 42 genişlik (kırılım ±1 dahil), %50–200 tarayıcı yakınlaştırması, yatay ekran, yazı boyutu %200 (aşağıda) |
+| `npm run qa:xb` | Aynı denetim + temel etkileşimler Chrome, Edge, Firefox ve WebKit'te (Playwright gerekir; aşağıda) |
 | `npm run qa:shots` / `qa:behavior` | Yatay taşma, dokunma hedefi, menü/form davranışı (aşağıda) |
 | `npm run fonts` | Font alt kümelerini yeniden üretir (Python: `pip install fonttools brotli`) |
 
@@ -554,6 +556,25 @@ altında, `npm run fonts` ile üretilir.
 `npm run serve` açıkken: `qa:shots` her sayfayı 320–1920 px'te çeker, yatay taşma, 44 px altı dokunma hedefi ve H1
 sayısını raporlar (`--landscape` ile yatay mod). `qa:behavior` JS kapalı görünürlük, mobil menü, sabit CTA ve form
 doğrulamasını test eder. `qa:visual` yukarıda.
+
+`qa:audit` (`scripts/qa/audit.mjs`, sayfa içi kontroller `scripts/qa/lib/audit-dom.mjs`) her sayfayı 280–2560 px
+arası 42 genişlikte, 1366×768 ve 1920×1080 pencerede %50–200 yakınlaştırmada (CSS görünüm alanı = pencere ÷
+yakınlaştırma), yatay telefon/tablette ve tarayıcı yazı boyutu %200'de açar. Raporlar: yatay kaydırma ve sebep
+olan öğe, ekran kenarında kesilen içerik, üst üste binen metin, kutusundan taşan başlık/buton, menü çakışması,
+sabit öğelerin ekran payı, örtülen tıklanabilir alan, kırık/oranı bozuk görsel, küçük dokunma hedefi, konsol
+hatası. `--quick` 6 genişlik, `--pages=/,/yks` sayfa seçer, `--selftest` aracın hata yakalayabildiğini kanıtlar.
+Ctrl+yakınlaştırma ile yazı büyütme farklıdır: yakınlaştırma vw'yi de küçültür, yazı büyütme yalnız rem'i
+büyütür. Bu yüzden büyük başlıklar `min(clamp(…), Nvw)` ile sınırlı ve tek sütunlu ızgaralar
+`minmax(0, 1fr)`: aksi hâlde tek uzun kelime bütün sütunu ekrandan taşırır.
+
+`qa:xb` (`scripts/qa/cross-browser.mjs`) Playwright ile çalışır ama projeye bağımlılık eklemez:
+`npm i -g playwright && npx playwright install firefox webkit`, sonra `PLAYWRIGHT=<playwright modülü yolu>`.
+WebKit, CSP'deki `upgrade-insecure-requests` yüzünden http yerel sunucuda kaynakları https'e çevirir; WebKit'i
+canlı sitede (`https://takipplus.com.tr`) çalıştır.
+
+`scripts/qa/pinch.mjs` iki parmakla yakınlaştırmayı gerçek Android telefonda (USB hata ayıklama,
+`adb forward tcp:9333 localabstract:chrome_devtools_remote`) test eder. Masaüstü öykünmesinde sentetik pinch hiç
+uygulanmadığı için orada test anlamsızdır; betik önce sade bir kontrol sayfasında kendini sınar.
 
 ### Site sahibinden gelmesi gerekenler (içerik)
 

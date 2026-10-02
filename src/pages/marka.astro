@@ -208,7 +208,7 @@ const boilerplate =
         }
       </ul>
 
-      <div class="kit-table-wrap">
+      <div class="kit-table-wrap" role="region" aria-label="Hangi boyutta hangi sürüm? tablosu" tabindex="0">
         <table class="kit-table">
           <caption>Hangi boyutta hangi sürüm?</caption>
           <thead>
@@ -311,7 +311,7 @@ const boilerplate =
         ))
       }
 
-      <div class="kit-table-wrap">
+      <div class="kit-table-wrap" role="region" aria-label="Kontrast (WCAG) tablosu" tabindex="0">
         <table class="kit-table">
           <caption>Kontrast (WCAG)</caption>
           <thead>
@@ -581,6 +581,7 @@ const boilerplate =
 
   .fonts {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
     list-style: none;
   }
@@ -595,7 +596,8 @@ const boilerplate =
   }
 
   .font-card__sample {
-    font-size: 3rem;
+    /* yazı büyütülünce örnek ("86,25") karta sığsın; varsayılan 48 px */
+    font-size: min(3rem, 15vw);
     line-height: 1.1;
     margin-bottom: var(--space-3);
   }

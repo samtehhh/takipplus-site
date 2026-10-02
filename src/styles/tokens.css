@@ -90,10 +90,12 @@
   --text-base: 1rem; /* 16: gövde metni asla bunun altına inmez */
   --text-md: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
   --text-lg: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-  --text-xl: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
-  --text-2xl: clamp(2rem, 1.55rem + 2.1vw, 3.375rem);
-  --text-3xl: clamp(2.5rem, 1.8rem + 3.4vw, 4.75rem);
-  --text-4xl: clamp(2.75rem, 1.85rem + 4.6vw, 6rem);
+  /* Büyük başlıklar ekran genişliğiyle de sınırlı: tarayıcının yazı boyutu %200'e
+     çıkarılsa da tek kelime ekrandan taşmaz (varsayılan boyutta sınır devreye girmez) */
+  --text-xl: min(clamp(1.5rem, 1.3rem + 1vw, 2.125rem), 8vw);
+  --text-2xl: min(clamp(2rem, 1.55rem + 2.1vw, 3.375rem), 10vw);
+  --text-3xl: min(clamp(2.5rem, 1.8rem + 3.4vw, 4.75rem), 12.5vw);
+  --text-4xl: min(clamp(2.75rem, 1.85rem + 4.6vw, 6rem), 14vw);
 
   --leading-tight: 1;
   --leading-snug: 1.15;

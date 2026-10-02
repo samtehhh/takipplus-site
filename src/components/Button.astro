@@ -51,8 +51,11 @@ const Tag = href ? 'a' : 'button';
     font-weight: 600;
     letter-spacing: -0.005em;
     line-height: 1.1;
+    text-align: center;
     text-decoration: none;
-    white-space: nowrap;
+    /* Etiket normalde tek satır; yalnız sığmadığında (dar ekran, büyük yazı) bölünür */
+    max-width: 100%;
+    text-wrap: balance;
     transition:
       transform var(--dur-1) var(--ease-out),
       background-color var(--dur-2) var(--ease-out),

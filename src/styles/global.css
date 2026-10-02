@@ -35,6 +35,8 @@ body {
   font-family: var(--font-display);
   font-size: var(--text-base);
   line-height: var(--leading-body);
+  /* Sığmayan tek kelime (büyük yazı boyutu, uzun e-posta) satır sonunda bölünür */
+  overflow-wrap: break-word;
   font-feature-settings: 'cv11', 'ss01';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -152,6 +154,13 @@ h2 {
 p {
   margin: 0;
   text-wrap: pretty;
+}
+
+/* Cihaz görselleri ve üstlerindeki kartlar ölçekli (cqw) çizimdir; içlerindeki kısa
+   etiketler kelime ortasından bölünmez */
+.stage,
+.device {
+  overflow-wrap: normal;
 }
 
 ul,

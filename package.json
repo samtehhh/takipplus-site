@@ -14,7 +14,9 @@
     "serve": "node scripts/serve.mjs 4322",
     "test:live": "node scripts/smoke.mjs",
     "validate:html": "html-validate \"dist/**/*.html\"",
-    "qa:visual": "node scripts/qa/visual.mjs"
+    "qa:visual": "node scripts/qa/visual.mjs",
+    "qa:audit": "node scripts/qa/audit.mjs http://localhost:4322 .qa/audit.json",
+    "qa:xb": "node scripts/qa/cross-browser.mjs http://localhost:4322 .qa/xb"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
