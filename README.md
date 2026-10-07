@@ -52,7 +52,7 @@ http://localhost:4322. Canlıya en yakın yerel ortam budur. Node 22.12 veya üs
 
 1. `scripts/lastmod.mjs`: her sayfanın kaynak dosyalarının son commit tarihini okur (sitemap `lastmod`).
 2. `scripts/brand-assets.mjs`: `assets/brand/kit/` (marka kiti v1.0) dosyalarından favicon seti, PWA ikonları, basın kiti dosyaları ve `takipplus-marka-kiti.zip`.
-3. `scripts/og-images.mjs`: her sayfa için 1200×630 OG görseli (`public/og`).
+3. `scripts/og-images.mjs`: her sayfa için 1200×630 bağlantı önizleme görseli (`public/og/<slug>.jpg`; WhatsApp/Instagram önizlemesi için ~100 KB JPEG, ürün sayfalarında gerçek uygulama ekranlı telefon).
 4. `astro build`: sayfalar, sitemap, `robots.txt`, `.well-known` dosyaları. Derlemenin sonunda
    `scripts/lib/style-attrs.mjs` satır içi `style="…"` özniteliklerini harici bir CSS dosyasına taşır (CSP için).
 5. `scripts/check-dist.mjs`: sayfa içi kontroller (aşağıda) ve `vercel.json` kurallarının yerel taklidiyle HTTP

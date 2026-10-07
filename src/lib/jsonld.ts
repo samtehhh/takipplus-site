@@ -67,7 +67,7 @@ export const mobileAppLd = (p: Product, description: string) => {
     applicationCategory: 'EducationalApplication',
     operatingSystem: p.platforms.map((x) => (x === 'ios' ? 'iOS' : 'Android')).join(', '),
     inLanguage: 'tr-TR',
-    image: abs(`/og/${p.slug}.png`),
+    image: abs(`/og/${p.slug}.jpg`),
     publisher: publisher(),
     audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
   };
