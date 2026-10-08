@@ -70,6 +70,8 @@ export const site = {
   verification: {
     /** Bing Webmaster Tools › HTML Meta Tag › msvalidate.01 değeri. */
     bing: '756D90E943A86E1C0CED69B01F5D53FE',
+    /** Pinterest › Ayarlar › Pinterest'e Bağlantı › Web siteleri › HTML etiketi (p:domain_verify). */
+    pinterest: 'dc640a9d83ad0bd877cf9fce09bc232b',
   },
 
   /**
