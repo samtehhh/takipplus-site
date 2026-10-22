@@ -57,7 +57,7 @@ const { product, content: c } = Astro.props as { product: Product; content: type
       <div class="hero__copy">
         <p class="hero__status">
           <Logo size={22} wordmark={false} />
-          {c.hero.status}
+          <span><b class="hero__name">{product.name}</b> · {c.hero.status}</span>
         </p>
         <h1 class="hero__title" id="hero-title">
           {c.hero.title.slice(0, -1).map((line) => <span class="hero__line">{line} </span>)}
@@ -239,6 +239,11 @@ const { product, content: c } = Astro.props as { product: Product; content: type
 
   .hero__status :global(.logo__mark) {
     border-radius: 6px;
+  }
+
+  .hero__name {
+    font-weight: 800;
+    color: var(--text);
   }
 
   /* "tek uygulamada." hiçbir genişlikte bölünmez; boyut ekrana göre ölçeklenir */

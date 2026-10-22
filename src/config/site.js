@@ -48,7 +48,7 @@ export const site = {
     x: '',
     tiktok: 'https://www.tiktok.com/@takipplus_yks',
     youtube: 'https://www.youtube.com/@takipplus_yks',
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/company/takipplus/',
   },
 
   /**
