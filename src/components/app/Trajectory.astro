@@ -208,9 +208,12 @@ const pct = (n: number) => Math.round(n * 100) / 100;
       opacity: 0;
     }
 
+    /* backwards (both değil): çizim bitince clip-path kalkar. Kalırsa bulanık (blur) parıltı katmanı
+       kaydırırken sürekli yeniden çiziliyor, canlıda 150 ms'ye varan takılma ölçüldü (29 Ekim 2026).
+       Son karedeki kesim zaten neredeyse kesimsiz olduğu için görünüm değişmez. */
     .traj--intro > svg,
     .traj.is-in > svg {
-      animation: traj-draw 1500ms var(--ease-in-out) 200ms both;
+      animation: traj-draw 1500ms var(--ease-in-out) 200ms backwards;
     }
 
     .traj--intro .traj__goal,

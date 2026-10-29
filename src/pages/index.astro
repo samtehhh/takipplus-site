@@ -702,9 +702,22 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
   }
 
   .fam__main--next .fam__stage {
+    position: relative;
+    isolation: isolate;
     width: 88px;
     height: 88px;
     border-radius: 22px;
+  }
+
+  /* Logonun arkasındaki ışık: yalnız opaklığı canlanır (boyama yok, ekran kartında döner) */
+  .fam__main--next .fam__stage::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(var(--edge) / 0.55), transparent 65%);
+    opacity: 0.6;
   }
 
   .fam__main--next :global(.fam__mark) {
@@ -765,11 +778,11 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
       animation-delay: 1.6s;
     }
 
-    .fam__main--next :global(.fam__mark) {
+    .fam__main--next .fam__stage::before {
       animation: fam-breathe 4.5s ease-in-out infinite;
     }
 
-    .fam__main--kpss :global(.fam__mark) {
+    .fam__main--kpss .fam__stage::before {
       animation-delay: 1.2s;
     }
   }
@@ -788,12 +801,13 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
   @keyframes fam-breathe {
     0%,
     100% {
-      filter: drop-shadow(0 8px 18px rgb(var(--edge) / 0.35));
+      opacity: 0.35;
     }
     50% {
-      filter: drop-shadow(0 8px 34px rgb(var(--edge) / 0.85));
+      opacity: 1;
     }
   }
+
 
   @media (hover: hover) {
     .fam__main:hover {
