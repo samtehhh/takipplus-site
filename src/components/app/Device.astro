@@ -28,9 +28,10 @@ interface Props {
 const { screens: list, kind = 'phone', sizes, eager = false, class: cls, decorative = false, videos = [] } = Astro.props;
 const files = import.meta.glob<ImageMetadata>('/src/assets/app/*.webp', { eager: true, import: 'default' });
 const dims = kind === 'phone' ? PHONE : TABLET;
-// En küçük aday ekranda gösterilen boyutun ~2 katı: yan yatık telefonlar (yelpaze) ve
-// masaüstündeki küçük çerçeveler de keskin kalır. 720 ve 1536 ekranların kendi çözünürlüğü.
-const widths = kind === 'phone' ? [540, 720] : [768, 1024, 1536];
+// Tarayıcı sizes × ekran yoğunluğuna göre seçer. 360/512 küçük telefonlarda (çerçeve ~170–290px,
+// yoğunluk 1.75–2) yetiyor; 540 ve üstü yan yatık telefonlar ve yoğun ekranlar için.
+// 720 ve 1536 ekranların kendi çözünürlüğü.
+const widths = kind === 'phone' ? [360, 540, 720] : [512, 768, 1024, 1536];
 const shots = list.map((name, i) => {
   const img = files[`/src/assets/app/${name}.webp`];
   if (!img) throw new Error(`Ekran bulunamadı: src/assets/app/${name}.webp`);
