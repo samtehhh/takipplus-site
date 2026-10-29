@@ -465,7 +465,7 @@ document.querySelectorAll<HTMLElement>('[data-tick]').forEach((el) => {
 // ---------- Sabit CTA (mobil) ----------
 const sticky = document.querySelector<HTMLElement>('[data-sticky]');
 const hero = document.querySelector('[data-hero]');
-const form = document.querySelector('#erken-erisim');
+const form = document.querySelector('#indir');
 if (sticky && hero) {
   let heroGone = false;
   let formSeen = false;

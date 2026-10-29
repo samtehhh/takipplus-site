@@ -1,0 +1,240 @@
+---
+/**
+ * "Takip+ YKS'yi indir": App Store ve Google Play için iki mağaza kartı.
+ * Mağaza bağlantıları (src/config/site.js → apps.yks.stores) gelene kadar kartlar
+ * "Çok yakında" der ve tıklanmaz; bağlantı girildiği anda kart mağazaya giden bağlantı olur.
+ * Mağaza işaretleri Simple Icons'tan (CC0), değiştirilmeden.
+ */
+import { Image } from 'astro:assets';
+import { products } from '../data/products';
+import appIcon from '../../assets/brand/kit/yks/png/uygulama-ikonu-1024.png';
+import appleSvg from '../assets/stores/apple.svg?raw';
+import playSvg from '../assets/stores/googleplay.svg?raw';
+
+interface Props {
+  id?: string;
+}
+
+const { id = 'indir' } = Astro.props;
+const yks = products.find((p) => p.slug === 'yks')!;
+const glyph = (svg: string) => svg.replace(/<title>.*?<\/title>/, '').replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+
+const stores = [
+  {
+    key: 'ios',
+    url: yks.stores.appStoreUrl,
+    glyph: glyph(appleSvg),
+    where: 'App Store’dan indir',
+    devices: 'iPhone ve iPad',
+    track: 'store_app_store',
+  },
+  {
+    key: 'android',
+    url: yks.stores.googlePlayUrl,
+    glyph: glyph(playSvg),
+    where: 'Google Play’den indir',
+    devices: 'Android telefon ve tablet',
+    track: 'store_google_play',
+  },
+];
+---
+
+<section class="dl" id={id} aria-labelledby={`${id}-title`}>
+  <div class="dl__head">
+    <h2 class="h2" id={`${id}-title`}>Takip+ YKS’yi indir</h2>
+    <p class="lead">Çok yakında sizlerle.</p>
+  </div>
+
+  <ul class="dl__cards" role="list">
+    {
+      stores.map((s) => {
+        const live = yks.released && !!s.url;
+        const Tag = live ? 'a' : 'div';
+        return (
+          <li>
+            <Tag
+              class:list={['dl__card', `dl__card--${s.key}`, { 'is-live': live }]}
+              href={live ? s.url : undefined}
+              rel={live ? 'noopener' : undefined}
+              data-track={live ? s.track : undefined}
+              data-store={s.key}
+            >
+              <span class="dl__glyph" set:html={s.glyph} />
+              <span class="dl__text">
+                <span class="dl__where">{s.where}</span>
+                <span class="dl__app">Takip+ YKS</span>
+                <span class="dl__devices">{s.devices}</span>
+              </span>
+              <Image class="dl__icon" src={appIcon} alt="" width={72} height={72} widths={[72, 144]} sizes="72px" loading="lazy" />
+              <span class="dl__state">{live ? 'İndir' : 'Çok yakında'}</span>
+            </Tag>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
+
+<style>
+  /* İki kart aynı iskelet, mağazanın kendi ışığıyla: App Store gümüş-mavi, Google Play yeşil-turkuaz.
+     Kart bir mağaza rozeti gibi okunur: solda mağaza işareti, ortada uygulama, sağda ikon. */
+  .dl {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .dl__head {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 40rem;
+  }
+
+  .dl__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .dl__card {
+    --glow: 96 165 250;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+    padding: var(--space-6) var(--space-5);
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(26rem 16rem at 0% 0%, rgb(var(--glow) / 0.2), transparent 70%),
+      linear-gradient(160deg, #0d0a22 0%, #07051a 100%);
+    box-shadow:
+      0 0 0 1px rgb(var(--glow) / 0.28) inset,
+      0 1px 0 rgb(255 255 255 / 0.06) inset,
+      0 30px 60px -30px rgb(5 2 25 / 0.9);
+    color: var(--text);
+    text-decoration: none;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
+
+  .dl__card--android {
+    --glow: 45 212 191;
+  }
+
+  .dl__glyph {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1) inset;
+  }
+
+  .dl__glyph :global(svg) {
+    width: 30px;
+    height: 30px;
+    fill: #f8fafc;
+  }
+
+  .dl__card--android .dl__glyph :global(svg) {
+    fill: rgb(var(--glow));
+  }
+
+  .dl__text {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .dl__where {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+
+  .dl__app {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .dl__devices {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-3);
+  }
+
+  .dl__card :global(.dl__icon) {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px -10px rgb(139 92 246 / 0.7);
+  }
+
+  .dl__state {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: rgb(var(--glow) / 0.12);
+    box-shadow: 0 0 0 1px rgb(var(--glow) / 0.4) inset;
+    color: rgb(var(--glow));
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .dl__card.is-live .dl__state {
+    background: #f8fafc;
+    box-shadow: none;
+    color: var(--night-900);
+  }
+
+  @media (hover: hover) {
+    .dl__card:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 0 0 1px rgb(var(--glow) / 0.5) inset,
+        0 1px 0 rgb(255 255 255 / 0.08) inset,
+        0 36px 70px -30px rgb(var(--glow) / 0.45);
+    }
+  }
+
+  .dl__card.is-live:active {
+    transform: scale(0.99);
+  }
+
+  @media (min-width: 48rem) {
+    .dl__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dl__card {
+      padding: var(--space-7) var(--space-6);
+    }
+
+    .dl__glyph {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+    }
+
+    .dl__glyph :global(svg) {
+      width: 36px;
+      height: 36px;
+    }
+
+    .dl__card :global(.dl__icon) {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+    }
+  }
+</style>

@@ -41,7 +41,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     </nav>
 
     <div class="site-header__actions">
-      <Button href={ctaHref} class="site-header__cta" track="cta_header">Erken erişime katıl</Button>
+      <Button href={ctaHref} class="site-header__cta" track="cta_header">Takip+ YKS’yi indir</Button>
       <button
         class="menu-toggle"
         type="button"
@@ -89,7 +89,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       </ul>
     </nav>
     <div class="menu__bottom">
-      <Button href={ctaHref} size="lg" track="cta_menu">Erken erişime katıl</Button>
+      <Button href={ctaHref} size="lg" track="cta_menu">Takip+ YKS’yi indir</Button>
       <ul class="menu__legal">
         {legalLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
       </ul>

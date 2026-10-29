@@ -26,7 +26,7 @@ export interface Product {
   tagline: string;
   audience: string;
   platforms: ('android' | 'ios')[];
-  /** Mağaza yayını. false iken butonlar "Erken erişime katıl" olur. */
+  /** Mağaza yayını. false iken butonlar indirme bölümüne gider, mağaza kartları "Çok yakında" der. */
   released: boolean;
   stores: {
     googlePlayUrl: string;

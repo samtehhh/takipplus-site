@@ -9,7 +9,7 @@ import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import StoreButtons from '../components/StoreButtons.astro';
 import Faq from '../components/Faq.astro';
-import WaitlistForm from '../components/WaitlistForm.astro';
+import DownloadSection from '../components/DownloadSection.astro';
 import Device from '../components/app/Device.astro';
 import FocusQuad from '../components/app/FocusQuad.astro';
 import Trajectory from '../components/app/Trajectory.astro';
@@ -47,7 +47,7 @@ const { product, content: c } = Astro.props as { product: Product; content: type
   accent={{ base: product.accent, deep: product.accentDeep }}
   jsonLd={[...(product.released ? [mobileAppLd(product, c.seo.description)] : []), faqLd(c.faq)]}
   breadcrumbs={[{ name: product.name, path: `/${product.slug}` }]}
-  ctaHref="#erken-erisim"
+  ctaHref="#indir"
   stickyCta
 >
   <!-- 1. Hero: mağaza görseli 01'in canlı hâli -->
@@ -69,8 +69,8 @@ const { product, content: c } = Astro.props as { product: Product; content: type
             product.released ? (
               <StoreButtons product={product} />
             ) : (
-              <Button href="#erken-erisim" size="lg" arrow track="cta_hero">
-                Erken erişime katıl
+              <Button href="#indir" size="lg" arrow track="cta_hero">
+                Takip+ YKS’yi indir
               </Button>
             )
           }
@@ -173,10 +173,7 @@ const { product, content: c } = Astro.props as { product: Product; content: type
       <Trajectory variant="finale" class="finale__traj" />
     </div>
     <div class="container finale__form">
-      <WaitlistForm
-        product={product.slug}
-        text="Takip+ YKS mağazalara çıktığında ilk sen haberdar ol. Tek ihtiyacımız e-posta adresin; yalnızca yayın ve erken erişim hakkında yazarız."
-      />
+      <DownloadSection />
     </div>
   </section>
 </Base>

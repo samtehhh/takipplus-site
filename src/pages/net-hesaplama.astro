@@ -3,7 +3,7 @@ import '../styles/tools.css';
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import Faq from '../components/Faq.astro';
-import WaitlistForm from '../components/WaitlistForm.astro';
+import DownloadSection from '../components/DownloadSection.astro';
 import Device from '../components/app/Device.astro';
 import { faqLd } from '../lib/jsonld';
 import { areas, tytSubjects, aytSubjects, distribution, type Subject } from '../data/tools';
@@ -47,7 +47,7 @@ const faq = [
   ogAlt="YKS Net Hesaplama: TYT ve AYT net hesapla"
   breadcrumbs={[{ name: 'Net Hesaplama', path: '/net-hesaplama' }]}
   jsonLd={[faqLd(faq)]}
-  ctaHref="#erken-erisim"
+  ctaHref="#indir"
 >
   <section class="th" aria-labelledby="nh-title">
     <div class="th__sky" aria-hidden="true"><span class="dotgrid"></span></div>
@@ -214,7 +214,7 @@ const faq = [
         </p>
         <div class="tool-app__actions">
           <Button href="/yks" arrow track="cta_tool_net">Takip+ YKS’yi keşfet</Button>
-          <a class="tool-app__link" href="#erken-erisim">Erken erişime katıl</a>
+          <a class="tool-app__link" href="#indir">Takip+ YKS’yi indir</a>
         </div>
       </div>
     </div>
@@ -248,10 +248,7 @@ const faq = [
 
   <section class="section defer">
     <div class="container">
-      <WaitlistForm
-        product="yks"
-        text="Takip+ YKS mağazalara çıktığında ilk sen haberdar ol. Tek ihtiyacımız e-posta adresin; yalnızca yayın ve erken erişim hakkında yazarız."
-      />
+      <DownloadSection />
     </div>
   </section>
 </Base>

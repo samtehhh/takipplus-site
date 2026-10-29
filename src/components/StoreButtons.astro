@@ -1,6 +1,6 @@
 ---
 /**
- * Yayın öncesi: "Erken erişime katıl" butonu.
+ * Yayın öncesi: "Takip+ YKS’yi indir" butonu (sayfadaki indirme bölümüne gider).
  * Yayın sonrası (product.released = true): resmi Google Play ve App Store
  * rozetleri. Rozet dosyaları resmi kaynaklardan indirilip değiştirilmeden
  * public/badges/ altına konmalı (bkz. README):
@@ -18,7 +18,7 @@ interface Props {
   secondary?: { href: string; label: string };
 }
 
-const { product, ctaHref = '#erken-erisim', size = 'lg', secondary } = Astro.props;
+const { product, ctaHref = '#indir', size = 'lg', secondary } = Astro.props;
 const { released, stores } = product;
 ---
 
@@ -38,8 +38,8 @@ const { released, stores } = product;
     </div>
   ) : (
     <div class="stores">
-      <Button href={ctaHref} size={size} track="cta_early_access">
-        Erken erişime katıl
+      <Button href={ctaHref} size={size} track="cta_download">
+        Takip+ YKS’yi indir
       </Button>
       {secondary && (
         <Button href={secondary.href} size={size} variant="secondary">

@@ -1,18 +1,29 @@
 ---
+import { Image } from 'astro:assets';
 import Logo from './Logo.astro';
-import { liveProducts, statusLabel } from '../data/products';
+import { liveProducts } from '../data/products';
 import { legalLinks, companyLinks, toolLinks } from '../data/nav';
 import { site, contactEmail } from '../config/site';
+import appIcon from '../../assets/brand/kit/yks/png/uygulama-ikonu-1024.png';
+// Sosyal medya işaretleri: Simple Icons (CC0), değiştirilmeden
+import facebook from '../assets/social/facebook.svg?raw';
+import reddit from '../assets/social/reddit.svg?raw';
+import instagram from '../assets/social/instagram.svg?raw';
+import tiktok from '../assets/social/tiktok.svg?raw';
+import youtube from '../assets/social/youtube.svg?raw';
+import linkedin from '../assets/social/linkedin.svg?raw';
 
+const glyph = (svg: string) => svg.replace(/<title>.*?<\/title>/, '').replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+
+// Hesap adresi henüz yoksa (site.js'te boş) işaret görünür ama tıklanmaz
 const socials = [
-  ['instagram', 'Instagram'],
-  ['x', 'X'],
-  ['tiktok', 'TikTok'],
-  ['youtube', 'YouTube'],
-  ['linkedin', 'LinkedIn'],
-]
-  .map(([k, label]) => ({ label, href: site.social[k as keyof typeof site.social] }))
-  .filter((s) => s.href);
+  { key: 'facebook', label: 'Facebook', svg: facebook },
+  { key: 'reddit', label: 'Reddit', svg: reddit },
+  { key: 'instagram', label: 'Instagram', svg: instagram },
+  { key: 'tiktok', label: 'TikTok', svg: tiktok },
+  { key: 'youtube', label: 'YouTube', svg: youtube },
+  { key: 'linkedin', label: 'LinkedIn', svg: linkedin },
+].map((s) => ({ ...s, href: site.social[s.key as keyof typeof site.social] || '', svg: glyph(s.svg) }));
 const year = new Date().getFullYear();
 ---
 
@@ -25,14 +36,16 @@ const year = new Date().getFullYear();
         <a class="site-footer__mail" href={`mailto:${contactEmail}`}>{contactEmail}</a>
       </div>
 
-      <nav aria-label="Ürünler">
-        <h2 class="site-footer__title">Ürünler</h2>
+      <nav aria-label="Familia">
+        <h2 class="site-footer__title">Familia</h2>
         <ul>
           {
             liveProducts.map((p) => (
               <li>
-                <a href={`/${p.slug}`}>{p.name}</a>
-                <span class="site-footer__status">{statusLabel[p.status]}</span>
+                <a class="site-footer__app" href={`/${p.slug}`}>
+                  <Image class="site-footer__app-icon" src={appIcon} alt="" width={28} height={28} widths={[28, 56]} sizes="28px" loading="lazy" />
+                  {p.name}
+                </a>
               </li>
             ))
           }
@@ -50,7 +63,6 @@ const year = new Date().getFullYear();
         <h2 class="site-footer__title">Takip+</h2>
         <ul>
           {companyLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-          {socials.map((s) => <li><a href={s.href} rel="me noopener" target="_blank">{s.label}</a></li>)}
         </ul>
       </nav>
 
@@ -62,9 +74,34 @@ const year = new Date().getFullYear();
       </nav>
     </div>
 
+    <section class="soc" aria-labelledby="soc-title">
+      <h2 class="soc__title" id="soc-title">Takip+ Sosyal</h2>
+      <ul class="soc__list" role="list">
+        {
+          socials.map((s) =>
+            s.href ? (
+              <li>
+                <a class={`soc__tile soc__tile--${s.key}`} href={s.href} rel="me noopener" target="_blank" aria-label={s.label}>
+                  <span class="soc__glyph" set:html={s.svg} />
+                  <span class="soc__name">{s.label}</span>
+                </a>
+              </li>
+            ) : (
+              <li>
+                <span class={`soc__tile soc__tile--${s.key} is-soon`} aria-label={`${s.label} (yakında)`} role="img">
+                  <span class="soc__glyph" set:html={s.svg} />
+                  <span class="soc__name">{s.label}</span>
+                </span>
+              </li>
+            ),
+          )
+        }
+      </ul>
+    </section>
+
     <div class="site-footer__base">
       <p>© {year} Takip+ (Takip Plus), {site.founder}</p>
-      <p>Takip+ YKS, ÖSYM ya da YÖK ile bağlantılı resmî bir uygulama değildir.</p>
+      <p>Takip+ YKS, ÖSYM veya başka sınav ve dershane kuruluşlarıyla bağlantılı değildir. Bir şirkete de ait değildir.</p>
     </div>
   </div>
 </footer>
@@ -148,9 +185,139 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
 
-  .site-footer__status {
-    font-size: var(--text-xs);
-    color: var(--text-3);
+  /* Familia: aktif uygulama kendi ikonuyla */
+  .site-footer nav a.site-footer__app {
+    gap: 0.625rem;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .site-footer__app :global(.site-footer__app-icon) {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px -6px rgb(139 92 246 / 0.8);
+  }
+
+  /* ---------- Takip+ Sosyal ----------
+     Her hesap bir karo: gece zemininde beyaz işaret; üstüne gelince karo o platformun rengine boyanır. */
+  .soc {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.01));
+    box-shadow: 0 0 0 1px var(--line) inset;
+  }
+
+  .soc__title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .soc__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .soc__list li {
+    display: block;
+  }
+
+  .soc__tile {
+    --brand: #8b5cf6;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 56px;
+    padding: 0.5rem 0.625rem;
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.04);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08) inset;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-out);
+  }
+
+  .soc__tile--facebook {
+    --brand: #0866ff;
+  }
+
+  .soc__tile--reddit {
+    --brand: #ff4500;
+  }
+
+  .soc__tile--instagram {
+    --brand: #e1306c;
+  }
+
+  .soc__tile--tiktok {
+    --brand: #25f4ee;
+  }
+
+  .soc__tile--youtube {
+    --brand: #ff0000;
+  }
+
+  .soc__tile--linkedin {
+    --brand: #0a66c2;
+  }
+
+  .soc__glyph {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+
+  .soc__glyph :global(svg) {
+    width: 18px;
+    height: 18px;
+    fill: #f8fafc;
+  }
+
+  .soc__name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soc__tile.is-soon {
+    opacity: 0.5;
+  }
+
+  @media (hover: hover) {
+    .site-footer nav a:hover {
+      color: var(--text);
+    }
+
+    a.soc__tile:hover {
+      transform: translateY(-2px);
+      background: color-mix(in srgb, var(--brand) 18%, transparent);
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent) inset,
+        0 14px 30px -14px color-mix(in srgb, var(--brand) 70%, transparent);
+    }
+
+    a.soc__tile:hover .soc__glyph {
+      background: var(--brand);
+    }
   }
 
   .site-footer__base {
@@ -169,21 +336,30 @@ const year = new Date().getFullYear();
       justify-content: space-between;
       gap: var(--space-5);
     }
-  }
 
-  @media (hover: hover) {
-    .site-footer nav a:hover {
-      color: var(--text);
-    }
-  }
-
-  @media (min-width: 48rem) {
     .site-footer__grid {
       grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     }
 
     .site-footer__brand {
       grid-column: auto;
+    }
+
+    .soc {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-5) var(--space-6);
+    }
+
+    .soc__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .soc__list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
 </style>

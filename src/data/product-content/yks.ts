@@ -279,7 +279,7 @@ export const faq = [
   },
   {
     q: 'Takip+ YKS ne zaman çıkacak?',
-    a: '<p>Uygulama Android ve iOS için geliştiriliyor, henüz mağazalarda değil. Yayın tarihi kesinleştiğinde erken erişim listesindekilere ilk biz haber vereceğiz.</p>',
+    a: '<p>Uygulama Android ve iOS için geliştiriliyor, henüz mağazalarda değil. Yayın tarihi kesinleştiğinde bu sitede ve sosyal medya hesaplarımızda duyuracağız; mağaza bağlantıları da burada olacak.</p>',
   },
   {
     q: 'Takip+ YKS ücretsiz mi?',

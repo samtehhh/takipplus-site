@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
-import WaitlistForm from '../components/WaitlistForm.astro';
+import DownloadSection from '../components/DownloadSection.astro';
 import DeviceDuo from '../components/app/DeviceDuo.astro';
 import Trajectory from '../components/app/Trajectory.astro';
 import PhoneFan from '../components/app/PhoneFan.astro';
@@ -31,7 +31,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
   path="/"
   ogImage="home"
   jsonLd={[organizationLd(), websiteLd()]}
-  ctaHref="#erken-erisim"
+  ctaHref="#indir"
   stickyCta
 >
   <!-- 1. Hero: marka sözü + hedef ekranı -->
@@ -46,7 +46,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
         </p>
         <div class="hh__actions">
           <Button href="/yks" size="lg" arrow track="cta_hero">Takip+ YKS ile başla</Button>
-          <a class="hh__link" href="#erken-erisim">Erken erişime katıl</a>
+          <a class="hh__link" href="#indir">Takip+ YKS’yi indir</a>
         </div>
       </div>
 
@@ -209,7 +209,7 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
 
   <section class="section defer">
     <div class="container">
-      <WaitlistForm />
+      <DownloadSection />
     </div>
   </section>
 </Base>
