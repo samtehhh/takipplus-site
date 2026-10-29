@@ -166,20 +166,22 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
               ['lgs', lgsMark, 'Takip+ LGS'],
               ['kpss', kpssMark, 'Takip+ KPSS'],
             ].map(([k, mark, name]) => (
-              <div class:list={['fam__soon', `fam__soon--${k}`]} aria-hidden="true">
-                <span class="fam__veil">
-                  <Image class="fam__soon-mark" src={mark} alt="" width={96} height={96} loading="lazy" />
-                  <span class="fam__soon-name">{name}</span>
-                  <span class="fam__soon-line" />
-                  <span class="fam__soon-line fam__soon-line--short" />
+              <div class:list={['fam__main', 'fam__main--next', `fam__main--${k}`]} aria-hidden="true">
+                <span class="fam__stage">
+                  <Image class="fam__mark" src={mark} alt="" width={140} height={140} loading="lazy" />
                 </span>
-                <span class="fam__soon-chip">Yakında</span>
+                <span class="fam__haze">
+                  <span class="fam__meta">
+                    <span class="fam__status">Geliştiriliyor</span>
+                    <span class="fam__plat">Android ve iOS</span>
+                  </span>
+                  <span class="fam__name">{name}</span>
+                  <span class="fam__line" />
+                  <span class="fam__line fam__line--short" />
+                </span>
               </div>
             ))
           }
-          <p class="fam__ask">
-            Hazırlandığın sınav listede yok mu? <a href="/iletisim">Fikrini ilet</a>
-          </p>
         </div>
       </div>
     </div>
@@ -573,10 +575,14 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     overflow: hidden;
     border-radius: var(--radius-xl);
     border: 1.5px solid transparent;
+    /* Ürün rengi: YKS mor; LGS mavi, KPSS turuncu (marka kiti renkler.json) */
+    --edge: 139 92 246;
+    --edge2: 224 86 253;
+    --deep: 42 14 143;
     background:
-      radial-gradient(34rem 20rem at 0% 100%, rgb(42 14 143 / 0.55), transparent 70%) padding-box,
+      radial-gradient(34rem 20rem at 0% 100%, rgb(var(--deep) / 0.55), transparent 70%) padding-box,
       linear-gradient(160deg, #0c0720 0%, #08051a 60%, #0d0826 100%) padding-box,
-      linear-gradient(140deg, rgb(139 92 246 / 0.9), rgb(224 86 253 / 0.45) 60%, rgb(255 255 255 / 0.08)) border-box;
+      linear-gradient(140deg, rgb(var(--edge) / 0.9), rgb(var(--edge2) / 0.45) 60%, rgb(255 255 255 / 0.08)) border-box;
     color: inherit;
     text-decoration: none;
     transition: transform var(--dur-2) var(--ease-out);
@@ -596,13 +602,13 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
     border-radius: 28px;
     background:
       radial-gradient(circle at 50% 45%, rgb(4 2 12 / 0.95) 40%, rgb(4 2 12 / 0.6) 70%, transparent 100%),
-      radial-gradient(circle at 50% 50%, rgb(139 92 246 / 0.35), transparent 75%);
+      radial-gradient(circle at 50% 50%, rgb(var(--edge) / 0.35), transparent 75%);
   }
 
   .fam__main :global(.fam__mark) {
     width: 88px;
     height: 88px;
-    filter: drop-shadow(0 10px 30px rgb(139 92 246 / 0.55));
+    filter: drop-shadow(0 10px 30px rgb(var(--edge) / 0.55));
   }
 
   .fam__meta,
@@ -674,96 +680,119 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
 
   .fam__next {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
-    align-content: start;
   }
 
-  .fam__soon {
-    --c: #3b82f6;
-    --c2: #22e1ff;
-    position: relative;
-    display: grid;
-    min-height: 13rem;
-    overflow: hidden;
-    border-radius: var(--radius-xl);
-    background:
-      radial-gradient(18rem 12rem at 80% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 70%),
-      linear-gradient(160deg, #0b0a1d, #08061a);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent) inset;
-  }
-
-  .fam__soon--kpss {
-    --c: #f97316;
-    --c2: #ffa51f;
-  }
-
-  /* İçerik var ama okunmuyor */
-  .fam__veil {
-    display: grid;
-    justify-items: start;
-    align-content: start;
-    gap: var(--space-3);
+  .fam__main--next {
+    gap: var(--space-2);
     padding: var(--space-5);
-    filter: blur(7px);
-    opacity: 0.85;
-    user-select: none;
   }
 
-  .fam__veil :global(.fam__soon-mark) {
+  .fam__main--lgs {
+    --edge: 29 107 255;
+    --edge2: 34 225 255;
+    --deep: 10 31 158;
+  }
+
+  .fam__main--kpss {
+    --edge: 242 92 5;
+    --edge2: 255 165 31;
+    --deep: 138 33 0;
+  }
+
+  .fam__main--next .fam__stage {
+    width: 88px;
+    height: 88px;
+    border-radius: 22px;
+  }
+
+  .fam__main--next :global(.fam__mark) {
     width: 64px;
     height: 64px;
   }
 
-  .fam__soon-name {
-    font-family: var(--font-display);
+  /* Kart Takip+ YKS'nin aynısı ama içi henüz okunmuyor: logo net, yazılar buğulu */
+  .fam__haze {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2);
+    width: 100%;
+    filter: blur(6px);
+    opacity: 0.8;
+    user-select: none;
+  }
+
+  .fam__main--next .fam__status {
+    background: rgb(var(--edge) / 0.25);
+    color: rgb(var(--edge2));
+  }
+
+  .fam__main--next .fam__name {
+    margin-top: 0;
     font-size: var(--text-xl);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: #fff;
   }
 
-  .fam__soon-line {
-    width: 90%;
-    height: 0.7rem;
+  .fam__line {
+    width: 85%;
+    height: 0.65rem;
     border-radius: 99px;
-    background: color-mix(in srgb, var(--c2) 35%, rgb(255 255 255 / 0.25));
+    background: rgb(255 255 255 / 0.22);
   }
 
-  .fam__soon-line--short {
-    width: 55%;
+  .fam__line--short {
+    width: 50%;
   }
 
-  .fam__soon-chip {
+  /* Hazırlanıyor hissi: logonun ışığı yavaşça nefes alır, kartın üstünden ince bir ışık geçer.
+     Hareket azaltılmışsa ikisi de durur. */
+  .fam__main--next::after {
+    content: '';
     position: absolute;
-    top: var(--space-5);
-    right: var(--space-5);
-    padding: 0.3rem 0.75rem;
-    border-radius: 999px;
-    background: rgb(8 6 26 / 0.7);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent) inset;
-    color: color-mix(in srgb, var(--c2) 70%, #fff);
-    font-family: var(--font-display);
-    font-size: var(--text-xs);
-    font-weight: 700;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 35%, rgb(var(--edge2) / 0.14) 50%, transparent 65%);
+    transform: translateX(-100%);
   }
 
-  .fam__ask {
-    grid-column: 1 / -1;
-    color: var(--text-2);
-    font-family: var(--font-body);
+  @media (prefers-reduced-motion: no-preference) {
+    .fam__main--next::after {
+      animation: fam-sheen 5.5s var(--ease-in-out) infinite;
+    }
+
+    .fam__main--kpss::after {
+      animation-delay: 1.6s;
+    }
+
+    .fam__main--next :global(.fam__mark) {
+      animation: fam-breathe 4.5s ease-in-out infinite;
+    }
+
+    .fam__main--kpss :global(.fam__mark) {
+      animation-delay: 1.2s;
+    }
   }
 
-  .fam__ask a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    margin-left: 0.25rem;
-    color: var(--text);
-    font-family: var(--font-display);
-    font-weight: 600;
-    text-decoration-color: rgb(196 181 253 / 0.55);
-    text-underline-offset: 0.3em;
+  @keyframes fam-sheen {
+    0%,
+    35% {
+      transform: translateX(-100%);
+    }
+    80%,
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes fam-breathe {
+    0%,
+    100% {
+      filter: drop-shadow(0 8px 18px rgb(var(--edge) / 0.35));
+    }
+    50% {
+      filter: drop-shadow(0 8px 34px rgb(var(--edge) / 0.85));
+    }
   }
 
   @media (hover: hover) {
@@ -800,12 +829,21 @@ const highlights = ['Günün Odağı', 'Optik Çözüm', 'Deneme analizi', 'Hede
       height: 140px;
     }
 
-    .fam__next {
-      grid-template-columns: minmax(0, 1fr);
+    .fam__main--next {
+      padding: var(--space-6);
     }
 
-    .fam__soon {
-      min-height: 0;
+    .fam__main--next .fam__stage {
+      top: var(--space-5);
+      right: var(--space-5);
+      width: 104px;
+      height: 104px;
+      border-radius: 26px;
+    }
+
+    .fam__main--next :global(.fam__mark) {
+      width: 76px;
+      height: 76px;
     }
   }
 
